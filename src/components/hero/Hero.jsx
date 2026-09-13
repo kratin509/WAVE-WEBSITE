@@ -21,7 +21,7 @@ function StaticWaveBackdrop() {
       className="absolute inset-0"
       style={{
         background:
-          'radial-gradient(120% 90% at 30% 20%, #ffcf4d 0%, #ff8a1f 32%, #e6231a 62%, #170d08 100%)',
+          'radial-gradient(120% 90% at 30% 20%, #ffd873 0%, #ff9d42 34%, #f2401f 68%, #d4290f 100%)',
       }}
     />
   )
@@ -115,7 +115,7 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative" style={{ height: '190vh' }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-ink">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-wave-orange-deep">
         <div className="absolute inset-0 z-0">
           {reduced ? (
             <StaticWaveBackdrop />
@@ -130,7 +130,7 @@ export function Hero() {
           className="pointer-events-none absolute inset-0 z-10"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(23,13,8,0.15) 0%, rgba(23,13,8,0) 30%, rgba(23,13,8,0) 55%, rgba(23,13,8,0.85) 100%)',
+              'linear-gradient(to bottom, rgba(255,180,90,0.12) 0%, rgba(255,180,90,0) 30%, rgba(255,180,90,0) 55%, rgba(212,41,15,0.55) 100%)',
           }}
         />
 
@@ -142,7 +142,7 @@ export function Hero() {
           className="pointer-events-none absolute inset-0 z-30"
           style={{
             background:
-              'radial-gradient(48% 42% at 50% 46%, rgba(15,8,5,0.55) 0%, rgba(15,8,5,0.28) 55%, rgba(15,8,5,0) 100%)',
+              'radial-gradient(48% 42% at 50% 46%, rgba(180,30,15,0.42) 0%, rgba(180,30,15,0.2) 55%, rgba(180,30,15,0) 100%)',
           }}
         />
 

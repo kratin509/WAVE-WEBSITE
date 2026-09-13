@@ -52,7 +52,7 @@ export function WaveScene({ motion, quality = 'high' }) {
       camera={{ position: [0, 0, 4.4], fov: 42 }}
       className="!absolute !inset-0"
     >
-      <color attach="background" args={['#170d08']} />
+      <color attach="background" args={['#ff7327']} />
       <WaveMesh motion={motion} segments={segments} intensity={intensity} />
     </Canvas>
   )

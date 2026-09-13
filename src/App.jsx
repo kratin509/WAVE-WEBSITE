@@ -8,8 +8,8 @@ import { Hero } from './components/hero/Hero'
 // once the hero's visual language is approved.
 function NextSectionStub() {
   return (
-    <section id="how-it-works" className="relative flex min-h-[60vh] items-center justify-center bg-ink px-6 text-center">
-      <p className="font-display text-2xl font-semibold tracking-tight text-cream/40 sm:text-3xl">
+    <section id="how-it-works" className="relative flex min-h-[60vh] items-center justify-center bg-wave-red-deep px-6 text-center">
+      <p className="font-display text-2xl font-semibold tracking-tight text-cream/50 sm:text-3xl">
         How a wave starts — coming next.
       </p>
     </section>

@@ -8,11 +8,11 @@
   --color-cream-dim: #f0e3d2;
   --color-ink: #170d08;
   --color-ink-soft: #241209;
-  --color-wave-yellow: #ffcf4d;
-  --color-wave-orange: #ff8a1f;
-  --color-wave-orange-deep: #ff5a1f;
-  --color-wave-red: #e6231a;
-  --color-wave-red-deep: #b3130f;
+  --color-wave-yellow: #ffd873;
+  --color-wave-orange: #ff9d42;
+  --color-wave-orange-deep: #ff7327;
+  --color-wave-red: #f2401f;
+  --color-wave-red-deep: #d4290f;
 
   --ease-wave: cubic-bezier(0.65, 0, 0.35, 1);
 }

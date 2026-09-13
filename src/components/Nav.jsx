@@ -28,7 +28,7 @@ export function Nav() {
     ? 'text-cream/70 hover:text-cream'
     : 'text-ink/65 hover:text-ink'
   const pillBg = onDark
-    ? 'bg-ink-soft/70 border-cream/15'
+    ? 'bg-wave-red-deep/60 border-cream/20'
     : 'bg-cream/80 border-ink/10'
 
   return (

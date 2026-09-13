@@ -71,10 +71,10 @@ export const WaveMaterial = shaderMaterial(
     uTime: 0,
     uMouse: new THREE.Vector2(0, 0),
     uIntensity: 1,
-    uColorYellow: new THREE.Color('#ffcf4d'),
-    uColorOrange: new THREE.Color('#ff8a1f'),
-    uColorRed: new THREE.Color('#e6231a'),
-    uColorDeep: new THREE.Color('#5c0f0a'),
+    uColorYellow: new THREE.Color('#ffd873'),
+    uColorOrange: new THREE.Color('#ff9d42'),
+    uColorOrangeDeep: new THREE.Color('#ff7327'),
+    uColorRed: new THREE.Color('#f2401f'),
   },
   // vertex
   /* glsl */ `
@@ -89,15 +89,22 @@ export const WaveMaterial = shaderMaterial(
     varying vec3 vNormal;
 
     float surface(vec2 p) {
-      float t = uTime * 0.16;
-      float big = snoise(vec3(p.x * 0.55, p.y * 0.7 + t, t * 0.6)) * 0.9;
-      float mid = snoise(vec3(p.x * 1.3 - t * 0.4, p.y * 1.1, t * 0.8 + 4.0)) * 0.35;
-      float ripple = sin(p.x * 2.2 + t * 1.6) * 0.06 + sin(p.y * 1.7 - t * 1.1) * 0.05;
+      float t = uTime * 0.2;
 
+      // two large, clean directional swells — this is what reads as "wave"
+      // rather than a random blob. Crests travel diagonally across the plane.
+      float swellA = sin(p.x * 0.85 + p.y * 0.35 + t * 1.15) * 0.5;
+      float swellB = sin(p.x * 0.45 - p.y * 0.7 + t * 0.75) * 0.34;
+      float swellC = cos(p.x * 0.22 + p.y * 0.5 - t * 0.5) * 0.18;
+
+      // light organic detail on top, kept subtle so the swells stay dominant
+      float detail = snoise(vec3(p.x * 1.7 + t * 0.35, p.y * 1.7, t * 0.6)) * 0.1;
+
+      // fluid, interactive push near the cursor
       float d = length(p - uMouse * 2.2);
-      float mouseBump = exp(-d * d * 1.4) * 0.5;
+      float mouseBump = exp(-d * d * 1.5) * 0.6;
 
-      return (big + mid + ripple + mouseBump) * uIntensity;
+      return (swellA + swellB + swellC + detail + mouseBump) * uIntensity;
     }
 
     void main() {
@@ -126,8 +133,8 @@ export const WaveMaterial = shaderMaterial(
 
     uniform vec3 uColorYellow;
     uniform vec3 uColorOrange;
+    uniform vec3 uColorOrangeDeep;
     uniform vec3 uColorRed;
-    uniform vec3 uColorDeep;
     uniform vec2 uMouse;
 
     varying vec2 vUv;
@@ -135,22 +142,29 @@ export const WaveMaterial = shaderMaterial(
     varying vec3 vNormal;
 
     void main() {
-      float h = clamp(vElevation * 1.4 + 0.42, 0.0, 1.0);
+      // Wrap elevation into repeating bands so the surface reads as several
+      // travelling wave crests (like the brand mark) instead of one smooth
+      // gradient blob — each band is a full red→orange→yellow→orange→red
+      // cycle that rides along with the geometry as it animates.
+      float bands = fract(vElevation * 0.85 + 0.5);
 
-      vec3 color = mix(uColorDeep, uColorRed, smoothstep(0.0, 0.46, h));
-      color = mix(color, uColorOrange, smoothstep(0.4, 0.75, h));
-      color = mix(color, uColorYellow, smoothstep(0.78, 1.08, h));
+      vec3 color = mix(uColorRed, uColorOrangeDeep, smoothstep(0.0, 0.22, bands));
+      color = mix(color, uColorOrange, smoothstep(0.18, 0.42, bands));
+      color = mix(color, uColorYellow, smoothstep(0.4, 0.58, bands));
+      color = mix(color, uColorOrange, smoothstep(0.56, 0.74, bands));
+      color = mix(color, uColorRed, smoothstep(0.7, 0.95, bands));
 
       vec3 viewDir = normalize(vec3(0.0, 0.0, 1.0));
       float fresnel = pow(1.0 - clamp(dot(vNormal, viewDir), 0.0, 1.0), 2.4);
-      color += fresnel * vec3(1.0, 0.8, 0.5) * 0.32;
+      color += fresnel * vec3(1.0, 0.85, 0.55) * 0.3;
 
       vec3 lightDir = normalize(vec3(uMouse.x * 0.6 - 0.3, uMouse.y * 0.6 + 0.6, 1.0));
       float diffuse = max(dot(vNormal, lightDir), 0.0);
-      color += diffuse * 0.14;
+      color += diffuse * 0.16;
 
-      float vign = smoothstep(1.05, 0.1, length(vUv - 0.5) * 1.4);
-      color *= mix(0.4, 0.95, vign);
+      // gentle vignette only — never dips toward black
+      float vign = smoothstep(1.15, 0.15, length(vUv - 0.5) * 1.3);
+      color *= mix(0.82, 1.05, vign);
 
       gl_FragColor = vec4(color, 1.0);
     }
