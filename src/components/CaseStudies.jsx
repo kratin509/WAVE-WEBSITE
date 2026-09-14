@@ -3,6 +3,7 @@ import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
 import { SectionLabel } from './ui/SectionLabel'
+import { CountUp } from './ui/CountUp'
 import hookC from '../assets/experiments/hookC.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -38,9 +39,9 @@ const STAGES = [
 
 function ResultStat({ value, label }) {
   return (
-    <div>
-      <p className="font-display text-3xl font-semibold text-ink sm:text-4xl">{value}</p>
-      <p className="mt-1 text-xs text-ink/60 sm:text-sm">{label}</p>
+    <div className="text-center">
+      <CountUp value={value} className="font-display text-5xl font-semibold text-cream tabular-nums sm:text-6xl" />
+      <p className="mt-1.5 text-xs text-cream/70 sm:text-sm">{label}</p>
     </div>
   )
 }
@@ -131,14 +132,14 @@ export function CaseStudies() {
 
         {/* Deliberately not --color-wave-orange-deep - full-bleed at this size it
             needs to be muted, not the vivid brand accent used for CTAs. */}
-        <div data-reveal className="mt-14 rounded-2xl bg-[#d35e41] px-6 py-10 sm:px-10 sm:py-12">
-          <p className="text-[11px] font-medium tracking-wide text-ink/60 uppercase">06 — the result</p>
-          <div className="mt-5 flex flex-wrap gap-x-12 gap-y-6">
+        <div data-reveal className="mt-14 rounded-2xl bg-[#d35e41] px-6 py-12 text-center sm:px-10 sm:py-16">
+          <p className="text-[11px] font-medium tracking-wide text-cream/70 uppercase">06 — the result</p>
+          <div className="mt-7 flex flex-wrap justify-center gap-x-16 gap-y-8">
             <ResultStat value="8.3M" label="views total" />
             <ResultStat value="47" label="variations tested" />
             <ResultStat value="20" label="creators onboarded" />
           </div>
-          <p className="mt-6 text-xs text-ink/55">Illustrative example — figures shown are sample data.</p>
+          <p className="mt-8 text-xs text-cream/60">Illustrative example — figures shown are sample data.</p>
         </div>
       </div>
     </section>
