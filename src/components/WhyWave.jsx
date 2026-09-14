@@ -154,7 +154,11 @@ export function WhyWave() {
   }, [reduced])
 
   return (
-    <section id="why-wave" ref={sectionRef} className="relative bg-cream px-6 py-24 sm:px-10 lg:px-[7vw] lg:py-32">
+    <section
+      id="why-wave"
+      ref={sectionRef}
+      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+    >
       <div className="mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
           <span

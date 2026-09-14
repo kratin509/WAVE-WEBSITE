@@ -6,6 +6,11 @@ import { Hero } from './components/hero/Hero'
 import { HowItWorks } from './components/HowItWorks'
 import { WhyWave } from './components/WhyWave'
 import { Experiments } from './components/experiments/Experiments'
+import { CaseStudies } from './components/CaseStudies'
+import { WhatYouGet } from './components/WhatYouGet'
+import { WhoItsFor } from './components/WhoItsFor'
+import { FAQ } from './components/FAQ'
+import { FinalCTA } from './components/FinalCTA'
 
 function App() {
   return (
@@ -18,6 +23,11 @@ function App() {
           <HowItWorks />
           <WhyWave />
           <Experiments />
+          <CaseStudies />
+          <WhatYouGet />
+          <WhoItsFor />
+          <FAQ />
+          <FinalCTA />
         </main>
       </SmoothScroll>
     </NavThemeProvider>
