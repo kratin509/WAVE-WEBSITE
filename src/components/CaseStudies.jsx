@@ -102,12 +102,18 @@ export function CaseStudies() {
             {STAGES.map((stage) => (
               <div
                 key={stage.n}
-                className={`border-t border-ink/10 py-8 first:border-t-0 first:pt-0 sm:py-9 ${
-                  stage.highlight ? 'border-l-2 border-l-wave-orange-deep pl-5 sm:pl-6' : ''
+                className={`group border-t border-l-2 border-ink/10 py-8 pl-5 transition-colors duration-300 first:border-t-0 first:pt-0 sm:py-9 sm:pl-6 ${
+                  stage.highlight ? 'border-l-wave-orange-deep' : 'border-l-transparent hover:border-l-wave-orange-deep'
                 }`}
               >
                 <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6">
-                  <span className="font-display text-xs text-ink/40 tabular-nums">{stage.n}</span>
+                  <span
+                    className={`font-display text-xs tabular-nums transition-colors duration-300 ${
+                      stage.highlight ? 'text-wave-orange-deep' : 'text-ink/40 group-hover:text-wave-orange-deep'
+                    }`}
+                  >
+                    {stage.n}
+                  </span>
                   <div className="flex-1">
                     <h3 className="font-display text-lg font-semibold text-ink sm:text-xl">{stage.label}</h3>
                     <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/55">{stage.body}</p>
@@ -123,7 +129,9 @@ export function CaseStudies() {
           </div>
         </div>
 
-        <div data-reveal className="mt-14 rounded-2xl bg-wave-orange-deep px-6 py-10 sm:px-10 sm:py-12">
+        {/* Deliberately not --color-wave-orange-deep - full-bleed at this size it
+            needs to be muted, not the vivid brand accent used for CTAs. */}
+        <div data-reveal className="mt-14 rounded-2xl bg-[#d35e41] px-6 py-10 sm:px-10 sm:py-12">
           <p className="text-[11px] font-medium tracking-wide text-ink/60 uppercase">06 — the result</p>
           <div className="mt-5 flex flex-wrap gap-x-12 gap-y-6">
             <ResultStat value="8.3M" label="views total" />
