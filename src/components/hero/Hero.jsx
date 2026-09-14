@@ -11,16 +11,48 @@ gsap.registerPlugin(ScrollTrigger)
 
 const CHECKLIST = ['UGC strategy', 'Creator sourcing', 'Testing & iteration', 'Scale what works']
 
-function Spark({ className }) {
+function HandLine({ className, style, color = 'var(--color-wave-orange-deep)', size = 40 }) {
   return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" className={className} aria-hidden="true">
+    <svg
+      width={size}
+      height={size}
+      viewBox="0 0 40 40"
+      fill="none"
+      className={className}
+      style={style}
+      aria-hidden="true"
+    >
       <path
-        d="M14 2 L14 11 M14 17 L14 26 M2 14 L11 14 M17 14 L26 14 M5 5 L10.5 10.5 M17.5 17.5 L23 23"
-        stroke="var(--color-wave-orange-deep)"
-        strokeWidth="2"
+        d="M20 3 L20 15 M20 25 L20 37 M3 20 L15 20 M25 20 L37 20 M7 7 L14.5 14.5 M25.5 25.5 L33 33 M33 7 L25.5 14.5 M14.5 25.5 L7 33"
+        stroke={color}
+        strokeWidth="2.6"
         strokeLinecap="round"
       />
     </svg>
+  )
+}
+
+function BarChartDoodle() {
+  return (
+    <svg width="34" height="28" viewBox="0 0 34 28" fill="none" aria-hidden="true">
+      <path d="M2 26 L14 12 L20 18 L32 3" stroke="var(--color-ink)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M24 3 L32 3 L32 11" stroke="var(--color-ink)" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+      <path d="M4 26 L4 20 M11 26 L11 16 M18 26 L18 21 M25 26 L25 13" stroke="var(--color-ink)" strokeOpacity="0.35" strokeWidth="2.2" strokeLinecap="round" />
+    </svg>
+  )
+}
+
+function IdeasThatConvert() {
+  return (
+    <div
+      className="pointer-events-none absolute z-30 hidden -rotate-3 flex-col items-end gap-1.5 lg:flex"
+      style={{ right: '4%', top: '87%' }}
+    >
+      <span className="font-display rounded-lg bg-cream/90 px-3.5 py-1.5 text-base font-semibold whitespace-nowrap text-ink shadow-[0_4px_14px_rgba(22,17,15,0.15)]">
+        Ideas that convert
+      </span>
+      <BarChartDoodle />
+    </div>
   )
 }
 
@@ -112,7 +144,7 @@ export function Hero() {
     smoothScrollTo('#how-it-works')
   }
 
-  const waveBandHeight = '30vh'
+  const waveBandHeight = mobile ? '30vh' : '40vh'
 
   return (
     <section id="top" ref={sectionRef} className="relative" style={{ height: '150vh' }}>
@@ -135,10 +167,27 @@ export function Hero() {
           style={{ height: waveBandHeight, zIndex: 20 }}
         />
 
-        <Spark className="absolute top-[27%] left-[36%] z-30 hidden lg:block" />
-        <Spark className="absolute top-[58%] left-[62%] hidden -rotate-12 opacity-70 lg:block" style={{ zIndex: 5 }} />
+        {/* hand-drawn emphasis marks - desktop only, kept well clear of the header */}
+        <HandLine
+          className="absolute hidden xl:block"
+          style={{ top: '24%', left: '44%', zIndex: 30 }}
+          size={44}
+        />
+        <HandLine
+          className="absolute hidden -rotate-12 lg:block"
+          style={{ top: '27%', left: '65%', zIndex: 45 }}
+          color="var(--color-ink)"
+          size={38}
+        />
+        <HandLine
+          className="absolute hidden rotate-6 opacity-80 lg:block"
+          style={{ top: '66%', left: '67%', zIndex: 30 }}
+          size={36}
+        />
 
-        <div className="relative z-50 flex h-full w-full items-start px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-[16vh] lg:pl-[7vw]">
+        <IdeasThatConvert />
+
+        <div className="relative z-50 flex h-full w-full items-start px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-[17vh] lg:pl-[7vw]">
           <div className="w-full lg:max-w-[46vw]">
             <p
               ref={eyebrowRef}
