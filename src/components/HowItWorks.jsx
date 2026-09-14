@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -97,13 +98,11 @@ export function HowItWorks() {
       <div className="mx-auto max-w-[1360px]">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[300px_1fr] lg:gap-20">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <span className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase">
-              our approach
-            </span>
-            <h2 className="mt-4 font-display text-4xl font-extrabold tracking-tight text-ink sm:text-5xl">
+            <SectionLabel>our approach</SectionLabel>
+            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-ink sm:text-[2.1rem]">
               how it works
             </h2>
-            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/55">
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/50">
               Five steps, one continuous loop. Same process every time.
             </p>
           </div>
@@ -125,10 +124,8 @@ export function HowItWorks() {
                   <div className="flex flex-col gap-2 sm:flex-row sm:items-baseline sm:gap-7">
                     <span className="font-display text-sm text-ink/40 tabular-nums">{step.n}</span>
                     <div className="flex-1">
-                      <h3 className="font-display text-2xl font-bold text-ink sm:text-[1.85rem]">
-                        {step.title}
-                      </h3>
-                      <p className="mt-3 max-w-xl text-base leading-relaxed text-ink/60">{step.body}</p>
+                      <h3 className="font-display text-xl font-semibold text-ink sm:text-2xl">{step.title}</h3>
+                      <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink/55 sm:text-[15px]">{step.body}</p>
                     </div>
                   </div>
                 </div>

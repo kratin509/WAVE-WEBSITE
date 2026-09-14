@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../../lib/useReducedMotion'
+import { SectionLabel } from '../ui/SectionLabel'
 import { CATEGORIES, HOOKS, WINNER } from './experimentsData'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -25,9 +26,9 @@ function HookCard({ hook }) {
       style={{ width: hook.winner ? '15.5vw' : '13.5vw', maxWidth: hook.winner ? 230 : 192, minWidth: hook.winner ? 176 : 150 }}
     >
       {hook.winner && (
-        <span className="absolute top-0 left-1/2 z-10 -translate-x-1/2 rounded-md bg-wave-peach-light px-2.5 py-1 text-[10px] font-semibold tracking-wide whitespace-nowrap text-ink uppercase">
+        <SectionLabel className="absolute top-0 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap">
           Top performer
-        </span>
+        </SectionLabel>
       )}
       <div
         data-cursor="play"
@@ -189,7 +190,7 @@ function CountUp({ value, className }) {
 function StatBlock({ value, label, children }) {
   return (
     <div>
-      <CountUp value={value} className="font-display text-3xl font-extrabold text-ink tabular-nums" />
+      <CountUp value={value} className="font-display text-2xl font-semibold text-ink tabular-nums" />
       <p className="mt-0.5 text-sm text-ink/55">{label}</p>
       <div className="mt-3">{children}</div>
     </div>
@@ -240,16 +241,11 @@ export function Experiments() {
     >
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
-          <span
-            data-reveal
-            className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
-          >
-            experiments
-          </span>
+          <SectionLabel data-reveal>experiments</SectionLabel>
 
           <h2
             data-reveal
-            className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
+            className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-ink sm:text-[2.25rem] lg:text-[2.75rem]"
           >
             <span className="block">one product.</span>
             <span className="block text-wave-orange-deep">30 different ideas.</span>
@@ -322,11 +318,9 @@ export function Experiments() {
           <div className="flex flex-wrap items-center gap-x-10 gap-y-10 2xl:flex-nowrap 2xl:justify-between">
             <div className="flex shrink-0 items-center gap-6">
               <div className="max-w-[190px]">
-                <span className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase">
-                  winning idea
-                </span>
-                <h3 className="mt-3 font-display text-2xl font-extrabold text-ink">Hook {WINNER.letter}</h3>
-                <p className="mt-1 text-ink/60">&ldquo;{WINNER.caption}&rdquo;</p>
+                <SectionLabel>winning idea</SectionLabel>
+                <h3 className="mt-3 font-display text-xl font-semibold text-ink">Hook {WINNER.letter}</h3>
+                <p className="mt-1 text-sm text-ink/55">&ldquo;{WINNER.caption}&rdquo;</p>
               </div>
 
               <div className="h-24 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream">

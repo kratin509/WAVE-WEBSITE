@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { SectionLabel } from './ui/SectionLabel'
 import hookC from '../assets/experiments/hookC.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -38,8 +39,8 @@ const STAGES = [
 function ResultStat({ value, label }) {
   return (
     <div>
-      <p className="font-display text-2xl font-semibold text-ink">{value}</p>
-      <p className="mt-0.5 text-xs text-ink/50">{label}</p>
+      <p className="font-display text-3xl font-semibold text-ink sm:text-4xl">{value}</p>
+      <p className="mt-1 text-xs text-ink/60 sm:text-sm">{label}</p>
     </div>
   )
 }
@@ -74,22 +75,17 @@ export function CaseStudies() {
       className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1200px]">
-        <div className="mx-auto max-w-2xl text-center">
-          <span
-            data-reveal
-            className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
-          >
-            case studies
-          </span>
-
-          <h2
-            data-reveal
-            className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
-          >
-            every result has a story.
-          </h2>
-
-          <p data-reveal className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink/50 sm:text-[15px]">
+        <div
+          data-reveal
+          className="grid grid-cols-1 gap-4 border-b border-ink/10 pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
+        >
+          <div>
+            <SectionLabel>case studies</SectionLabel>
+            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-ink sm:text-[2.25rem] lg:text-[2.75rem]">
+              every result has a story.
+            </h2>
+          </div>
+          <p className="max-w-md text-sm leading-relaxed text-ink/50 sm:text-[15px] lg:text-right">
             Not a folder of clips and a view count — a growth story, stage by stage.
           </p>
         </div>
@@ -113,8 +109,8 @@ export function CaseStudies() {
                 <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6">
                   <span className="font-display text-xs text-ink/40 tabular-nums">{stage.n}</span>
                   <div className="flex-1">
-                    <h3 className="font-display text-base font-semibold text-ink sm:text-lg">{stage.label}</h3>
-                    <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/60">{stage.body}</p>
+                    <h3 className="font-display text-lg font-semibold text-ink sm:text-xl">{stage.label}</h3>
+                    <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/55">{stage.body}</p>
                     {stage.highlight && (
                       <p className="mt-2 text-[11px] font-medium tracking-wide text-wave-orange-deep uppercase">
                         why it matters — this is the part a production agency never gets to
@@ -124,22 +120,17 @@ export function CaseStudies() {
                 </div>
               </div>
             ))}
-
-            <div className="border-t border-ink/10 py-8 sm:py-9">
-              <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6">
-                <span className="font-display text-xs text-ink/40 tabular-nums">06</span>
-                <div className="flex-1">
-                  <h3 className="font-display text-base font-semibold text-ink sm:text-lg">the result</h3>
-                  <div className="mt-4 flex flex-wrap gap-x-10 gap-y-6">
-                    <ResultStat value="8.3M" label="views total" />
-                    <ResultStat value="47" label="variations tested" />
-                    <ResultStat value="20" label="creators onboarded" />
-                  </div>
-                  <p className="mt-4 text-xs text-ink/40">Illustrative example — figures shown are sample data.</p>
-                </div>
-              </div>
-            </div>
           </div>
+        </div>
+
+        <div data-reveal className="mt-14 rounded-2xl bg-wave-orange-deep px-6 py-10 sm:px-10 sm:py-12">
+          <p className="text-[11px] font-medium tracking-wide text-ink/60 uppercase">06 — the result</p>
+          <div className="mt-5 flex flex-wrap gap-x-12 gap-y-6">
+            <ResultStat value="8.3M" label="views total" />
+            <ResultStat value="47" label="variations tested" />
+            <ResultStat value="20" label="creators onboarded" />
+          </div>
+          <p className="mt-6 text-xs text-ink/55">Illustrative example — figures shown are sample data.</p>
         </div>
       </div>
     </section>

@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -58,12 +59,15 @@ function FAQItem({ q, a }) {
         onClick={() => setOpen((o) => !o)}
         className="flex w-full items-center justify-between gap-6 text-left"
       >
-        <span className="font-display text-base font-semibold text-ink sm:text-lg">{q}</span>
+        <span className="font-display text-base font-semibold text-ink">{q}</span>
         <PlusIcon open={open} />
       </button>
-      <div className="grid transition-[grid-template-rows] duration-300 ease-out" style={{ gridTemplateRows: open ? '1fr' : '0fr' }}>
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: open ? '1fr' : '0fr' }}
+      >
         <div className="overflow-hidden">
-          <p className="mt-3 max-w-2xl text-sm leading-relaxed text-ink/60 sm:text-[15px]">{a}</p>
+          <p className="mt-3 max-w-xl text-sm leading-relaxed text-ink/55">{a}</p>
         </div>
       </div>
     </div>
@@ -95,27 +99,23 @@ export function FAQ() {
 
   return (
     <section id="faq" ref={sectionRef} className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28">
-      <div className="mx-auto max-w-[860px]">
-        <div className="mx-auto max-w-2xl text-center">
-          <span
-            data-reveal
-            className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
-          >
-            faq
-          </span>
+      <div className="mx-auto max-w-[1200px]">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-20">
+          <div data-reveal className="lg:sticky lg:top-32 lg:self-start">
+            <SectionLabel>faq</SectionLabel>
+            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-ink sm:text-[2.1rem]">
+              questions, answered.
+            </h2>
+            <p className="mt-4 max-w-xs text-sm leading-relaxed text-ink/50">
+              The objections we hear most, answered plainly.
+            </p>
+          </div>
 
-          <h2
-            data-reveal
-            className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
-          >
-            questions, answered.
-          </h2>
-        </div>
-
-        <div data-reveal className="mt-12">
-          {QUESTIONS.map((item) => (
-            <FAQItem key={item.q} q={item.q} a={item.a} />
-          ))}
+          <div data-reveal>
+            {QUESTIONS.map((item) => (
+              <FAQItem key={item.q} q={item.q} a={item.a} />
+            ))}
+          </div>
         </div>
       </div>
     </section>

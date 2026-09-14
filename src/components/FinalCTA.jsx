@@ -2,14 +2,14 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
-import { useNavTheme } from '../lib/navTheme'
+import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 
 gsap.registerPlugin(ScrollTrigger)
 
 export function FinalCTA() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
-  const { setOnDark } = useNavTheme()
+  useSectionNavTheme(sectionRef, { dark: true, start: 'top 80%', end: 'bottom bottom', onLeave: false })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
@@ -30,20 +30,6 @@ export function FinalCTA() {
     return () => ctx.revert()
   }, [reduced])
 
-  useEffect(() => {
-    const el = sectionRef.current
-    if (!el) return
-    const st = ScrollTrigger.create({
-      trigger: el,
-      start: 'top 80%',
-      end: 'bottom bottom',
-      onEnter: () => setOnDark(true),
-      onEnterBack: () => setOnDark(true),
-      onLeaveBack: () => setOnDark(false),
-    })
-    return () => st.kill()
-  }, [setOnDark])
-
   return (
     <section
       id="start-a-wave"
@@ -53,7 +39,7 @@ export function FinalCTA() {
       <div className="mx-auto max-w-xl">
         <h2
           data-reveal
-          className="font-display text-2xl leading-[1.15] font-semibold text-cream sm:text-3xl lg:text-[2.5rem]"
+          className="font-display text-[1.75rem] leading-[1.15] font-semibold text-cream sm:text-[2.25rem] lg:text-[2.75rem]"
         >
           ready to start a <span className="text-wave-orange">wave?</span>
         </h2>

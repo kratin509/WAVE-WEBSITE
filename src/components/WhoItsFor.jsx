@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -37,16 +38,11 @@ export function WhoItsFor() {
       className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-2xl text-center">
-        <span
-          data-reveal
-          className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
-        >
-          who it&rsquo;s for
-        </span>
+        <SectionLabel data-reveal>who it&rsquo;s for</SectionLabel>
 
         <h2
           data-reveal
-          className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
+          className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-ink sm:text-[2.25rem] lg:text-[2.75rem]"
         >
           built for brands that already have something worth growing.
         </h2>

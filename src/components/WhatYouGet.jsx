@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { useSectionNavTheme } from '../lib/useSectionNavTheme'
+import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -10,7 +12,7 @@ function CheckIcon() {
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true" className="mt-0.5 shrink-0">
       <path
         d="M2.5 7.4 L5.3 10.2 L11.5 3.5"
-        stroke="var(--color-wave-orange-deep)"
+        stroke="var(--color-wave-orange)"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -41,6 +43,7 @@ const PHASES = [
 export function WhatYouGet() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
+  useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
@@ -65,37 +68,27 @@ export function WhatYouGet() {
     <section
       id="what-you-get"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1500px]">
-        <div className="mx-auto max-w-2xl text-center">
-          <span
-            data-reveal
-            className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
-          >
-            what you get
-          </span>
+        <div data-reveal className="max-w-xl">
+          <SectionLabel tone="dark">what you get</SectionLabel>
 
-          <h2
-            data-reveal
-            className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
-          >
-            you don&rsquo;t get a folder of UGC.
-            <br />
-            you get a <span className="text-wave-orange-deep">growth engine.</span>
+          <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-cream sm:text-[2.25rem] lg:text-[2.75rem]">
+            you don&rsquo;t get a folder of UGC. you get a <span className="text-wave-orange">growth engine.</span>
           </h2>
         </div>
 
         <div
           data-reveal
-          className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-ink/10 pt-10 sm:grid-cols-2 lg:grid-cols-4"
+          className="mt-14 grid grid-cols-1 gap-x-10 gap-y-10 border-t border-cream/10 pt-10 sm:grid-cols-2 lg:grid-cols-4"
         >
           {PHASES.map((phase) => (
             <div key={phase.label}>
-              <p className="text-[11px] font-semibold tracking-[0.15em] text-ink/35 uppercase">{phase.label}</p>
+              <p className="text-[11px] font-semibold tracking-[0.15em] text-cream/35 uppercase">{phase.label}</p>
               <ul className="mt-4 flex flex-col gap-3">
                 {phase.items.map((item) => (
-                  <li key={item} className="flex items-start gap-2 text-sm text-ink/70">
+                  <li key={item} className="flex items-start gap-2 text-sm text-cream/70">
                     <CheckIcon />
                     {item}
                   </li>

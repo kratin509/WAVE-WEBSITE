@@ -2,6 +2,8 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { useSectionNavTheme } from '../lib/useSectionNavTheme'
+import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
@@ -9,8 +11,8 @@ function ReachIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
       <circle cx="14" cy="14" r="3" fill="var(--color-wave-orange-deep)" />
-      <path d="M14 6.5 A7.5 7.5 0 0 1 21.5 14" stroke="var(--color-ink)" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
-      <path d="M14 2 A12 12 0 0 1 26 14" stroke="var(--color-ink)" strokeOpacity="0.18" strokeWidth="2" strokeLinecap="round" />
+      <path d="M14 6.5 A7.5 7.5 0 0 1 21.5 14" stroke="var(--color-cream)" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
+      <path d="M14 2 A12 12 0 0 1 26 14" stroke="var(--color-cream)" strokeOpacity="0.2" strokeWidth="2" strokeLinecap="round" />
     </svg>
   )
 }
@@ -18,8 +20,8 @@ function ReachIcon() {
 function VariantsIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <rect x="2" y="8" width="14" height="14" rx="3" stroke="var(--color-ink)" strokeOpacity="0.22" strokeWidth="2" />
-      <rect x="8" y="5" width="14" height="14" rx="3" stroke="var(--color-ink)" strokeOpacity="0.4" strokeWidth="2" />
+      <rect x="2" y="8" width="14" height="14" rx="3" stroke="var(--color-cream)" strokeOpacity="0.25" strokeWidth="2" />
+      <rect x="8" y="5" width="14" height="14" rx="3" stroke="var(--color-cream)" strokeOpacity="0.45" strokeWidth="2" />
       <rect x="14" y="2" width="12" height="12" rx="3" stroke="var(--color-wave-orange-deep)" strokeWidth="2" />
     </svg>
   )
@@ -30,8 +32,8 @@ function CacIcon() {
     <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
       <path
         d="M2.5 7 L10.5 14 L15.5 10 L25.5 19.5"
-        stroke="var(--color-ink)"
-        strokeOpacity="0.4"
+        stroke="var(--color-cream)"
+        strokeOpacity="0.45"
         strokeWidth="2"
         strokeLinecap="round"
         strokeLinejoin="round"
@@ -59,7 +61,7 @@ function SpreadDots() {
             width: s,
             height: s,
             background: i === sizes.length - 1 ? 'var(--color-wave-orange-deep)' : 'var(--color-wave-peach)',
-            opacity: 0.45 + i * 0.13,
+            opacity: i === sizes.length - 1 ? 1 : 0.55 + i * 0.08,
           }}
         />
       ))}
@@ -76,8 +78,8 @@ function VariantDots() {
           key={i}
           className="h-2 w-2 rounded-[2px]"
           style={{
-            background: winners.includes(i) ? 'var(--color-wave-orange-deep)' : 'var(--color-ink)',
-            opacity: winners.includes(i) ? 1 : 0.15,
+            background: winners.includes(i) ? 'var(--color-wave-orange-deep)' : 'var(--color-cream)',
+            opacity: winners.includes(i) ? 1 : 0.2,
           }}
         />
       ))}
@@ -96,6 +98,7 @@ function DescendingBars() {
           style={{
             height: h,
             background: i === heights.length - 1 ? 'var(--color-wave-orange-deep)' : 'var(--color-wave-peach)',
+            opacity: i === heights.length - 1 ? 1 : 0.7,
           }}
         />
       ))}
@@ -133,6 +136,7 @@ const CARDS = [
 export function WhyWave() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
+  useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
@@ -157,52 +161,49 @@ export function WhyWave() {
     <section
       id="why-wave"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
-          <span
-            data-reveal
-            className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase"
-          >
+          <SectionLabel data-reveal tone="dark">
             why wave
-          </span>
+          </SectionLabel>
 
           <h2
             data-reveal
-            className="mt-6 font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl"
+            className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-cream sm:text-[2.25rem] lg:text-[2.75rem]"
           >
-            <span className="block text-ink/30 line-through decoration-ink/25">the old way.</span>
-            <span className="block text-wave-orange-deep">meet the new wave.</span>
+            <span className="block text-cream/30 line-through decoration-cream/25">the old way.</span>
+            <span className="block text-wave-orange">meet the new wave.</span>
           </h2>
 
-          <p data-reveal className="mx-auto mt-5 max-w-md text-base leading-relaxed text-ink/60 sm:text-lg">
+          <p data-reveal className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-cream/50 sm:text-[15px]">
             A constant stream of creator content, tested at scale, that lowers what you pay to acquire a customer.
           </p>
         </div>
 
         <div
           data-reveal
-          className="mt-16 grid grid-cols-1 border-t border-ink/10 sm:grid-cols-3 sm:divide-x sm:divide-ink/10"
+          className="mt-16 grid grid-cols-1 border-t border-cream/10 sm:grid-cols-3 sm:divide-x sm:divide-cream/10"
         >
           {CARDS.map((card) => (
             <div
               key={card.title}
-              className="border-b border-ink/10 py-10 last:border-b-0 sm:border-b-0 sm:px-8 sm:py-12 sm:first:pl-0 sm:last:pr-0"
+              className="border-b border-cream/10 py-10 last:border-b-0 sm:border-b-0 sm:px-8 sm:py-12 sm:first:pl-0 sm:last:pr-0"
             >
               <card.icon />
 
-              <p className="mt-6 flex items-center gap-1.5 text-xs font-medium text-ink/35">
-                <span className="line-through decoration-ink/25">{card.old}</span>
+              <p className="mt-6 flex items-center gap-1.5 text-xs font-medium text-cream/35">
+                <span className="line-through decoration-cream/25">{card.old}</span>
                 <span aria-hidden="true">→</span>
               </p>
 
-              <h3 className="mt-2 font-display text-xl font-bold text-ink">{card.title}</h3>
-              <p className="mt-3 max-w-xs text-sm leading-relaxed text-ink/60">{card.body}</p>
+              <h3 className="mt-2 font-display text-lg font-semibold text-cream">{card.title}</h3>
+              <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/55">{card.body}</p>
 
               <div className="mt-7">
                 <card.visual />
-                <p className="mt-2 text-[11px] font-semibold tracking-wide text-wave-orange-deep uppercase">
+                <p className="mt-2 text-[11px] font-semibold tracking-wide text-wave-orange uppercase">
                   {card.metric}
                 </p>
               </div>
@@ -210,7 +211,7 @@ export function WhyWave() {
           ))}
         </div>
 
-        <p data-reveal className="mt-8 text-center text-xs text-ink/40">
+        <p data-reveal className="mt-8 text-center text-xs text-cream/30">
           Illustrative — real campaign numbers land here once results are in.
         </p>
       </div>

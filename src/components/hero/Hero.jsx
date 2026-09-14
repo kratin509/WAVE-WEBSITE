@@ -118,10 +118,10 @@ export function Hero() {
             UGC growth for consumer apps + D2C
           </p>
 
-          <h1 ref={headlineRef} className="font-display leading-[1.02] tracking-tight text-ink">
-            <span className="block text-[7vw] font-medium sm:text-3xl lg:text-[2.3vw]">Turn UGC into</span>
-            <span className="mt-1 block text-[11vw] font-extrabold sm:text-6xl lg:text-[4.7vw]">your next</span>
-            <span className="block text-[11vw] font-extrabold text-wave-orange-deep sm:text-6xl lg:text-[4.7vw]">
+          <h1 ref={headlineRef} className="font-display leading-[1.08] tracking-tight text-ink">
+            <span className="block text-xl font-medium sm:text-2xl lg:text-[1.65rem]">Turn UGC into</span>
+            <span className="mt-1 block text-4xl font-semibold sm:text-5xl lg:text-[3.25rem]">your next</span>
+            <span className="block text-4xl font-semibold text-wave-orange-deep sm:text-5xl lg:text-[3.25rem]">
               growth channel.
             </span>
           </h1>
