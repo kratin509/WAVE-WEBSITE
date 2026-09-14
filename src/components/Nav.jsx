@@ -80,7 +80,7 @@ export function Nav() {
             className={`hidden items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-semibold tracking-wide uppercase transition-colors duration-300 sm:flex ${
               onDark
                 ? 'bg-cream text-ink hover:bg-wave-yellow'
-                : 'bg-ink text-cream hover:bg-wave-red'
+                : 'bg-wave-red text-cream hover:bg-ink'
             }`}
           >
             Start a Wave
@@ -132,7 +132,7 @@ export function Nav() {
             <a
               href="#start-a-wave"
               onClick={() => setMenuOpen(false)}
-              className="mt-1 rounded-xl bg-ink px-4 py-3 text-center text-sm font-semibold tracking-wide text-cream uppercase"
+              className="mt-1 rounded-xl bg-wave-red px-4 py-3 text-center text-sm font-semibold tracking-wide text-cream uppercase"
             >
               Start a Wave →
             </a>

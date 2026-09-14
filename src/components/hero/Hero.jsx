@@ -15,13 +15,18 @@ gsap.registerPlugin(ScrollTrigger)
 
 const HEADLINE_LINES = ['TURN UGC INTO', 'YOUR NEXT', 'GROWTH CHANNEL.']
 
+// The wave sits as a contained band along the bottom at rest — most of the
+// hero stays calm white/cream so the dark headline actually has contrast —
+// then grows to fill the screen as the user scrolls "into" it.
+const WAVE_REST_VH = 38
+
 function StaticWaveBackdrop() {
   return (
     <div
       className="absolute inset-0"
       style={{
         background:
-          'radial-gradient(120% 90% at 30% 20%, #ffd873 0%, #ff9d42 34%, #f2401f 68%, #d4290f 100%)',
+          'radial-gradient(120% 90% at 30% 15%, #ffd873 0%, #ff9d42 34%, #f2401f 68%, #d4290f 100%)',
       }}
     />
   )
@@ -33,6 +38,7 @@ export function Hero() {
   const { setOnDark } = useNavTheme()
 
   const sectionRef = useRef(null)
+  const waveBandRef = useRef(null)
   const eyebrowRef = useRef(null)
   const headlineRef = useRef(null)
   const subRef = useRef(null)
@@ -79,7 +85,8 @@ export function Hero() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [reduced, mobile, motionState])
 
-  // Scroll-out: enter-the-wave transition + nav theme swap
+  // Scroll-out: the wave band rises to fill the screen, headline fades back,
+  // nav swaps to its light-on-dark variant once the wave takes over.
   useEffect(() => {
     if (!sectionRef.current) return
 
@@ -90,10 +97,14 @@ export function Hero() {
       scrub: 0.35,
       onUpdate: (self) => {
         motionState.progress = self.progress
-        setOnDark(self.progress > 0.22)
+        setOnDark(self.progress > 0.45)
 
         if (reduced) return
         const p = self.progress
+
+        if (waveBandRef.current) {
+          gsap.set(waveBandRef.current, { height: `${WAVE_REST_VH + p * (100 - WAVE_REST_VH)}vh` })
+        }
         gsap.set(headlineRef.current, {
           opacity: Math.max(0, 1 - p * 1.5),
           y: -p * 140,
@@ -115,8 +126,25 @@ export function Hero() {
 
   return (
     <section id="top" ref={sectionRef} className="relative" style={{ height: '190vh' }}>
-      <div className="sticky top-0 h-screen w-full overflow-hidden bg-wave-orange-deep">
-        <div className="absolute inset-0 z-0">
+      <div className="sticky top-0 h-screen w-full overflow-hidden bg-cream">
+        {/* subtle orange presence behind the headline — accent, not a wash */}
+        <div
+          className="pointer-events-none absolute inset-0 z-0"
+          style={{
+            background:
+              'radial-gradient(60% 45% at 50% 30%, rgba(255,157,66,0.16) 0%, rgba(255,157,66,0) 70%)',
+          }}
+        />
+
+        <div
+          ref={waveBandRef}
+          className="absolute inset-x-0 bottom-0 z-10 overflow-hidden"
+          style={{
+            height: `${WAVE_REST_VH}vh`,
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, black 12%)',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, black 12%)',
+          }}
+        >
           {reduced ? (
             <StaticWaveBackdrop />
           ) : (
@@ -126,40 +154,30 @@ export function Hero() {
           )}
         </div>
 
-        <div
-          className="pointer-events-none absolute inset-0 z-10"
-          style={{
-            background:
-              'linear-gradient(to bottom, rgba(255,180,90,0.12) 0%, rgba(255,180,90,0) 30%, rgba(255,180,90,0) 55%, rgba(212,41,15,0.55) 100%)',
-          }}
-        />
-
         <div className="absolute inset-0 z-20">
           <CardsFlow motionState={motionState} reduced={reduced} mobile={mobile} />
         </div>
 
         <div
-          className="pointer-events-none absolute inset-0 z-30"
-          style={{
-            background:
-              'radial-gradient(48% 42% at 50% 46%, rgba(180,30,15,0.42) 0%, rgba(180,30,15,0.2) 55%, rgba(180,30,15,0) 100%)',
-          }}
-        />
-
-        <div className="relative z-40 flex h-full w-full flex-col items-center justify-center px-6 text-center sm:px-8">
+          className="relative z-40 flex h-full w-full flex-col items-center justify-center px-6 text-center sm:px-8"
+          style={{ paddingBottom: `${WAVE_REST_VH}vh`, paddingTop: '7rem' }}
+        >
           <p
             ref={eyebrowRef}
-            className="mb-5 text-[11px] font-semibold tracking-[0.28em] text-cream/70 uppercase drop-shadow-[0_2px_12px_rgba(0,0,0,0.5)] sm:text-xs"
+            className="mb-5 rounded-full border border-ink/12 bg-white/70 px-4 py-1.5 text-[11px] font-semibold tracking-[0.22em] text-ink/70 uppercase backdrop-blur-sm sm:text-xs"
           >
             UGC-Led Growth for Consumer Apps + D2C Brands
           </p>
 
           <h1
             ref={headlineRef}
-            className="font-display text-[8vw] leading-[0.94] font-extrabold tracking-tight whitespace-nowrap text-cream drop-shadow-[0_6px_30px_rgba(0,0,0,0.55)] sm:text-[7.4vw] lg:text-[5.8vw]"
+            className="font-display text-[8vw] leading-[0.94] font-extrabold tracking-tight whitespace-nowrap text-ink sm:text-[7.4vw] lg:text-[5.8vw]"
           >
-            {HEADLINE_LINES.map((line) => (
-              <span key={line} className="block">
+            {HEADLINE_LINES.map((line, i) => (
+              <span
+                key={line}
+                className={`block ${i === HEADLINE_LINES.length - 1 ? 'text-wave-red' : ''}`}
+              >
                 {line}
               </span>
             ))}
@@ -167,7 +185,7 @@ export function Hero() {
 
           <p
             ref={subRef}
-            className="mt-7 max-w-xl text-sm leading-relaxed text-cream/85 drop-shadow-[0_2px_14px_rgba(0,0,0,0.55)] text-balance sm:text-base"
+            className="mt-7 max-w-xl text-sm leading-relaxed text-ink/65 text-balance sm:text-base"
           >
             We run 100+ UGC experiments across creators, hooks and formats to find
             what works — then scale the winners into viral campaigns that drive
@@ -178,7 +196,7 @@ export function Hero() {
             <a
               href="#start-a-wave"
               data-cursor="button"
-              className="rounded-full bg-cream px-7 py-3.5 text-sm font-semibold tracking-wide text-ink uppercase transition-colors hover:bg-wave-yellow"
+              className="rounded-full bg-wave-red px-7 py-3.5 text-sm font-semibold tracking-wide text-cream uppercase shadow-[0_10px_30px_rgba(242,64,31,0.35)] transition-colors hover:bg-ink"
             >
               Start a Wave →
             </a>
@@ -186,7 +204,7 @@ export function Hero() {
               href="#how-it-works"
               onClick={handleSeeHowItWorks}
               data-cursor="link"
-              className="text-sm font-semibold tracking-wide text-cream/80 uppercase underline decoration-cream/30 underline-offset-4 transition-colors hover:text-cream"
+              className="text-sm font-semibold tracking-wide text-ink/70 uppercase underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink"
             >
               See how it works ↓
             </a>

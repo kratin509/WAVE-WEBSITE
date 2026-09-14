@@ -5,10 +5,13 @@ import { LANES } from './cardsData'
 
 gsap.registerPlugin(MotionPathPlugin)
 
+// All three lanes stay low, at and around the wave band, so the entire
+// headline/copy zone above stays clear for legibility — cards read as
+// riding the wave rather than crossing the type.
 const PATHS = {
-  far: 'M -150 140 C 80 70, 260 190, 460 120 C 660 55, 830 170, 1150 95',
-  mid: 'M -150 90 C 120 160, 300 40, 520 130 C 730 210, 900 70, 1150 150',
-  near: 'M -150 560 C 140 480, 340 600, 540 520 C 750 445, 920 570, 1150 500',
+  far: 'M -150 430 C 90 395, 260 460, 460 415 C 660 370, 830 440, 1150 400',
+  mid: 'M -150 495 C 110 450, 300 520, 520 475 C 730 430, 900 500, 1150 455',
+  near: 'M -150 570 C 140 520, 340 595, 540 545 C 750 495, 920 580, 1150 530',
 }
 
 function Card({ lane, card, tiltEnabled }) {
@@ -37,13 +40,14 @@ function Card({ lane, card, tiltEnabled }) {
 }
 
 function StaticCardsFlow() {
-  // prefers-reduced-motion: no continuous motion, just a settled collage.
+  // prefers-reduced-motion: no continuous motion, just a settled collage —
+  // kept low, riding the wave band, so the headline above stays clear.
   const positions = [
-    { top: '14%', left: '8%', rotate: -6, scale: 0.85 },
-    { top: '54%', left: '4%', rotate: 4, scale: 0.72 },
-    { top: '8%', left: '68%', rotate: 5, scale: 0.8 },
-    { top: '58%', left: '74%', rotate: -4, scale: 0.9 },
-    { top: '4%', left: '40%', rotate: -2, scale: 0.8 },
+    { top: '66%', left: '1%', rotate: -5, scale: 0.85 },
+    { top: '81%', left: '0%', rotate: 4, scale: 0.68 },
+    { top: '62%', left: '23%', rotate: 3, scale: 0.78 },
+    { top: '69%', left: '56%', rotate: -3, scale: 0.95 },
+    { top: '83%', left: '80%', rotate: 5, scale: 0.82 },
   ]
   const cards = LANES.flatMap((lane) => lane.cards).slice(0, 5)
 
