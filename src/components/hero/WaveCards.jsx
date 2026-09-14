@@ -3,16 +3,12 @@ import gsap from 'gsap'
 import { useReducedMotion } from '../../lib/useReducedMotion'
 import { WAVE_CARDS, WAVE_CARDS_MOBILE } from './waveCardsData'
 
-function AnnotationArrow({ side }) {
+function AnnotationArrow({ side, vertical }) {
+  const transform = [side === 'right' && 'scaleX(-1)', vertical === 'below' && 'scaleY(-1)']
+    .filter(Boolean)
+    .join(' ')
   return (
-    <svg
-      width="46"
-      height="34"
-      viewBox="0 0 46 34"
-      fill="none"
-      className={side === 'right' ? 'scale-x-[-1]' : ''}
-      aria-hidden="true"
-    >
+    <svg width="46" height="34" viewBox="0 0 46 34" fill="none" style={{ transform }} aria-hidden="true">
       <path
         d="M4 4 C 4 20, 16 26, 38 27"
         stroke="var(--color-ink)"
@@ -27,21 +23,26 @@ function AnnotationArrow({ side }) {
 }
 
 function Annotation({ card }) {
-  const isLeft = card.annotation.side === 'left'
+  const { side, vertical = 'above' } = card.annotation
+  const isLeft = side === 'left'
+  const isBelow = vertical === 'below'
   return (
     <div
-      className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
+      className="pointer-events-none absolute hidden md:block"
       style={{
         left: `${card.left + (isLeft ? -15 : 9)}%`,
-        top: `${card.top - 12}%`,
+        top: `${card.top + (isBelow ? 17 : -12)}%`,
         zIndex: card.z + 5,
+        transform: isBelow ? 'none' : 'translateY(-100%)',
       }}
     >
-      <div className={`flex flex-col items-center ${isLeft ? '' : 'items-end'}`}>
+      <div
+        className={`flex flex-col items-center ${isLeft ? '' : 'items-end'} ${isBelow ? 'flex-col-reverse' : ''}`}
+      >
         <span className="font-display -rotate-2 rounded-md bg-cream px-2.5 py-1 text-[11px] font-medium whitespace-nowrap text-ink/70 shadow-[0_2px_10px_rgba(22,17,15,0.08)]">
           {card.annotation.text}
         </span>
-        <AnnotationArrow side={card.annotation.side} />
+        <AnnotationArrow side={side} vertical={vertical} />
       </div>
     </div>
   )

@@ -3,48 +3,32 @@ import card3 from '../../assets/cards/card3_saanvi.png'
 import card4 from '../../assets/cards/card4_tanvi.png'
 import card5 from '../../assets/cards/card5_kiara.png'
 
-// Right-hand cluster, occupying roughly the right half of the hero.
-// depth: 'back' cards render behind the front wave layers; everything
-// else (including the hero card) renders in front of all wave layers -
-// that's the "wave passes behind some cards, in front of others" effect.
+// Right-hand cluster, roughly aligned in one row like the reference (small
+// left, large hero center, small right) - kept well clear of the ~53%-wide
+// copy column so nothing (cards or their annotations) ever crosses it.
 export const WAVE_CARDS = [
   {
     img: card1,
     alt: 'UGC creator - "best thing I\'ve bought this year"',
-    left: 64,
-    top: 71,
+    left: 55,
+    top: 47,
     rotate: -6,
-    scale: 0.58,
-    blur: 0.5,
-    opacity: 0.82,
-    depth: 'back',
-    z: 14,
-    bob: 5.2,
-    annotation: { text: 'Authentic content', side: 'left' },
-  },
-  {
-    img: card4,
-    alt: 'UGC creator - "this is your sign"',
-    left: 60,
-    top: 50,
-    rotate: -10,
-    scale: 0.78,
+    scale: 0.68,
     blur: 0,
-    opacity: 0.96,
-    depth: 'front',
-    z: 26,
-    bob: 4.4,
+    opacity: 0.92,
+    z: 22,
+    bob: 5.2,
+    annotation: { text: 'Authentic content', side: 'right', vertical: 'below' },
   },
   {
     img: card3,
     alt: 'UGC creator - "finally found a matcha that hits", the winning hook',
-    left: 68,
-    top: 30,
+    left: 72,
+    top: 28,
     rotate: -5,
     scale: 1.15,
     blur: 0,
     opacity: 1,
-    depth: 'front',
     z: 40,
     bob: 5,
     hero: true,
@@ -54,12 +38,11 @@ export const WAVE_CARDS = [
     img: card5,
     alt: 'UGC creator - "holy grail" skincare',
     left: 90,
-    top: 20,
+    top: 22,
     rotate: 4,
-    scale: 0.56,
+    scale: 0.58,
     blur: 0,
-    opacity: 0.88,
-    depth: 'front',
+    opacity: 0.9,
     z: 24,
     bob: 6,
     annotation: { text: 'Actual results', side: 'right' },
@@ -78,7 +61,6 @@ export const WAVE_CARDS_MOBILE = [
     scale: 0.6,
     blur: 0,
     opacity: 0.95,
-    depth: 'front',
     z: 24,
     bob: 4.5,
   },
@@ -91,7 +73,6 @@ export const WAVE_CARDS_MOBILE = [
     scale: 0.68,
     blur: 0,
     opacity: 1,
-    depth: 'front',
     z: 26,
     bob: 5,
   },
