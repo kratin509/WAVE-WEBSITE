@@ -25,15 +25,20 @@ function buildTilePath({ wavelength, amplitude, baseline, bandHeight, seed = 0, 
 }
 
 // back → front. baseline rises (lower number = higher up = further back),
-// amplitude + saturation grow toward the front layer, matching the brief's
-// "lighter peach at the top, stronger orange near the bottom" direction.
-// Wavelengths are close to a full viewport width, so each layer reads as a
-// couple of big, dramatically uneven swells rather than many small evenly
-// spaced repeats - large peaks, deep valleys, no two crests alike.
+// amplitude grows toward the front layer, matching the brief's "lighter
+// tone at the top, deeper tone near the bottom" direction. Wavelengths are
+// close to a full viewport width, so each layer reads as a couple of big,
+// dramatically uneven swells rather than many small evenly spaced repeats
+// - large peaks, deep valleys, no two crests alike.
+//
+// Colors here are deliberately muted/desaturated hex values dedicated to
+// the wave band, not the vivid --color-wave-* brand tokens used elsewhere
+// (CTA button, headline accent) - keeps the hero calm while those accents
+// stay punchy.
 const LAYER_DEFS = [
   {
     id: 'l1',
-    color: 'var(--color-wave-peach-light)',
+    color: '#f1ddc9',
     wavelength: 1500,
     amplitude: 50,
     baseline: 70,
@@ -46,7 +51,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l2',
-    color: 'var(--color-wave-peach)',
+    color: '#e6bd94',
     wavelength: 1150,
     amplitude: 72,
     baseline: 130,
@@ -59,7 +64,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l3',
-    color: 'var(--color-wave-orange)',
+    color: '#d99a6c',
     wavelength: 900,
     amplitude: 95,
     baseline: 210,
@@ -72,7 +77,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l4',
-    color: 'var(--color-wave-orange-deep)',
+    color: '#c97a4e',
     wavelength: 700,
     amplitude: 118,
     baseline: 320,

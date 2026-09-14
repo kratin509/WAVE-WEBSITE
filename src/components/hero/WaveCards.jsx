@@ -1,5 +1,4 @@
-import { useEffect, useRef } from 'react'
-import gsap from 'gsap'
+import { useRef } from 'react'
 import { useReducedMotion } from '../../lib/useReducedMotion'
 import { WAVE_CARDS, WAVE_CARDS_MOBILE } from './waveCardsData'
 
@@ -38,7 +37,7 @@ function Annotation({ card }) {
   const offsetY = dy ?? (isBelow ? 20 : -14)
   return (
     <div
-      className="pointer-events-none absolute z-40 hidden md:block"
+      className="pointer-events-none absolute z-40 hidden xl:block"
       style={{
         left: `${card.left + offsetX}%`,
         top: `${card.top + offsetY}%`,
@@ -57,30 +56,10 @@ function Annotation({ card }) {
   )
 }
 
-export function WaveCards({ scrollProgressRef, mobile }) {
+export function WaveCards({ mobile }) {
   const reduced = useReducedMotion()
   const cardRefs = useRef([])
-  const rafRef = useRef(null)
   const cards = mobile ? WAVE_CARDS_MOBILE : WAVE_CARDS
-
-  useEffect(() => {
-    if (reduced) return
-    const quicks = cardRefs.current.map((el) =>
-      el ? gsap.quickTo(el, 'y', { duration: 0.5, ease: 'power2.out' }) : null,
-    )
-
-    const tick = () => {
-      const p = scrollProgressRef.current ?? 0
-      quicks.forEach((q, i) => {
-        if (!q) return
-        // cards further along (higher index) travel a little further forward
-        q(-p * (70 + i * 18))
-      })
-      rafRef.current = requestAnimationFrame(tick)
-    }
-    rafRef.current = requestAnimationFrame(tick)
-    return () => cancelAnimationFrame(rafRef.current)
-  }, [reduced, scrollProgressRef, cards])
 
   return (
     <>
