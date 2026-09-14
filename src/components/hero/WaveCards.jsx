@@ -3,12 +3,55 @@ import gsap from 'gsap'
 import { useReducedMotion } from '../../lib/useReducedMotion'
 import { WAVE_CARDS, WAVE_CARDS_MOBILE } from './waveCardsData'
 
+function AnnotationArrow({ side }) {
+  return (
+    <svg
+      width="46"
+      height="34"
+      viewBox="0 0 46 34"
+      fill="none"
+      className={side === 'right' ? 'scale-x-[-1]' : ''}
+      aria-hidden="true"
+    >
+      <path
+        d="M4 4 C 4 20, 16 26, 38 27"
+        stroke="var(--color-ink)"
+        strokeOpacity="0.45"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+      <path d="M31 22 L39 28 L30 31" stroke="var(--color-ink)" strokeOpacity="0.45" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" fill="none" />
+    </svg>
+  )
+}
+
+function Annotation({ card }) {
+  const isLeft = card.annotation.side === 'left'
+  return (
+    <div
+      className="pointer-events-none absolute hidden -translate-y-1/2 md:block"
+      style={{
+        left: `${card.left + (isLeft ? -15 : 9)}%`,
+        top: `${card.top - 12}%`,
+        zIndex: card.z + 5,
+      }}
+    >
+      <div className={`flex flex-col items-center ${isLeft ? '' : 'items-end'}`}>
+        <span className="font-display -rotate-2 rounded-md bg-cream px-2.5 py-1 text-[11px] font-medium whitespace-nowrap text-ink/70 shadow-[0_2px_10px_rgba(22,17,15,0.08)]">
+          {card.annotation.text}
+        </span>
+        <AnnotationArrow side={card.annotation.side} />
+      </div>
+    </div>
+  )
+}
+
 export function WaveCards({ scrollProgressRef, mobile }) {
   const reduced = useReducedMotion()
   const cardRefs = useRef([])
   const rafRef = useRef(null)
   const cards = mobile ? WAVE_CARDS_MOBILE : WAVE_CARDS
-  const heroCard = cards.find((c) => c.hero)
 
   useEffect(() => {
     if (reduced) return
@@ -27,10 +70,10 @@ export function WaveCards({ scrollProgressRef, mobile }) {
     }
     rafRef.current = requestAnimationFrame(tick)
     return () => cancelAnimationFrame(rafRef.current)
-  }, [reduced, scrollProgressRef])
+  }, [reduced, scrollProgressRef, cards])
 
   return (
-    <div className="absolute inset-0">
+    <>
       {cards.map((card, i) => (
         <div
           key={i}
@@ -69,15 +112,7 @@ export function WaveCards({ scrollProgressRef, mobile }) {
         </div>
       ))}
 
-      {heroCard && !mobile && (
-        <p
-          className="pointer-events-none absolute z-50 -translate-x-1/2 rotate-[-2deg] font-display text-xs font-medium text-ink/55 italic whitespace-nowrap"
-          style={{ left: '63%', top: '10%' }}
-          aria-hidden="true"
-        >
-          the internet decides.
-        </p>
-      )}
-    </div>
+      {!mobile && cards.filter((c) => c.annotation).map((card, i) => <Annotation key={i} card={card} />)}
+    </>
   )
 }
