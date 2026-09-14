@@ -6,7 +6,6 @@ import { CATEGORIES, HOOKS, WINNER } from './experimentsData'
 
 gsap.registerPlugin(ScrollTrigger)
 
-const BREADCRUMB = ['Ideas', 'Tests', 'Data', 'Growth']
 const AVATAR_TONES = ['bg-wave-orange-deep', 'bg-wave-orange', 'bg-ink-soft', 'bg-wave-peach']
 
 function PlayIcon({ className }) {
@@ -14,22 +13,6 @@ function PlayIcon({ className }) {
     <svg width="14" height="14" viewBox="0 0 14 14" fill="none" className={className} aria-hidden="true">
       <circle cx="7" cy="7" r="6.25" stroke="currentColor" strokeOpacity="0.7" />
       <path d="M5.7 4.6 L9.6 7 L5.7 9.4 Z" fill="currentColor" />
-    </svg>
-  )
-}
-
-function CurvedArrow() {
-  return (
-    <svg width="60" height="40" viewBox="0 0 60 40" fill="none" aria-hidden="true">
-      <path
-        d="M54 4 C 40 4, 18 8, 8 30"
-        stroke="var(--color-ink)"
-        strokeOpacity="0.5"
-        strokeWidth="2"
-        strokeLinecap="round"
-        fill="none"
-      />
-      <path d="M17 24 L7 31 L11 19" stroke="var(--color-ink)" strokeOpacity="0.5" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" fill="none" />
     </svg>
   )
 }
@@ -42,7 +25,7 @@ function HookCard({ hook }) {
       style={{ width: hook.winner ? '15.5vw' : '13.5vw', maxWidth: hook.winner ? 230 : 192, minWidth: hook.winner ? 176 : 150 }}
     >
       {hook.winner && (
-        <span className="absolute top-0 left-1/2 z-10 -translate-x-1/2 rounded-full border border-wave-orange-deep/30 bg-cream px-3 py-1 text-[10px] font-semibold whitespace-nowrap text-wave-orange-deep uppercase shadow-sm">
+        <span className="absolute top-0 left-1/2 z-10 -translate-x-1/2 rounded-md bg-wave-peach-light px-2.5 py-1 text-[10px] font-semibold tracking-wide whitespace-nowrap text-ink uppercase">
           Top performer
         </span>
       )}
@@ -168,28 +151,6 @@ function StatBlock({ value, label, children }) {
   )
 }
 
-function DecorativeWave() {
-  return (
-    <svg
-      className="pointer-events-none absolute right-0 bottom-0 hidden h-auto w-[38vw] max-w-[560px] opacity-90 md:block"
-      viewBox="0 0 560 360"
-      fill="none"
-      aria-hidden="true"
-    >
-      <path
-        d="M560 360 L560 160 C 480 190, 430 90, 350 120 C 270 150, 240 240, 150 220 C 90 208, 60 250, 0 260 L0 360 Z"
-        fill="url(#expWaveGrad)"
-      />
-      <defs>
-        <linearGradient id="expWaveGrad" x1="0" y1="360" x2="560" y2="60" gradientUnits="userSpaceOnUse">
-          <stop offset="0%" stopColor="var(--color-wave-orange-deep)" />
-          <stop offset="100%" stopColor="var(--color-wave-orange)" />
-        </linearGradient>
-      </defs>
-    </svg>
-  )
-}
-
 export function Experiments() {
   const reduced = useReducedMotion()
   const [active, setActive] = useState('All')
@@ -230,59 +191,44 @@ export function Experiments() {
     <section
       id="experiments"
       ref={sectionRef}
-      className="relative overflow-hidden bg-cream px-6 py-24 sm:px-10 lg:px-[7vw] lg:py-32"
+      className="relative bg-cream px-6 py-24 sm:px-10 lg:px-[7vw] lg:py-32"
     >
       <div className="relative mx-auto max-w-[1500px]">
-        <div data-reveal className="flex flex-wrap items-start justify-between gap-6">
-          <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-wave-orange-deep" />
-            Experimentation
-          </p>
-          <div className="hidden items-center gap-2 text-[11px] font-semibold tracking-[0.15em] text-ink/35 uppercase lg:flex">
-            {BREADCRUMB.map((w, i) => (
-              <span key={w} className="flex items-center gap-2">
-                {i > 0 && <span aria-hidden="true">→</span>}
-                {w}
-              </span>
-            ))}
-          </div>
-        </div>
+        <span
+          data-reveal
+          className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase"
+        >
+          experiments
+        </span>
 
-        <div className="relative mt-6">
+        <div className="mt-8">
           <h2
             data-reveal
             className="font-display text-[12vw] leading-[0.98] font-extrabold tracking-tight text-ink sm:text-6xl lg:text-[4.2vw]"
           >
-            <span className="block">One product.</span>
+            <span className="block">one product.</span>
             <span className="block text-wave-orange-deep">30 different ideas.</span>
           </h2>
 
           <p data-reveal className="mt-5 max-w-xl text-base leading-relaxed text-ink/60 sm:text-lg">
-            We test multiple hooks, angles and formats with real creators to find what actually works. Then we
-            scale it.
+            We test multiple hooks, angles and formats with real creators to find what actually works.
           </p>
-          <p data-reveal className="mt-2 text-xs text-ink/35 italic">
-            Illustrative example. Figures shown are sample data.
+          <p data-reveal className="mt-2 text-xs text-ink/40">
+            Illustrative example — figures shown are sample data.
           </p>
-
-          <div
-            data-reveal
-            className="pointer-events-none absolute top-0 right-0 hidden -rotate-2 flex-col items-end gap-1 xl:flex"
-          >
-            <span className="font-display text-lg font-semibold text-ink">30+ ideas tested</span>
-            <CurvedArrow />
-          </div>
         </div>
 
-        <div data-reveal className="mt-10 flex flex-wrap gap-2">
+        <div data-reveal className="mt-12 flex flex-wrap gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
               type="button"
               data-cursor="button"
               onClick={() => setActive(cat)}
-              className={`rounded-full px-4 py-2 text-sm font-medium tracking-wide transition-colors ${
-                active === cat ? 'bg-ink text-cream' : 'bg-white/70 text-ink/55 hover:text-ink'
+              className={`rounded-full border px-4 py-2 text-sm font-medium tracking-wide transition-colors ${
+                active === cat
+                  ? 'border-ink bg-ink text-cream'
+                  : 'border-ink/12 text-ink/55 hover:border-ink/30 hover:text-ink'
               }`}
             >
               {cat}
@@ -290,7 +236,7 @@ export function Experiments() {
           ))}
         </div>
 
-        <div data-reveal className="mt-10 flex gap-5 lg:gap-8">
+        <div data-reveal className="mt-12 flex gap-5 lg:gap-8">
           <div className="hidden shrink-0 flex-col items-center md:flex" style={{ width: 24 }}>
             <span className="font-display text-xs text-ink/40">01</span>
             <span className="my-2 w-px flex-1 bg-ink/10" />
@@ -327,18 +273,14 @@ export function Experiments() {
           </div>
         </div>
 
-        <div
-          data-reveal
-          className="mt-14 rounded-[2rem] border border-ink/10 bg-white/60 p-7 backdrop-blur-sm sm:p-9 lg:p-10"
-        >
+        <div data-reveal className="mt-20 border-t border-ink/10 pt-10 sm:pt-12">
           <div className="flex flex-wrap items-center gap-x-10 gap-y-8">
             <div className="max-w-[220px]">
-              <p className="flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase">
-                <span className="inline-block h-1.5 w-1.5 rounded-full bg-wave-orange-deep" />
-                Winning idea
-              </p>
-              <h3 className="mt-2 font-display text-2xl font-extrabold text-ink">Hook {WINNER.letter}</h3>
-              <p className="mt-1 text-ink/60 italic">&ldquo;{WINNER.caption}&rdquo;</p>
+              <span className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase">
+                winning idea
+              </span>
+              <h3 className="mt-3 font-display text-2xl font-extrabold text-ink">Hook {WINNER.letter}</h3>
+              <p className="mt-1 text-ink/60">&ldquo;{WINNER.caption}&rdquo;</p>
             </div>
 
             <div className="h-24 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream">
@@ -383,14 +325,12 @@ export function Experiments() {
 
         <div
           data-reveal
-          className="mt-16 flex flex-col gap-2 border-t border-ink/10 pt-6 text-[11px] font-medium tracking-[0.15em] text-ink/40 uppercase sm:flex-row sm:items-center sm:justify-between"
+          className="mt-20 flex flex-col gap-2 border-t border-ink/10 pt-6 text-[11px] font-medium tracking-[0.15em] text-ink/40 uppercase sm:flex-row sm:items-center sm:justify-between"
         >
           <span>Real tests. Real creators. Real growth.</span>
           <span>The compound effect of good creative.</span>
         </div>
       </div>
-
-      <DecorativeWave />
     </section>
   )
 }

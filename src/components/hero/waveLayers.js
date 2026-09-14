@@ -31,14 +31,14 @@ function buildTilePath({ wavelength, amplitude, baseline, bandHeight, seed = 0, 
 // dramatically uneven swells rather than many small evenly spaced repeats
 // - large peaks, deep valleys, no two crests alike.
 //
-// Colors here are deliberately muted/desaturated hex values dedicated to
-// the wave band, not the vivid --color-wave-* brand tokens used elsewhere
-// (CTA button, headline accent) - keeps the hero calm while those accents
-// stay punchy.
+// Colors here are dedicated hex values for the wave band (not the vivid
+// --color-wave-* brand tokens used elsewhere, e.g. the CTA button and
+// headline accent) - just a touch less saturated than full brand color so
+// the band stays lively without competing with the accent color.
 const LAYER_DEFS = [
   {
     id: 'l1',
-    color: '#f1ddc9',
+    color: '#fce1c7',
     wavelength: 1500,
     amplitude: 50,
     baseline: 70,
@@ -51,7 +51,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l2',
-    color: '#e6bd94',
+    color: '#fab572',
     wavelength: 1150,
     amplitude: 72,
     baseline: 130,
@@ -64,7 +64,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l3',
-    color: '#d99a6c',
+    color: '#f7803e',
     wavelength: 900,
     amplitude: 95,
     baseline: 210,
@@ -77,7 +77,7 @@ const LAYER_DEFS = [
   },
   {
     id: 'l4',
-    color: '#c97a4e',
+    color: '#f45428',
     wavelength: 700,
     amplitude: 118,
     baseline: 320,
