@@ -40,8 +40,11 @@ const STAGES = [
 function ResultStat({ value, label }) {
   return (
     <div className="text-center">
-      <CountUp value={value} className="font-display text-5xl font-semibold text-cream tabular-nums sm:text-6xl" />
-      <p className="mt-1.5 text-xs text-cream/70 sm:text-sm">{label}</p>
+      <CountUp
+        value={value}
+        className="font-display text-4xl font-semibold text-cream tabular-nums sm:text-6xl lg:text-7xl"
+      />
+      <p className="mt-2 text-xs text-cream/70 sm:text-sm">{label}</p>
     </div>
   )
 }
@@ -103,8 +106,10 @@ export function CaseStudies() {
             {STAGES.map((stage) => (
               <div
                 key={stage.n}
-                className={`group border-t border-l-2 border-ink/10 py-8 pl-5 transition-colors duration-300 first:border-t-0 first:pt-0 sm:py-9 sm:pl-6 ${
-                  stage.highlight ? 'border-l-wave-orange-deep' : 'border-l-transparent hover:border-l-wave-orange-deep'
+                className={`group border-t border-l-2 border-ink/10 py-8 pr-5 pl-5 transition-colors duration-300 first:border-t-0 first:pt-0 sm:py-9 sm:pr-6 sm:pl-6 ${
+                  stage.highlight
+                    ? 'border-l-wave-orange-deep bg-wave-peach-light/35'
+                    : 'border-l-transparent bg-wave-peach-light/0 hover:border-l-wave-orange-deep hover:bg-wave-peach-light/35'
                 }`}
               >
                 <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6">
@@ -132,14 +137,14 @@ export function CaseStudies() {
 
         {/* Deliberately not --color-wave-orange-deep - full-bleed at this size it
             needs to be muted, not the vivid brand accent used for CTAs. */}
-        <div data-reveal className="mt-14 rounded-2xl bg-[#d35e41] px-6 py-12 text-center sm:px-10 sm:py-16">
+        <div data-reveal className="mx-auto mt-14 max-w-2xl rounded-2xl bg-[#d35e41] px-6 py-8 text-center sm:px-10 sm:py-10">
           <p className="text-[11px] font-medium tracking-wide text-cream/70 uppercase">06 — the result</p>
-          <div className="mt-7 flex flex-wrap justify-center gap-x-16 gap-y-8">
+          <div className="mt-6 grid grid-cols-3 gap-2">
             <ResultStat value="8.3M" label="views total" />
             <ResultStat value="47" label="variations tested" />
             <ResultStat value="20" label="creators onboarded" />
           </div>
-          <p className="mt-8 text-xs text-cream/60">Illustrative example — figures shown are sample data.</p>
+          <p className="mt-6 text-xs text-cream/60">Illustrative example — figures shown are sample data.</p>
         </div>
       </div>
     </section>
