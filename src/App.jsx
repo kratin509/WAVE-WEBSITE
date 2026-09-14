@@ -3,21 +3,7 @@ import { SmoothScroll } from './lib/SmoothScroll'
 import { Cursor } from './components/Cursor'
 import { Nav } from './components/Nav'
 import { Hero } from './components/hero/Hero'
-
-// Scroll-target stub only - the real "How A Wave Starts" section is built next,
-// once the hero's visual language is approved.
-function NextSectionStub() {
-  return (
-    <section
-      id="how-it-works"
-      className="relative flex min-h-[60vh] items-center justify-center bg-cream px-6 text-center"
-    >
-      <p className="font-display text-2xl font-semibold tracking-tight text-ink/30 sm:text-3xl">
-        How a wave starts. Coming next.
-      </p>
-    </section>
-  )
-}
+import { HowItWorks } from './components/HowItWorks'
 
 function App() {
   return (
@@ -27,7 +13,7 @@ function App() {
         <Nav />
         <main>
           <Hero />
-          <NextSectionStub />
+          <HowItWorks />
         </main>
       </SmoothScroll>
     </NavThemeProvider>
