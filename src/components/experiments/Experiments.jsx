@@ -141,10 +141,55 @@ function Sparkline() {
   )
 }
 
+function CountUp({ value, className }) {
+  const reduced = useReducedMotion()
+  const ref = useRef(null)
+
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+
+    const match = value.match(/^([\d.]+)(.*)$/)
+    if (!match || reduced) {
+      el.textContent = value
+      return
+    }
+
+    const [, numStr, suffix] = match
+    const target = parseFloat(numStr)
+    const decimals = (numStr.split('.')[1] || '').length
+    const proxy = { v: 0 }
+    el.textContent = `0${suffix}`
+
+    const st = ScrollTrigger.create({
+      trigger: el,
+      start: 'top 85%',
+      once: true,
+      onEnter: () => {
+        gsap.to(proxy, {
+          v: target,
+          duration: 1.6,
+          ease: 'power2.out',
+          onUpdate: () => {
+            el.textContent = `${proxy.v.toFixed(decimals)}${suffix}`
+          },
+        })
+      },
+    })
+    return () => st.kill()
+  }, [value, reduced])
+
+  return (
+    <p ref={ref} className={className}>
+      {value}
+    </p>
+  )
+}
+
 function StatBlock({ value, label, children }) {
   return (
     <div>
-      <p className="font-display text-3xl font-extrabold text-ink">{value}</p>
+      <CountUp value={value} className="font-display text-3xl font-extrabold text-ink tabular-nums" />
       <p className="mt-0.5 text-sm text-ink/55">{label}</p>
       <div className="mt-3">{children}</div>
     </div>
@@ -194,23 +239,23 @@ export function Experiments() {
       className="relative bg-cream px-6 py-24 sm:px-10 lg:px-[7vw] lg:py-32"
     >
       <div className="relative mx-auto max-w-[1500px]">
-        <span
-          data-reveal
-          className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase"
-        >
-          experiments
-        </span>
+        <div className="mx-auto max-w-2xl text-center">
+          <span
+            data-reveal
+            className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase"
+          >
+            experiments
+          </span>
 
-        <div className="mt-8">
           <h2
             data-reveal
-            className="font-display text-[12vw] leading-[0.98] font-extrabold tracking-tight text-ink sm:text-6xl lg:text-[4.2vw]"
+            className="mt-6 font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl"
           >
             <span className="block">one product.</span>
             <span className="block text-wave-orange-deep">30 different ideas.</span>
           </h2>
 
-          <p data-reveal className="mt-5 max-w-xl text-base leading-relaxed text-ink/60 sm:text-lg">
+          <p data-reveal className="mx-auto mt-5 max-w-md text-base leading-relaxed text-ink/60 sm:text-lg">
             We test multiple hooks, angles and formats with real creators to find what actually works.
           </p>
           <p data-reveal className="mt-2 text-xs text-ink/40">
@@ -218,7 +263,7 @@ export function Experiments() {
           </p>
         </div>
 
-        <div data-reveal className="mt-12 flex flex-wrap gap-2">
+        <div data-reveal className="mt-10 flex flex-wrap justify-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -274,43 +319,49 @@ export function Experiments() {
         </div>
 
         <div data-reveal className="mt-20 border-t border-ink/10 pt-10 sm:pt-12">
-          <div className="flex flex-wrap items-center gap-x-10 gap-y-8">
-            <div className="max-w-[220px]">
-              <span className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase">
-                winning idea
-              </span>
-              <h3 className="mt-3 font-display text-2xl font-extrabold text-ink">Hook {WINNER.letter}</h3>
-              <p className="mt-1 text-ink/60">&ldquo;{WINNER.caption}&rdquo;</p>
+          <div className="flex flex-wrap items-center gap-x-10 gap-y-10 2xl:flex-nowrap 2xl:justify-between">
+            <div className="flex shrink-0 items-center gap-6">
+              <div className="max-w-[190px]">
+                <span className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase">
+                  winning idea
+                </span>
+                <h3 className="mt-3 font-display text-2xl font-extrabold text-ink">Hook {WINNER.letter}</h3>
+                <p className="mt-1 text-ink/60">&ldquo;{WINNER.caption}&rdquo;</p>
+              </div>
+
+              <div className="h-24 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream">
+                {WINNER.img ? (
+                  <img src={WINNER.img} alt={WINNER.caption} className="h-full w-full object-cover" />
+                ) : (
+                  <div
+                    className="h-full w-full"
+                    style={{ background: 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))' }}
+                  />
+                )}
+              </div>
             </div>
 
-            <div className="h-24 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream">
-              {WINNER.img ? (
-                <img src={WINNER.img} alt={WINNER.caption} className="h-full w-full object-cover" />
-              ) : (
-                <div
-                  className="h-full w-full"
-                  style={{ background: 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))' }}
-                />
-              )}
-            </div>
-
-            <span className="hidden font-display text-2xl text-ink/25 sm:block" aria-hidden="true">
-              →
-            </span>
+            <span className="hidden h-16 w-px shrink-0 bg-ink/10 2xl:block" aria-hidden="true" />
 
             <StatBlock value="20" label="creators onboarded">
               <AvatarStack />
             </StatBlock>
 
+            <span className="hidden h-16 w-px shrink-0 bg-ink/10 2xl:block" aria-hidden="true" />
+
             <StatBlock value="47" label="variations tested">
               <ThumbStack images={HOOKS.filter((h) => !h.winner).slice(0, 4).map((h) => h.img)} />
             </StatBlock>
+
+            <span className="hidden h-16 w-px shrink-0 bg-ink/10 2xl:block" aria-hidden="true" />
 
             <StatBlock value="8.3M" label="views total">
               <Sparkline />
             </StatBlock>
 
-            <div className="ml-0 sm:ml-auto">
+            <span className="hidden h-16 w-px shrink-0 bg-ink/10 2xl:block" aria-hidden="true" />
+
+            <div className="shrink-0">
               <p className="font-display text-lg font-semibold text-ink">From a scroll to real growth.</p>
               <button
                 type="button"
