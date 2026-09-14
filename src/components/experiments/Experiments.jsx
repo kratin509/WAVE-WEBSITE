@@ -236,34 +236,34 @@ export function Experiments() {
     <section
       id="experiments"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-24 sm:px-10 lg:px-[7vw] lg:py-32"
+      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
           <span
             data-reveal
-            className="inline-block rounded-md bg-wave-peach-light px-3 py-1.5 text-xs font-semibold tracking-wide text-ink uppercase"
+            className="inline-block rounded-full bg-wave-peach-light/70 px-2.5 py-1 text-[10px] font-medium tracking-wide text-ink/70 uppercase"
           >
             experiments
           </span>
 
           <h2
             data-reveal
-            className="mt-6 font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-ink sm:text-5xl lg:text-6xl"
+            className="mt-4 font-display text-2xl leading-[1.15] font-semibold text-ink sm:text-3xl lg:text-[2.5rem]"
           >
             <span className="block">one product.</span>
             <span className="block text-wave-orange-deep">30 different ideas.</span>
           </h2>
 
-          <p data-reveal className="mx-auto mt-5 max-w-md text-base leading-relaxed text-ink/60 sm:text-lg">
+          <p data-reveal className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-ink/50 sm:text-[15px]">
             We test multiple hooks, angles and formats with real creators to find what actually works.
           </p>
-          <p data-reveal className="mt-2 text-xs text-ink/40">
+          <p data-reveal className="mt-1.5 text-[11px] text-ink/35">
             Illustrative example — figures shown are sample data.
           </p>
         </div>
 
-        <div data-reveal className="mt-10 flex flex-wrap justify-center gap-2">
+        <div data-reveal className="mt-8 flex flex-wrap justify-center gap-2">
           {CATEGORIES.map((cat) => (
             <button
               key={cat}
@@ -281,7 +281,7 @@ export function Experiments() {
           ))}
         </div>
 
-        <div data-reveal className="mt-12 flex gap-5 lg:gap-8">
+        <div data-reveal className="mt-10 flex gap-5 lg:gap-8">
           <div className="hidden shrink-0 flex-col items-center md:flex" style={{ width: 24 }}>
             <span className="font-display text-xs text-ink/40">01</span>
             <span className="my-2 w-px flex-1 bg-ink/10" />
@@ -318,7 +318,7 @@ export function Experiments() {
           </div>
         </div>
 
-        <div data-reveal className="mt-20 border-t border-ink/10 pt-10 sm:pt-12">
+        <div data-reveal className="mt-16 border-t border-ink/10 pt-10 sm:pt-12">
           <div className="flex flex-wrap items-center gap-x-10 gap-y-10 2xl:flex-nowrap 2xl:justify-between">
             <div className="flex shrink-0 items-center gap-6">
               <div className="max-w-[190px]">
@@ -376,7 +376,7 @@ export function Experiments() {
 
         <div
           data-reveal
-          className="mt-20 flex flex-col gap-2 border-t border-ink/10 pt-6 text-[11px] font-medium tracking-[0.15em] text-ink/40 uppercase sm:flex-row sm:items-center sm:justify-between"
+          className="mt-14 flex flex-col gap-2 border-t border-ink/10 pt-6 text-[11px] font-medium tracking-[0.15em] text-ink/40 uppercase sm:flex-row sm:items-center sm:justify-between"
         >
           <span>Real tests. Real creators. Real growth.</span>
           <span>The compound effect of good creative.</span>
