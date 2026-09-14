@@ -35,7 +35,7 @@ function CurvedArrow() {
 }
 
 function HookCard({ hook }) {
-  const isDark = hook.tone === 'dark'
+  const isDark = hook.tone !== 'light'
   return (
     <div
       className="group relative shrink-0 snap-start pt-4"
@@ -51,26 +51,41 @@ function HookCard({ hook }) {
         className={`relative aspect-[9/16] overflow-hidden rounded-2xl transition-transform duration-300 group-hover:-translate-y-1 ${
           hook.winner ? 'ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream' : 'border border-ink/10'
         }`}
-        style={{
-          background: isDark
-            ? 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))'
-            : 'linear-gradient(165deg, var(--color-cream-dim), var(--color-wave-peach-light))',
-          boxShadow: '0 18px 40px rgba(22,17,15,0.16)',
-        }}
+        style={
+          hook.img
+            ? { boxShadow: '0 18px 40px rgba(22,17,15,0.16)' }
+            : {
+                background: isDark
+                  ? 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))'
+                  : 'linear-gradient(165deg, var(--color-cream-dim), var(--color-wave-peach-light))',
+                boxShadow: '0 18px 40px rgba(22,17,15,0.16)',
+              }
+        }
       >
-        <span className={`absolute top-3 left-3 h-2 w-2 rounded-full ${isDark ? 'bg-cream/40' : 'bg-ink/25'}`} />
-        <p
-          className={`absolute inset-x-4 top-[38%] font-display text-[1.05rem] leading-snug font-semibold ${
-            isDark ? 'text-cream' : 'text-ink'
-          }`}
-        >
-          {hook.caption}
-        </p>
-        <div
-          className={`absolute inset-x-3 bottom-3 flex items-center gap-1.5 text-xs font-semibold ${
-            isDark ? 'text-cream/85' : 'text-ink/70'
-          }`}
-        >
+        {hook.img ? (
+          <>
+            <img
+              src={hook.img}
+              alt={hook.caption}
+              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+              loading="lazy"
+              draggable={false}
+            />
+            <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-ink/55 via-transparent to-transparent" />
+          </>
+        ) : (
+          <>
+            <span className={`absolute top-3 left-3 h-2 w-2 rounded-full ${isDark ? 'bg-cream/40' : 'bg-ink/25'}`} />
+            <p
+              className={`absolute inset-x-4 top-[38%] font-display text-[1.05rem] leading-snug font-semibold ${
+                isDark ? 'text-cream' : 'text-ink'
+              }`}
+            >
+              {hook.caption}
+            </p>
+          </>
+        )}
+        <div className="absolute inset-x-3 bottom-3 flex items-center gap-1.5 text-xs font-semibold text-cream/90">
           <PlayIcon />
           {hook.views}
         </div>
@@ -103,18 +118,17 @@ function AvatarStack() {
   )
 }
 
-function ThumbStack() {
+function ThumbStack({ images }) {
   return (
     <div className="flex items-center">
-      {[0, 1, 2, 3].map((i) => (
+      {images.map((src, i) => (
         <span
           key={i}
-          className="h-9 w-7 rounded-md border-2 border-cream"
-          style={{
-            marginLeft: i === 0 ? 0 : -8,
-            background: `linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))`,
-          }}
-        />
+          className="h-9 w-7 overflow-hidden rounded-md border-2 border-cream bg-ink-soft"
+          style={{ marginLeft: i === 0 ? 0 : -8 }}
+        >
+          <img src={src} alt="" className="h-full w-full object-cover" />
+        </span>
       ))}
       <span
         className="flex h-9 w-7 items-center justify-center rounded-md border-2 border-cream bg-white text-[9px] font-semibold text-ink/60"
@@ -327,10 +341,16 @@ export function Experiments() {
               <p className="mt-1 text-ink/60 italic">&ldquo;{WINNER.caption}&rdquo;</p>
             </div>
 
-            <div
-              className="h-24 w-14 shrink-0 rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream"
-              style={{ background: 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))' }}
-            />
+            <div className="h-24 w-14 shrink-0 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream">
+              {WINNER.img ? (
+                <img src={WINNER.img} alt={WINNER.caption} className="h-full w-full object-cover" />
+              ) : (
+                <div
+                  className="h-full w-full"
+                  style={{ background: 'linear-gradient(165deg, var(--color-ink-soft), var(--color-ink))' }}
+                />
+              )}
+            </div>
 
             <span className="hidden font-display text-2xl text-ink/25 sm:block" aria-hidden="true">
               →
@@ -341,7 +361,7 @@ export function Experiments() {
             </StatBlock>
 
             <StatBlock value="47" label="variations tested">
-              <ThumbStack />
+              <ThumbStack images={HOOKS.filter((h) => !h.winner).slice(0, 4).map((h) => h.img)} />
             </StatBlock>
 
             <StatBlock value="8.3M" label="views total">
