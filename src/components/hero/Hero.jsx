@@ -75,7 +75,7 @@ export function Hero() {
   const waveBandHeight = mobile ? '20vh' : '26vh'
 
   return (
-    <section id="top" className="relative h-screen w-full overflow-hidden bg-cream">
+    <section id="top" className="relative h-screen w-full overflow-hidden bg-white">
       {/* wave layers + cards, interleaved by z-index: back waves (10) <
           back cards (14) < front waves (20) < front/hero cards (24-40) */}
       <WaveLayers
@@ -108,8 +108,8 @@ export function Hero() {
         size={36}
       />
 
-      <div className="relative z-50 flex h-full w-full items-start px-6 pt-24 sm:px-10 sm:pt-28 lg:pt-[17vh] lg:pl-[7vw]">
-        <div className="w-full lg:max-w-[46vw]">
+      <div className="relative z-50 flex h-full w-full items-start px-6 pt-20 sm:px-10 sm:pt-24 lg:pt-[14vh] lg:pl-[7vw]">
+        <div className="w-full lg:max-w-[43vw]">
           <p
             ref={eyebrowRef}
             className="mb-4 flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase"
@@ -118,21 +118,21 @@ export function Hero() {
             UGC growth for consumer apps + D2C
           </p>
 
-          <h1 ref={headlineRef} className="font-display leading-[1.08] tracking-tight text-ink">
-            <span className="block text-xl font-medium sm:text-2xl lg:text-[1.65rem]">Turn UGC into</span>
-            <span className="mt-1 block text-4xl font-semibold sm:text-5xl lg:text-[3.25rem]">your next</span>
-            <span className="block text-4xl font-semibold text-wave-orange-deep sm:text-5xl lg:text-[3.25rem]">
+          <h1 ref={headlineRef} className="font-display leading-[1.04] tracking-tight text-ink">
+            <span className="block text-2xl font-medium sm:text-3xl lg:text-4xl">Turn UGC into</span>
+            <span className="mt-1 block text-5xl font-semibold sm:text-6xl lg:text-[3.9rem]">your next</span>
+            <span className="block text-5xl font-semibold text-wave-orange-deep sm:text-6xl lg:text-[3.9rem]">
               growth channel.
             </span>
           </h1>
 
-          <p ref={subRef} className="mt-6 max-w-md text-base leading-relaxed text-ink/60">
+          <p ref={subRef} className="mt-5 max-w-md text-base leading-relaxed text-ink/60">
             Real creators. Real content. Real users.
             <br />
             We find what hits. Then we scale it.
           </p>
 
-          <div ref={ctaRef} className="mt-7 flex flex-wrap items-center gap-6">
+          <div ref={ctaRef} className="mt-6 flex flex-wrap items-center gap-6">
             <a
               href="#start-a-wave"
               data-cursor="button"

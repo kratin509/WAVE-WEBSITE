@@ -193,7 +193,7 @@ export function Experiments() {
     <section
       id="experiments"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">

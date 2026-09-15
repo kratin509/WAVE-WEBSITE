@@ -97,7 +97,7 @@ function StackCard({ card, index }) {
   const Illustration = card.illustration
   return (
     <div
-      className="sticky flex min-h-[420px] flex-col overflow-hidden rounded-[28px] border border-ink/5 bg-cream shadow-2xl shadow-black/40 lg:min-h-[440px] lg:flex-row"
+      className="sticky flex min-h-[420px] flex-col overflow-hidden rounded-[28px] border border-ink/5 bg-white shadow-2xl shadow-black/40 lg:min-h-[440px] lg:flex-row"
       style={{ top: `${108 + index * 28}px`, zIndex: 10 + index }}
     >
       <div className="flex flex-col justify-center p-8 sm:p-10 lg:w-1/2 lg:p-14">
@@ -121,7 +121,7 @@ function StackCard({ card, index }) {
         </a>
       </div>
 
-      <div className="flex min-h-[260px] items-center justify-center bg-cream-dim lg:w-1/2">
+      <div className="flex min-h-[260px] items-center justify-center bg-neutral-50 lg:w-1/2">
         <Illustration />
       </div>
     </div>

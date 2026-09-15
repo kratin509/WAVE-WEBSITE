@@ -28,7 +28,7 @@ export function Nav() {
     ? 'text-cream/65 hover:text-cream'
     : 'text-ink/60 hover:text-ink'
   const borderTone = onDark ? 'border-cream/15' : 'border-ink/10'
-  const barBg = onDark ? 'bg-ink' : scrolled ? 'bg-cream/95 backdrop-blur-sm' : 'bg-cream'
+  const barBg = onDark ? 'bg-ink' : scrolled ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'
 
   return (
     <header className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${borderTone} ${barBg}`}>

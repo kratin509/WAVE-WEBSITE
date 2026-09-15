@@ -98,7 +98,7 @@ export function FAQ() {
   }, [reduced])
 
   return (
-    <section id="faq" ref={sectionRef} className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28">
+    <section id="faq" ref={sectionRef} className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28">
       <div className="mx-auto max-w-[1200px]">
         <div className="grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-20">
           <div data-reveal className="lg:sticky lg:top-32 lg:self-start">
