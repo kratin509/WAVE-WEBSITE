@@ -1,7 +1,8 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { SectionLabel } from './ui/SectionLabel'
 import { CountUp } from './ui/CountUp'
 import hookC from '../assets/experiments/hookC.jpg'
@@ -12,27 +13,31 @@ const STAGES = [
   {
     n: '01',
     label: 'the brief',
+    eyebrow: 'the problem',
     body: 'A consumer shopping app had a strong product but flat organic growth. Paid CAC was climbing, and nobody could say which creative angle would actually convert.',
   },
   {
     n: '02',
     label: 'the experiment',
+    eyebrow: 'the test',
     body: 'We recruited a slate of creators and tested nine distinct hooks — problem-first, POV, tutorial, before/after, lifestyle, testimonial — across dozens of early variations.',
   },
   {
     n: '03',
     label: 'the discovery',
+    eyebrow: 'why it matters',
     body: "The best-performing hook wasn't the most polished video — it was a rough, close-to-camera POV that named the exact frustration the product solved. Authenticity beat production value, and no amount of agency polish would have found that.",
-    highlight: true,
   },
   {
     n: '04',
     label: 'the winner',
+    eyebrow: 'the hook',
     body: '“How I find what I actually want in 30 seconds.” A plain-spoken, result-driven POV that named the outcome instead of the features.',
   },
   {
     n: '05',
     label: 'the scale',
+    eyebrow: 'the rollout',
     body: 'We recreated the winning angle across 20 creators and 47 variations — keeping the core hook intact while testing pacing, captions and hook order.',
   },
 ]
@@ -49,9 +54,68 @@ function ResultStat({ value, label }) {
   )
 }
 
+function CaseRow({ stage, index, active, onActivate }) {
+  const isActive = active === index
+  return (
+    <div
+      data-cursor="link"
+      onMouseEnter={() => onActivate(index)}
+      onClick={() => onActivate(index)}
+      onFocus={() => onActivate(index)}
+      tabIndex={0}
+      role="button"
+      aria-expanded={isActive}
+      className={`cursor-pointer border-b border-cream/10 px-4 transition-colors duration-300 first:border-t first:border-t-cream/10 sm:px-6 ${
+        isActive ? 'bg-cream/[0.04]' : ''
+      }`}
+    >
+      <div className="grid grid-cols-[1fr_auto] items-center gap-4 py-6 sm:grid-cols-[1fr_72px_32px] sm:gap-6">
+        <h3
+          className={`text-right font-display text-xl font-medium tracking-tight transition-colors duration-300 sm:text-2xl lg:text-[2.1rem] ${
+            isActive ? 'text-cream' : 'text-cream/35'
+          }`}
+        >
+          {stage.label}
+        </h3>
+        <span
+          className={`flex items-center justify-center rounded-sm border py-1 font-mono text-xs transition-colors duration-300 ${
+            isActive ? 'border-cream/20 bg-wave-orange-deep text-cream' : 'border-cream/15 text-cream/45'
+          }`}
+        >
+          {stage.n}
+        </span>
+        <span
+          className={`hidden text-right text-lg text-cream/50 transition-opacity duration-300 sm:block ${
+            isActive ? 'opacity-100' : 'opacity-0'
+          }`}
+          aria-hidden="true"
+        >
+          ↗
+        </span>
+      </div>
+
+      <div
+        className="grid transition-[grid-template-rows] duration-300 ease-out"
+        style={{ gridTemplateRows: isActive ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <div className="pb-6">
+            <p className="font-mono text-[11px] tracking-[0.12em] text-wave-orange-deep uppercase">
+              {stage.eyebrow}
+            </p>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-cream/60 sm:text-[15px]">{stage.body}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function CaseStudies() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
+  const [active, setActive] = useState(0)
+  useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
@@ -76,61 +140,35 @@ export function CaseStudies() {
     <section
       id="case-studies"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1200px]">
         <div
           data-reveal
-          className="grid grid-cols-1 gap-4 border-b border-ink/10 pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
+          className="grid grid-cols-1 gap-4 border-b border-cream/10 pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
         >
           <div>
-            <SectionLabel>case studies</SectionLabel>
-            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-ink sm:text-[2.25rem] lg:text-[2.75rem]">
+            <SectionLabel tone="dark">case studies</SectionLabel>
+            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-cream sm:text-[2.25rem] lg:text-[2.75rem]">
               every result has a story.
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-ink/50 sm:text-[15px] lg:text-right">
+          <p className="max-w-md text-sm leading-relaxed text-cream/50 sm:text-[15px] lg:text-right">
             Not a folder of clips and a view count — a growth story, stage by stage.
           </p>
         </div>
 
         <div data-reveal className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-cream sm:w-32">
+            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-wave-orange-deep ring-offset-2 ring-offset-ink sm:w-32">
               <img src={hookC} alt="The winning hook from this case study" className="h-full w-full object-cover" />
             </div>
-            <p className="mt-3 text-xs text-ink/40">Illustrative example, built from the Hook C test.</p>
+            <p className="mt-3 text-xs text-cream/40">Illustrative example, built from the Hook C test.</p>
           </div>
 
-          <div>
-            {STAGES.map((stage) => (
-              <div
-                key={stage.n}
-                className={`group border-t border-l-2 border-ink/10 py-8 pr-5 pl-5 transition-colors duration-300 first:border-t-0 first:pt-0 sm:py-9 sm:pr-6 sm:pl-6 ${
-                  stage.highlight
-                    ? 'border-l-wave-orange-deep bg-wave-peach-light/35'
-                    : 'border-l-transparent bg-wave-peach-light/0 hover:border-l-wave-orange-deep hover:bg-wave-peach-light/35'
-                }`}
-              >
-                <div className="flex flex-col gap-1.5 sm:flex-row sm:items-baseline sm:gap-6">
-                  <span
-                    className={`font-display text-xs tabular-nums transition-colors duration-300 ${
-                      stage.highlight ? 'text-wave-orange-deep' : 'text-ink/40 group-hover:text-wave-orange-deep'
-                    }`}
-                  >
-                    {stage.n}
-                  </span>
-                  <div className="flex-1">
-                    <h3 className="font-display text-lg font-semibold text-ink sm:text-xl">{stage.label}</h3>
-                    <p className="mt-2 max-w-xl text-sm leading-relaxed text-ink/55">{stage.body}</p>
-                    {stage.highlight && (
-                      <p className="mt-2 text-[11px] font-medium tracking-wide text-wave-orange-deep uppercase">
-                        why it matters — this is the part a production agency never gets to
-                      </p>
-                    )}
-                  </div>
-                </div>
-              </div>
+          <div className="mt-2">
+            {STAGES.map((stage, i) => (
+              <CaseRow key={stage.n} stage={stage} index={i} active={active} onActivate={setActive} />
             ))}
           </div>
         </div>
