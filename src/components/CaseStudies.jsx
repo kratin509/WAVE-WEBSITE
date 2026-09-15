@@ -168,12 +168,18 @@ export function CaseStudies() {
           </p>
         </div>
 
-        <div data-reveal className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
+        <div data-reveal className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[280px_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-[#FF4B1F] ring-offset-2 ring-offset-white sm:w-32">
+            <div className="aspect-[9/16] w-40 overflow-hidden rounded-2xl ring-2 ring-[#FF4B1F] ring-offset-2 ring-offset-white sm:w-52 lg:w-full">
               <img src={hookC} alt="The winning hook from this case study" className="h-full w-full object-cover" />
             </div>
-            <p className="mt-3 text-xs text-[#66564C]">Illustrative example, built from the Hook C test.</p>
+            <div className="mt-4 flex items-center gap-2">
+              <span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm bg-wave-orange-deep font-mono text-[11px] text-cream">
+                {STAGES[active].n}
+              </span>
+              <p className="text-sm font-medium text-[#211914]">now viewing — {STAGES[active].label}</p>
+            </div>
+            <p className="mt-2 text-xs text-[#66564C]">Illustrative example, built from the Hook C test.</p>
           </div>
 
           <div className="mt-2">
