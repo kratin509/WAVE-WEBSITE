@@ -4,36 +4,25 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
 import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { SectionLabel } from './ui/SectionLabel'
-import hookA from '../assets/experiments/hookA.jpg'
 import hookB from '../assets/experiments/hookB.jpg'
 import hookC from '../assets/experiments/hookC.jpg'
-import hookD from '../assets/experiments/hookD.jpg'
 import hookE from '../assets/experiments/hookE.jpg'
 import hookF from '../assets/experiments/hookF.jpg'
-import hookG from '../assets/experiments/hookG.jpg'
 import hookH from '../assets/experiments/hookH.jpg'
 import hookI from '../assets/experiments/hookI.jpg'
+import goViralNetwork from '../assets/why-wave/go-viral-network.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
-function FanIllustration() {
-  const items = [
-    { src: hookA, rotate: -9, x: -46 },
-    { src: hookG, rotate: 10, x: 46 },
-    { src: hookD, rotate: -2, x: 0 },
-  ]
+function ViralIllustration() {
   return (
-    <div className="relative flex h-full min-h-[260px] w-full items-center justify-center">
-      {items.map((item, i) => (
-        <div
-          key={item.src}
-          className="absolute aspect-[9/16] w-28 overflow-hidden rounded-2xl border border-ink/10 shadow-xl sm:w-32"
-          style={{ transform: `translateX(${item.x}px) rotate(${item.rotate}deg)`, zIndex: i === 2 ? 3 : i }}
-        >
-          <img src={item.src} alt="" className="h-full w-full object-cover" loading="lazy" draggable={false} />
-        </div>
-      ))}
-    </div>
+    <img
+      src={goViralNetwork}
+      alt="Creator profile cards feeding reach, followers and engagement into a central growth hub"
+      className="h-full min-h-[260px] w-full object-cover"
+      loading="lazy"
+      draggable={false}
+    />
   )
 }
 
@@ -82,7 +71,7 @@ const CARDS = [
     body: 'Get a constant stream of creators talking about your brand and create the conditions for breakout content.',
     cta: 'See how it spreads',
     href: '#experiments',
-    illustration: FanIllustration,
+    illustration: ViralIllustration,
   },
   {
     title: 'Test more creative',
