@@ -7,12 +7,12 @@ import hookC from '../assets/experiments/hookC.jpg'
 
 gsap.registerPlugin(ScrollTrigger)
 
-// "Sunset Wave" palette - scoped to this section only (not the shared
-// design tokens), a muted terracotta/burnt-orange family so the section
-// reads warm and editorial rather than a loud orange block. Vivid
-// --color-wave-orange-deep is kept only for the tiny active-state pill.
-const BG = '#C95F3D' // main background
-const PANEL = '#A9472D' // expanded/active content panel
+// Light, warm, editorial palette - scoped to this section only (not the
+// shared design tokens). Orange (--color-wave-orange-deep, matches the
+// requested #FF4B1F exactly) is reserved for active/high-attention
+// details only, never the background.
+const BG = '#FFE2C7' // main background
+const PANEL = '#FFF0E2' // expanded/active content panel
 
 const STAGES = [
   {
@@ -52,9 +52,9 @@ function ResultStat({ value, label }) {
     <div className="text-center">
       <CountUp
         value={value}
-        className="font-display text-4xl font-semibold text-[#FFF5E9] tabular-nums sm:text-6xl lg:text-7xl"
+        className="font-display text-4xl font-semibold text-[#211914] tabular-nums sm:text-6xl lg:text-7xl"
       />
-      <p className="mt-2 text-xs text-[#F5D5C5] sm:text-sm">{label}</p>
+      <p className="mt-2 text-xs text-[#66564C] sm:text-sm">{label}</p>
     </div>
   )
 }
@@ -70,26 +70,26 @@ function CaseRow({ stage, index, active, onActivate }) {
       tabIndex={0}
       role="button"
       aria-expanded={isActive}
-      className="cursor-pointer border-b border-[#F6C2AC]/20 px-4 transition-colors duration-300 first:border-t first:border-t-[#F6C2AC]/20 sm:px-6"
+      className="cursor-pointer border-b border-[#DDBFA9] px-4 transition-colors duration-300 first:border-t first:border-t-[#DDBFA9] sm:px-6"
       style={{ backgroundColor: isActive ? PANEL : 'transparent' }}
     >
       <div className="grid grid-cols-[1fr_auto] items-center gap-4 py-6 sm:grid-cols-[1fr_72px_32px] sm:gap-6">
         <h3
           className={`text-right font-display text-xl font-medium tracking-tight transition-colors duration-300 sm:text-2xl lg:text-[2.1rem] ${
-            isActive ? 'text-[#FFF5E9]' : 'text-[#E3A58C]'
+            isActive ? 'text-[#211914]' : 'text-[#A98776]'
           }`}
         >
           {stage.label}
         </h3>
         <span
           className={`flex items-center justify-center rounded-sm border py-1 font-mono text-xs transition-colors duration-300 ${
-            isActive ? 'border-[#F6C2AC]/30 bg-wave-orange-deep text-[#FFF5E9]' : 'border-[#F6C2AC]/25 text-[#E3A58C]'
+            isActive ? 'border-[#DDBFA9] bg-wave-orange-deep text-cream' : 'border-[#DDBFA9] text-[#A98776]'
           }`}
         >
           {stage.n}
         </span>
         <span
-          className={`hidden text-right text-lg text-[#FFD08A] transition-opacity duration-300 sm:block ${
+          className={`hidden text-right text-lg text-[#FF4B1F] transition-opacity duration-300 sm:block ${
             isActive ? 'opacity-100' : 'opacity-0'
           }`}
           aria-hidden="true"
@@ -104,8 +104,8 @@ function CaseRow({ stage, index, active, onActivate }) {
       >
         <div className="overflow-hidden">
           <div className="pb-6">
-            <p className="font-mono text-[11px] tracking-[0.12em] text-[#FFD08A] uppercase">{stage.eyebrow}</p>
-            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#F5D5C5] sm:text-[15px]">{stage.body}</p>
+            <p className="font-mono text-[11px] tracking-[0.12em] text-[#FF4B1F] uppercase">{stage.eyebrow}</p>
+            <p className="mt-2 max-w-xl text-sm leading-relaxed text-[#66564C] sm:text-[15px]">{stage.body}</p>
           </div>
         </div>
       </div>
@@ -147,27 +147,27 @@ export function CaseStudies() {
       <div className="mx-auto max-w-[1200px]">
         <div
           data-reveal
-          className="grid grid-cols-1 gap-4 border-b border-[#F6C2AC]/20 pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
+          className="grid grid-cols-1 gap-4 border-b border-[#DDBFA9] pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
         >
           <div>
-            <span className="inline-block rounded-full bg-[#A9472D]/50 px-2.5 py-1 text-[10px] font-medium tracking-wide text-[#FFD08A] uppercase">
+            <span className="inline-block rounded-full bg-[#FFF0E2] px-2.5 py-1 text-[10px] font-medium tracking-wide text-[#66564C] uppercase">
               case studies
             </span>
-            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-[#FFF5E9] sm:text-[2.25rem] lg:text-[2.75rem]">
+            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-[#211914] sm:text-[2.25rem] lg:text-[2.75rem]">
               every result has a story.
             </h2>
           </div>
-          <p className="max-w-md text-sm leading-relaxed text-[#F5D5C5] sm:text-[15px] lg:text-right">
+          <p className="max-w-md text-sm leading-relaxed text-[#66564C] sm:text-[15px] lg:text-right">
             Not a folder of clips and a view count — a growth story, stage by stage.
           </p>
         </div>
 
         <div data-reveal className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-[#FF5A2A] ring-offset-2 ring-offset-[#C95F3D] sm:w-32">
+            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-[#FF4B1F] ring-offset-2 ring-offset-[#FFE2C7] sm:w-32">
               <img src={hookC} alt="The winning hook from this case study" className="h-full w-full object-cover" />
             </div>
-            <p className="mt-3 text-xs text-[#F5D5C5]">Illustrative example, built from the Hook C test.</p>
+            <p className="mt-3 text-xs text-[#66564C]">Illustrative example, built from the Hook C test.</p>
           </div>
 
           <div className="mt-2">
@@ -182,13 +182,13 @@ export function CaseStudies() {
           className="mx-auto mt-14 max-w-2xl rounded-2xl px-6 py-8 text-center sm:px-10 sm:py-10"
           style={{ backgroundColor: PANEL }}
         >
-          <p className="text-[11px] font-medium tracking-wide text-[#FFD08A] uppercase">06 — the result</p>
+          <p className="text-[11px] font-medium tracking-wide text-[#FF4B1F] uppercase">06 — the result</p>
           <div className="mt-6 grid grid-cols-3 gap-2">
             <ResultStat value="8.3M" label="views total" />
             <ResultStat value="47" label="variations tested" />
             <ResultStat value="20" label="creators onboarded" />
           </div>
-          <p className="mt-6 text-xs text-[#F5D5C5]">Illustrative example — figures shown are sample data.</p>
+          <p className="mt-6 text-xs text-[#66564C]">Illustrative example — figures shown are sample data.</p>
         </div>
       </div>
     </section>
