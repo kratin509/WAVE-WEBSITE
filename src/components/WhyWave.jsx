@@ -14,6 +14,20 @@ import goViralNetwork from '../assets/why-wave/go-viral-network.png'
 
 gsap.registerPlugin(ScrollTrigger)
 
+// A repeating tile of the brand's own wave-line motif, stroked in orange
+// at very low opacity, standing in for "logos in the background" the way
+// Valley's reference tiles its own mark across a colored panel - here
+// adapted to a plain black section so it reads as a subtle watermark
+// texture rather than a flat, dull fill.
+const WAVE_PATTERN =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='100' viewBox='0 0 140 100'%3E%3Cpath d='M-10 25 Q 7.5 5 25 25 T 60 25 T 95 25 T 130 25 T 165 25' stroke='%23FF4B1F' stroke-opacity='0.5' stroke-width='2.5' fill='none'/%3E%3Cpath d='M-10 72 Q 7.5 52 25 72 T 60 72 T 95 72 T 130 72 T 165 72' stroke='%23FF4B1F' stroke-opacity='0.35' stroke-width='2' fill='none'/%3E%3C/svg%3E"
+
+// Fine film-grain texture (feTurbulence), matching the site's global
+// .grain-overlay technique but scoped here so the flat black reads as a
+// textured surface instead of a dull, dead-flat fill.
+const GRAIN =
+  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"
+
 function ViralIllustration() {
   return (
     <img
@@ -156,9 +170,20 @@ export function WhyWave() {
     <section
       id="why-wave"
       ref={sectionRef}
-      className="relative bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative overflow-hidden bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
-      <div className="mx-auto max-w-[1800px]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.09]"
+        style={{ backgroundImage: `url("${WAVE_PATTERN}")`, backgroundSize: '140px 100px' }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute inset-0 opacity-[0.05] mix-blend-overlay"
+        style={{ backgroundImage: `url("${GRAIN}")`, backgroundSize: '140px 140px' }}
+      />
+
+      <div className="relative mx-auto max-w-[1800px]">
         <div className="mx-auto max-w-4xl text-center">
           <SectionLabel data-reveal tone="dark">
             why wave
