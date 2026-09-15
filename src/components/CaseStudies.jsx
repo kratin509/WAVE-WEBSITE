@@ -13,6 +13,7 @@ gsap.registerPlugin(ScrollTrigger)
 // details only, never the background.
 const BG = '#FFFFFF' // main background
 const PANEL = '#FFF0E2' // expanded/active content panel
+const RESULT_PANEL = '#CC6046' // the "06 - result" panel only, reusing the same toned-down orange used in FinalCTA's full-bleed gradient
 
 const STAGES = [
   {
@@ -52,9 +53,9 @@ function ResultStat({ value, label }) {
     <div className="text-center">
       <CountUp
         value={value}
-        className="font-display text-4xl font-semibold text-wave-orange-deep tabular-nums sm:text-6xl lg:text-7xl"
+        className="font-display text-4xl font-semibold text-cream tabular-nums sm:text-6xl lg:text-7xl"
       />
-      <p className="mt-2 text-xs text-[#66564C] sm:text-sm">{label}</p>
+      <p className="mt-2 text-xs text-cream/70 sm:text-sm">{label}</p>
     </div>
   )
 }
@@ -185,15 +186,15 @@ export function CaseStudies() {
         <div
           data-reveal
           className="mt-14 w-full rounded-2xl px-6 py-10 text-center sm:px-14 sm:py-12 lg:px-20"
-          style={{ backgroundColor: PANEL }}
+          style={{ backgroundColor: RESULT_PANEL }}
         >
-          <p className="text-[11px] font-medium tracking-wide text-[#FF4B1F] uppercase">06 — the result</p>
+          <p className="text-[11px] font-medium tracking-wide text-cream/80 uppercase">06 — the result</p>
           <div className="mt-6 grid grid-cols-3 gap-6 sm:gap-16 lg:gap-24">
             <ResultStat value="8.3M" label="views total" />
             <ResultStat value="47" label="variations tested" />
             <ResultStat value="20" label="creators onboarded" />
           </div>
-          <p className="mt-6 text-xs text-[#66564C]">Illustrative example — figures shown are sample data.</p>
+          <p className="mt-6 text-xs text-cream/60">Illustrative example — figures shown are sample data.</p>
         </div>
       </div>
     </section>

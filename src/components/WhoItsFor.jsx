@@ -8,6 +8,26 @@ gsap.registerPlugin(ScrollTrigger)
 
 const CATEGORIES = ['Consumer apps', 'D2C brands', 'High-growth consumer businesses']
 
+// Faint dot-grid texture, radially faded so it reads as an ambient
+// backdrop rather than a hard tiled pattern - dots are ink at low
+// opacity since this section sits on the light cream background.
+function DotGrid() {
+  return (
+    <div
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-0"
+      style={{
+        backgroundImage: 'radial-gradient(currentColor 1px, transparent 1px)',
+        backgroundSize: '24px 24px',
+        color: 'var(--color-ink)',
+        opacity: 0.14,
+        maskImage: 'radial-gradient(ellipse 60% 55% at 50% 45%, black 40%, transparent 90%)',
+        WebkitMaskImage: 'radial-gradient(ellipse 60% 55% at 50% 45%, black 40%, transparent 90%)',
+      }}
+    />
+  )
+}
+
 export function WhoItsFor() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
@@ -35,9 +55,10 @@ export function WhoItsFor() {
     <section
       id="who-its-for"
       ref={sectionRef}
-      className="relative bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="relative overflow-hidden bg-cream px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
-      <div className="mx-auto max-w-2xl text-center">
+      <DotGrid />
+      <div className="relative mx-auto max-w-2xl text-center">
         <SectionLabel data-reveal>who it&rsquo;s for</SectionLabel>
 
         <h2
