@@ -155,21 +155,21 @@ function StatBlock({ value, label, children }) {
 
 // A single hand-drawn-style wave, confined to the section's own top
 // padding band so it never reaches down into the headline - full-bleed
-// width (ignores the section's horizontal padding on purpose), draws
-// itself in left-to-right on scroll. Irregular peak heights and spacing
-// (rather than a uniform repeating sine) so it reads as hand-drawn, and
-// the path runs flush from x=0 to the exact viewBox width so it always
-// draws all the way to the far edge.
-function TopWave({ pathRef }) {
+// width (ignores the section's horizontal padding on purpose). Fades in
+// as a single complete shape via the same [data-reveal] system as the
+// rest of the section, rather than a scroll-linked stroke-draw tween,
+// so it can never freeze partway through if page height shifts (e.g.
+// images below loading) mistime a scroll-triggered animation.
+function TopWave() {
   return (
     <svg
+      data-reveal
       aria-hidden="true"
       className="pointer-events-none absolute inset-x-0 top-0 h-16 w-full sm:h-20 lg:h-24"
       viewBox="0 0 1400 100"
       preserveAspectRatio="none"
     >
       <path
-        ref={pathRef}
         d="M0 62 C 70 66, 100 8, 190 6 C 270 4, 310 58, 360 64 C 430 72, 480 14, 580 10 C 670 6, 720 92, 800 90 C 880 88, 930 18, 1030 12 C 1110 7, 1150 68, 1220 62 C 1300 55, 1340 22, 1400 26"
         stroke="var(--color-wave-red)"
         strokeWidth="15"
@@ -186,7 +186,6 @@ export function Experiments() {
   const [active, setActive] = useState('All')
   const scrollerRef = useRef(null)
   const sectionRef = useRef(null)
-  const waveRef = useRef(null)
 
   const filtered = useMemo(
     () => (active === 'All' ? HOOKS : HOOKS.filter((h) => h.category === active)),
@@ -208,17 +207,6 @@ export function Experiments() {
           scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' },
         },
       )
-
-      if (waveRef.current) {
-        const length = waveRef.current.getTotalLength()
-        gsap.set(waveRef.current, { strokeDasharray: length, strokeDashoffset: length })
-        gsap.to(waveRef.current, {
-          strokeDashoffset: 0,
-          duration: 1.2,
-          ease: 'power2.inOut',
-          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' },
-        })
-      }
     }, sectionRef)
     return () => ctx.revert()
   }, [reduced])
@@ -235,7 +223,7 @@ export function Experiments() {
       ref={sectionRef}
       className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
-      <TopWave pathRef={waveRef} />
+      <TopWave />
 
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
