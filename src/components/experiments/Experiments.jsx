@@ -153,11 +153,37 @@ function StatBlock({ value, label, children }) {
   )
 }
 
+// A single hand-drawn-style wave, confined to the section's own top
+// padding band so it never reaches down into the headline - full-bleed
+// width (ignores the section's horizontal padding on purpose), draws
+// itself in left-to-right on scroll.
+function TopWave({ pathRef }) {
+  return (
+    <svg
+      aria-hidden="true"
+      className="pointer-events-none absolute inset-x-0 top-0 h-16 w-full sm:h-20 lg:h-24"
+      viewBox="0 0 1400 100"
+      preserveAspectRatio="none"
+    >
+      <path
+        ref={pathRef}
+        d="M-10 55 Q 90 10 190 55 T 390 55 T 590 55 T 790 55 T 990 55 T 1190 55 T 1390 55"
+        stroke="var(--color-wave-red)"
+        strokeWidth="4"
+        strokeLinecap="round"
+        fill="none"
+        vectorEffect="non-scaling-stroke"
+      />
+    </svg>
+  )
+}
+
 export function Experiments() {
   const reduced = useReducedMotion()
   const [active, setActive] = useState('All')
   const scrollerRef = useRef(null)
   const sectionRef = useRef(null)
+  const waveRef = useRef(null)
 
   const filtered = useMemo(
     () => (active === 'All' ? HOOKS : HOOKS.filter((h) => h.category === active)),
@@ -179,6 +205,17 @@ export function Experiments() {
           scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' },
         },
       )
+
+      if (waveRef.current) {
+        const length = waveRef.current.getTotalLength()
+        gsap.set(waveRef.current, { strokeDasharray: length, strokeDashoffset: length })
+        gsap.to(waveRef.current, {
+          strokeDashoffset: 0,
+          duration: 1.2,
+          ease: 'power2.inOut',
+          scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' },
+        })
+      }
     }, sectionRef)
     return () => ctx.revert()
   }, [reduced])
@@ -195,6 +232,8 @@ export function Experiments() {
       ref={sectionRef}
       className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
+      <TopWave pathRef={waveRef} />
+
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
           <SectionLabel data-reveal>experiments</SectionLabel>
