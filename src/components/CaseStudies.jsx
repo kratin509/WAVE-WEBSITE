@@ -11,7 +11,7 @@ gsap.registerPlugin(ScrollTrigger)
 // shared design tokens). Orange (--color-wave-orange-deep, matches the
 // requested #FF4B1F exactly) is reserved for active/high-attention
 // details only, never the background.
-const BG = '#FFE2C7' // main background
+const BG = '#FFFFFF' // main background
 const PANEL = '#FFF0E2' // expanded/active content panel
 
 const STAGES = [
@@ -153,8 +153,13 @@ export function CaseStudies() {
             <span className="inline-block rounded-full bg-[#FFF0E2] px-2.5 py-1 text-[10px] font-medium tracking-wide text-[#66564C] uppercase">
               case studies
             </span>
-            <h2 className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold text-[#211914] sm:text-[2.25rem] lg:text-[2.75rem]">
-              every result has a story.
+            <h2 className="mt-4 font-display leading-[1.1]">
+              <span className="text-[1.9rem] font-bold tracking-tight text-[#211914] sm:text-[2.6rem] lg:text-[3.1rem]">
+                every result has a{' '}
+              </span>
+              <span className="font-serif text-[2.1rem] text-[#FF4B1F] italic sm:text-[2.9rem] lg:text-[3.5rem]">
+                story.
+              </span>
             </h2>
           </div>
           <p className="max-w-md text-sm leading-relaxed text-[#66564C] sm:text-[15px] lg:text-right">
@@ -164,7 +169,7 @@ export function CaseStudies() {
 
         <div data-reveal className="mt-14 grid grid-cols-1 gap-10 lg:grid-cols-[220px_1fr] lg:gap-16">
           <div className="lg:sticky lg:top-32 lg:self-start">
-            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-[#FF4B1F] ring-offset-2 ring-offset-[#FFE2C7] sm:w-32">
+            <div className="aspect-[9/16] w-28 overflow-hidden rounded-xl ring-2 ring-[#FF4B1F] ring-offset-2 ring-offset-white sm:w-32">
               <img src={hookC} alt="The winning hook from this case study" className="h-full w-full object-cover" />
             </div>
             <p className="mt-3 text-xs text-[#66564C]">Illustrative example, built from the Hook C test.</p>
@@ -179,11 +184,11 @@ export function CaseStudies() {
 
         <div
           data-reveal
-          className="mx-auto mt-14 max-w-2xl rounded-2xl px-6 py-8 text-center sm:px-10 sm:py-10"
+          className="mt-14 w-full rounded-2xl px-6 py-10 text-center sm:px-14 sm:py-12 lg:px-20"
           style={{ backgroundColor: PANEL }}
         >
           <p className="text-[11px] font-medium tracking-wide text-[#FF4B1F] uppercase">06 — the result</p>
-          <div className="mt-6 grid grid-cols-3 gap-2">
+          <div className="mt-6 grid grid-cols-3 gap-6 sm:gap-16 lg:gap-24">
             <ResultStat value="8.3M" label="views total" />
             <ResultStat value="47" label="variations tested" />
             <ResultStat value="20" label="creators onboarded" />
