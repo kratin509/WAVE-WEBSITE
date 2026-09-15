@@ -156,7 +156,10 @@ function StatBlock({ value, label, children }) {
 // A single hand-drawn-style wave, confined to the section's own top
 // padding band so it never reaches down into the headline - full-bleed
 // width (ignores the section's horizontal padding on purpose), draws
-// itself in left-to-right on scroll.
+// itself in left-to-right on scroll. Irregular peak heights and spacing
+// (rather than a uniform repeating sine) so it reads as hand-drawn, and
+// the path runs flush from x=0 to the exact viewBox width so it always
+// draws all the way to the far edge.
 function TopWave({ pathRef }) {
   return (
     <svg
@@ -167,9 +170,9 @@ function TopWave({ pathRef }) {
     >
       <path
         ref={pathRef}
-        d="M-10 55 Q 90 10 190 55 T 390 55 T 590 55 T 790 55 T 990 55 T 1190 55 T 1390 55"
+        d="M0 62 C 70 66, 100 8, 190 6 C 270 4, 310 58, 360 64 C 430 72, 480 14, 580 10 C 670 6, 720 92, 800 90 C 880 88, 930 18, 1030 12 C 1110 7, 1150 68, 1220 62 C 1300 55, 1340 22, 1400 26"
         stroke="var(--color-wave-red)"
-        strokeWidth="4"
+        strokeWidth="7"
         strokeLinecap="round"
         fill="none"
         vectorEffect="non-scaling-stroke"
