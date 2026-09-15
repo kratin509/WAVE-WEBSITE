@@ -172,7 +172,7 @@ function TopWave({ pathRef }) {
         ref={pathRef}
         d="M0 62 C 70 66, 100 8, 190 6 C 270 4, 310 58, 360 64 C 430 72, 480 14, 580 10 C 670 6, 720 92, 800 90 C 880 88, 930 18, 1030 12 C 1110 7, 1150 68, 1220 62 C 1300 55, 1340 22, 1400 26"
         stroke="var(--color-wave-red)"
-        strokeWidth="7"
+        strokeWidth="15"
         strokeLinecap="round"
         fill="none"
         vectorEffect="non-scaling-stroke"
