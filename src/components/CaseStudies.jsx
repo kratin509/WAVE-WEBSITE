@@ -52,7 +52,7 @@ function ResultStat({ value, label }) {
     <div className="text-center">
       <CountUp
         value={value}
-        className="font-display text-4xl font-semibold text-[#211914] tabular-nums sm:text-6xl lg:text-7xl"
+        className="font-display text-4xl font-semibold text-wave-orange-deep tabular-nums sm:text-6xl lg:text-7xl"
       />
       <p className="mt-2 text-xs text-[#66564C] sm:text-sm">{label}</p>
     </div>
