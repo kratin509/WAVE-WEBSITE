@@ -3,6 +3,7 @@
 @theme {
   --font-display: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
   --font-body: "Inter Tight", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Instrument Serif", ui-serif, Georgia, serif;
 
   --color-cream: #f7f1e8;
   --color-cream-dim: #efe4d3;

@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
@@ -7,135 +7,89 @@ import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
 
-function ReachIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <circle cx="14" cy="14" r="3" fill="var(--color-wave-orange-deep)" />
-      <path d="M14 6.5 A7.5 7.5 0 0 1 21.5 14" stroke="var(--color-cream)" strokeOpacity="0.4" strokeWidth="2" strokeLinecap="round" />
-      <path d="M14 2 A12 12 0 0 1 26 14" stroke="var(--color-cream)" strokeOpacity="0.2" strokeWidth="2" strokeLinecap="round" />
-    </svg>
-  )
-}
-
-function VariantsIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <rect x="2" y="8" width="14" height="14" rx="3" stroke="var(--color-cream)" strokeOpacity="0.25" strokeWidth="2" />
-      <rect x="8" y="5" width="14" height="14" rx="3" stroke="var(--color-cream)" strokeOpacity="0.45" strokeWidth="2" />
-      <rect x="14" y="2" width="12" height="12" rx="3" stroke="var(--color-wave-orange-deep)" strokeWidth="2" />
-    </svg>
-  )
-}
-
-function CacIcon() {
-  return (
-    <svg width="28" height="28" viewBox="0 0 28 28" fill="none" aria-hidden="true">
-      <path
-        d="M2.5 7 L10.5 14 L15.5 10 L25.5 19.5"
-        stroke="var(--color-cream)"
-        strokeOpacity="0.45"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-      <path
-        d="M25.5 19.5 L25.5 12.5 M25.5 19.5 L18.5 19.5"
-        stroke="var(--color-wave-orange-deep)"
-        strokeWidth="2"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-      />
-    </svg>
-  )
-}
-
-function SpreadDots() {
-  const sizes = [4, 5, 6.5, 8, 10]
-  return (
-    <div className="flex h-7 items-end gap-1.5">
-      {sizes.map((s, i) => (
-        <span
-          key={i}
-          className="rounded-full"
-          style={{
-            width: s,
-            height: s,
-            background: i === sizes.length - 1 ? 'var(--color-wave-orange-deep)' : 'var(--color-wave-peach)',
-            opacity: i === sizes.length - 1 ? 1 : 0.55 + i * 0.08,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function VariantDots() {
-  const winners = [2, 6]
-  return (
-    <div className="grid h-7 grid-cols-9 items-center gap-1">
-      {Array.from({ length: 9 }).map((_, i) => (
-        <span
-          key={i}
-          className="h-2 w-2 rounded-[2px]"
-          style={{
-            background: winners.includes(i) ? 'var(--color-wave-orange-deep)' : 'var(--color-cream)',
-            opacity: winners.includes(i) ? 1 : 0.2,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
-function DescendingBars() {
-  const heights = [26, 23, 20, 15, 10, 6]
-  return (
-    <div className="flex h-7 items-end gap-1">
-      {heights.map((h, i) => (
-        <span
-          key={i}
-          className="w-1.5 rounded-full"
-          style={{
-            height: h,
-            background: i === heights.length - 1 ? 'var(--color-wave-orange-deep)' : 'var(--color-wave-peach)',
-            opacity: i === heights.length - 1 ? 1 : 0.7,
-          }}
-        />
-      ))}
-    </div>
-  )
-}
-
 const CARDS = [
   {
-    icon: ReachIcon,
-    old: 'one polished ad, hope it lands',
     title: 'Go viral',
+    eyebrow: 'reach, compounding',
+    old: 'one polished ad, hope it lands',
     body: 'Get a constant stream of creators talking about your brand and create the conditions for breakout content.',
-    visual: SpreadDots,
-    metric: 'reach, compounding',
   },
   {
-    icon: VariantsIcon,
-    old: 'bet on 5–10 ideas',
     title: 'Test more creative',
+    eyebrow: 'ideas tested',
+    old: 'bet on 5–10 ideas',
     body: 'Instead of betting on 5–10 ideas, test hundreds and let real audience behaviour tell you what works.',
-    visual: VariantDots,
-    metric: 'ideas tested',
   },
   {
-    icon: CacIcon,
-    old: 'rising paid-media spend',
     title: 'Lower CAC',
+    eyebrow: 'cost per acquisition',
+    old: 'rising paid-media spend',
     body: 'Turn winning organic creative into a new acquisition channel and reduce your dependence on increasingly expensive paid media.',
-    visual: DescendingBars,
-    metric: 'cost per acquisition',
   },
 ]
+
+function WaveRow({ card, index, active, onActivate }) {
+  const isActive = active === index
+  return (
+    <div
+      data-cursor="link"
+      onMouseEnter={() => onActivate(index)}
+      onClick={() => onActivate(index)}
+      onFocus={() => onActivate(index)}
+      tabIndex={0}
+      role="button"
+      aria-expanded={isActive}
+      className={`cursor-pointer rounded-2xl transition-colors duration-500 ${
+        isActive ? 'bg-cream/[0.06] px-5 py-7 sm:px-8 sm:py-9' : 'px-5 py-5 sm:px-8'
+      }`}
+    >
+      <div className="flex items-center gap-5">
+        <span
+          className={`flex h-9 w-9 shrink-0 items-center justify-center rounded-lg font-display text-sm font-semibold tabular-nums transition-colors duration-500 ${
+            isActive ? 'bg-wave-orange-deep text-cream' : 'border border-cream/20 text-cream/35'
+          }`}
+        >
+          {String(index + 1).padStart(2, '0')}
+        </span>
+        <h3
+          className={`font-display text-xl font-semibold transition-colors duration-500 sm:text-2xl ${
+            isActive ? 'text-cream' : 'text-cream/35'
+          }`}
+        >
+          {card.title}
+        </h3>
+      </div>
+
+      <div
+        className="grid transition-[grid-template-rows] duration-500 ease-out"
+        style={{ gridTemplateRows: isActive ? '1fr' : '0fr' }}
+      >
+        <div className="overflow-hidden">
+          <div className="mt-5 flex items-start justify-between gap-6 pl-14">
+            <div className="max-w-md">
+              <p className="text-[11px] font-semibold tracking-[0.15em] text-wave-orange uppercase">
+                {card.eyebrow}
+              </p>
+              <p className="mt-2 text-sm leading-relaxed text-cream/55">{card.body}</p>
+              <p className="mt-3 flex items-center gap-1.5 text-xs text-cream/30">
+                <span className="line-through decoration-cream/25">{card.old}</span>
+                <span aria-hidden="true">→</span>
+              </p>
+            </div>
+            <span className="hidden shrink-0 text-lg text-cream/25 sm:block" aria-hidden="true">
+              ↗
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 export function WhyWave() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
+  const [active, setActive] = useState(0)
   useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
@@ -169,45 +123,23 @@ export function WhyWave() {
             why wave
           </SectionLabel>
 
-          <h2
-            data-reveal
-            className="mt-4 font-display text-[1.75rem] leading-[1.15] font-semibold tracking-tight text-cream sm:text-[2.25rem] lg:text-[2.75rem]"
-          >
-            <span className="block text-cream/30 line-through decoration-cream/25">the old way.</span>
-            <span className="block text-wave-orange">meet the new wave.</span>
+          <h2 data-reveal className="mt-4 leading-[1.1]">
+            <span className="block font-display text-[1.6rem] font-semibold tracking-tight text-cream/30 line-through decoration-cream/25 sm:text-[2rem] lg:text-[2.5rem]">
+              the old way.
+            </span>
+            <span className="mt-1 block font-serif text-[2.4rem] text-wave-orange italic sm:text-[3.1rem] lg:text-[3.75rem]">
+              meet the new wave.
+            </span>
           </h2>
 
-          <p data-reveal className="mx-auto mt-3 max-w-sm text-sm leading-relaxed text-cream/50 sm:text-[15px]">
+          <p data-reveal className="mx-auto mt-4 max-w-sm text-sm leading-relaxed text-cream/50 sm:text-[15px]">
             A constant stream of creator content, tested at scale, that lowers what you pay to acquire a customer.
           </p>
         </div>
 
-        <div
-          data-reveal
-          className="mt-16 grid grid-cols-1 border-t border-cream/10 sm:grid-cols-3 sm:divide-x sm:divide-cream/10"
-        >
-          {CARDS.map((card) => (
-            <div
-              key={card.title}
-              className="border-b border-cream/10 py-10 last:border-b-0 sm:border-b-0 sm:px-8 sm:py-12 sm:first:pl-0 sm:last:pr-0"
-            >
-              <card.icon />
-
-              <p className="mt-6 flex items-center gap-1.5 text-xs font-medium text-cream/35">
-                <span className="line-through decoration-cream/25">{card.old}</span>
-                <span aria-hidden="true">→</span>
-              </p>
-
-              <h3 className="mt-2 font-display text-lg font-semibold text-cream">{card.title}</h3>
-              <p className="mt-3 max-w-xs text-sm leading-relaxed text-cream/55">{card.body}</p>
-
-              <div className="mt-7">
-                <card.visual />
-                <p className="mt-2 text-[11px] font-semibold tracking-wide text-wave-orange uppercase">
-                  {card.metric}
-                </p>
-              </div>
-            </div>
+        <div data-reveal className="mx-auto mt-14 max-w-3xl border-t border-cream/10 pt-2">
+          {CARDS.map((card, i) => (
+            <WaveRow key={card.title} card={card} index={i} active={active} onActivate={setActive} />
           ))}
         </div>
 
