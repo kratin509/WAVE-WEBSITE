@@ -132,10 +132,13 @@ export function WhyWave() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
   const painRef = useRef(null)
-  // Nav should only flip dark while the pain-points block is still showing
-  // its dark background - it fades to white well before the block's own
-  // end, so the trigger's end is pulled in to roughly match that point.
-  useSectionNavTheme(painRef, { dark: true, end: '65% top' })
+  // WhyWavePainPoints is a 300vh container whose sticky h-screen panel
+  // unpins after (300vh - 100vh) of scroll - i.e. at 200/300 = 66.7% of
+  // the container's own height, not its full bottom edge. The panel's
+  // background only turns dark in the back half of that pin duration, so
+  // the nav flip window is scoped to roughly [47%, 67%] of the container
+  // to match what's actually on screen at each point.
+  useSectionNavTheme(painRef, { dark: true, start: '47% top', end: '67% top' })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
