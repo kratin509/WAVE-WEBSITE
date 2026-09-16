@@ -1,7 +1,5 @@
 import { useRef } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
-import card5 from '../assets/cards/card5_kiara.png'
-import hookC from '../assets/experiments/hookC.jpg'
 
 const BULLETS = [
   {
@@ -57,35 +55,31 @@ function BackgroundWaves({ sectionRef }) {
   )
 }
 
-function FeatureRow({ image, alt, stat, statLabel, statTone, heading, body, bullets, imageSide }) {
+function FeatureRow({ stat, statLabel, statTone, heading, body, bullets, imageSide }) {
   const imageFirst = imageSide === 'left'
   return (
-    <div className="relative z-10 grid grid-cols-1 items-center gap-14 md:grid-cols-2 md:gap-16">
-      <div
-        className={`relative flex justify-center ${imageFirst ? 'md:order-1 md:justify-end' : 'md:order-2 md:justify-start'}`}
-      >
-        <div className="aspect-[9/16] w-64 overflow-hidden rounded-3xl border border-ink/10 shadow-xl sm:w-72">
-          <img src={image} alt={alt} className="h-full w-full object-cover" loading="lazy" draggable={false} />
-        </div>
+    <div className="flex flex-col items-center gap-10 md:flex-row md:items-center md:gap-8">
+      <div className={`relative flex w-full justify-center md:w-auto ${imageFirst ? 'md:order-1' : 'md:order-2'} md:flex-1`}>
+        <div className="aspect-[9/16] w-full max-w-[300px] rounded-3xl border border-ink/10 bg-gradient-to-br from-ink/5 to-ink/10 shadow-xl sm:max-w-[360px]" />
 
         <div
-          className={`absolute z-20 min-w-[170px] rounded-2xl border p-4 shadow-lg ${
-            imageFirst ? '-bottom-4 left-4 md:left-6' : '-top-4 right-4 md:right-6'
+          className={`absolute bottom-4 min-w-[160px] rounded-2xl border p-4 shadow-lg ${
+            imageFirst ? 'left-0' : 'right-0'
           } ${statTone === 'orange' ? 'border-wave-orange-deep/20 bg-wave-orange-deep text-cream' : 'border-wave-peach/40 bg-wave-peach-light text-ink'}`}
         >
-          <p className="text-2xl font-black">{stat}</p>
-          <p className={`mt-0.5 text-xs font-medium ${statTone === 'orange' ? 'text-cream/80' : 'text-ink/60'}`}>
-            {statLabel}
-          </p>
+          <p className="text-4xl font-bold tracking-tight">{stat}</p>
+          <p className={`mt-0.5 text-sm ${statTone === 'orange' ? 'text-cream/80' : 'text-ink/60'}`}>{statLabel}</p>
         </div>
       </div>
 
-      <div className={imageFirst ? 'md:order-2' : 'order-2 md:order-1'}>
-        <h3 className="mb-4 font-display text-3xl font-bold text-ink sm:text-4xl">{heading}</h3>
-        <p className="max-w-md text-base leading-relaxed text-ink/60 sm:text-lg">{body}</p>
+      <div className={`w-full md:flex-1 ${imageFirst ? 'md:order-2' : 'md:order-1'}`}>
+        <h3 className="mb-6 font-display text-4xl leading-[1.1] font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl">
+          {heading}
+        </h3>
+        <p className="max-w-md text-lg leading-relaxed text-ink/60">{body}</p>
 
         {bullets && (
-          <ul className="mt-6 max-w-md space-y-4">
+          <ul className="mt-8 max-w-md space-y-4">
             {bullets.map((item) => (
               <li key={item.title} className="flex gap-3">
                 <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-wave-orange-deep" />
@@ -108,11 +102,9 @@ export function WhyWaveFeatures() {
     <section ref={sectionRef} className="relative overflow-hidden bg-cream px-6 py-20 sm:py-24">
       <BackgroundWaves sectionRef={sectionRef} />
 
-      <div className="relative z-10 mx-auto max-w-6xl">
+      <div className="relative z-10 mx-auto max-w-[1000px]">
         <div className="mb-24">
           <FeatureRow
-            image={card5}
-            alt="Creator holding up a skincare serum to camera"
             stat="200%"
             statLabel="Organic follower growth"
             statTone="peach"
@@ -124,8 +116,6 @@ export function WhyWaveFeatures() {
 
         <div>
           <FeatureRow
-            image={hookC}
-            alt="The winning hook - a creator talking to camera about a product she found"
             stat="4.2M"
             statLabel="Impressions"
             statTone="orange"
