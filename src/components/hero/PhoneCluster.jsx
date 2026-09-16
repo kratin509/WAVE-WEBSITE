@@ -1,24 +1,53 @@
-import card3 from '../../assets/cards/card3_saanvi.png'
 import card4 from '../../assets/cards/card4_tanvi.png'
 import card5 from '../../assets/cards/card5_kiara.png'
+import hookE from '../../assets/experiments/hookE.jpg'
 
 // Three tilted, overlapping UGC-video cards, positioned as percentages of
 // this component's own box (not the whole hero) so the cluster is a
 // self-contained visual unit next to the copy column - no annotation
-// tags, just the cards themselves.
+// tags, just the cards themselves. Card 1 (largest, female + product) up
+// front-left, Card 2 (male creator) tucked behind/right with an opposite
+// rotation, Card 3 (smallest, female talking to camera) farthest right.
 const CARDS = [
-  { img: card4, alt: 'UGC creator video', left: 2, top: 15, w: 36, rotate: -7, z: 20, bob: 5.2 },
-  { img: card3, alt: 'UGC creator video, the winning hook', left: 32, top: 0, w: 40, rotate: -1, z: 40, bob: 5 },
-  { img: card5, alt: 'UGC creator video', left: 66, top: 22, w: 32, rotate: 6, z: 24, bob: 5.8 },
+  { img: card4, alt: 'Creator showing a product to camera', left: 0, top: 14, w: 40, rotate: -6, z: 30, bob: 5.2 },
+  { img: hookE, alt: 'Creator holding up a phone to camera', left: 30, top: 0, w: 38, rotate: 4, z: 20, bob: 5.6 },
+  { img: card5, alt: 'Creator talking to camera', left: 66, top: 24, w: 30, rotate: 7, z: 24, bob: 5.9 },
 ]
+
+// A big, near-invisible outline of the brand's own wave mark sitting
+// behind the cards - identity, not decoration.
+function WaveMarkGhost() {
+  return (
+    <svg
+      aria-hidden="true"
+      viewBox="0 0 200 200"
+      className="pointer-events-none absolute top-1/2 left-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 opacity-[0.05]"
+    >
+      <path
+        d="M20 110 Q 45 60 70 110 T 120 110 T 170 110"
+        stroke="var(--color-wave-orange-deep)"
+        strokeWidth="10"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  )
+}
 
 export function PhoneCluster({ reduced }) {
   return (
-    <div className="relative mx-auto aspect-[6/5] w-full max-w-[520px]">
+    <div className="relative mx-auto aspect-[6/5] w-full max-w-[480px]">
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/2 left-1/2 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-3xl"
+        style={{ background: 'radial-gradient(circle, var(--color-wave-peach), transparent 68%)' }}
+      />
+      <WaveMarkGhost />
+
       {CARDS.map((c, i) => (
         <div
           key={i}
-          className={`absolute overflow-hidden rounded-2xl border border-white/15 shadow-[0_24px_55px_rgba(22,17,15,0.25)] ${
+          className={`absolute overflow-hidden rounded-2xl border border-white/15 shadow-[0_20px_45px_rgba(22,17,15,0.22)] ${
             reduced ? '' : 'animate-card-bob'
           }`}
           style={{
