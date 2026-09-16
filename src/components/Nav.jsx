@@ -25,21 +25,17 @@ export function Nav() {
 
   const ink = onDark ? 'text-cream' : 'text-ink'
   const inkMuted = onDark
-    ? 'text-cream/65 hover:text-cream'
+    ? 'text-cream/70 hover:text-cream'
     : 'text-ink/60 hover:text-ink'
-  const borderTone = onDark ? 'border-cream/15' : 'border-ink/10'
-  const barBg = onDark ? 'bg-ink' : scrolled ? 'bg-white/95 backdrop-blur-sm' : 'bg-white'
+  const borderTone = onDark ? 'border-cream/20' : 'border-ink/15'
+  // Transparent over whatever's beneath by default - matching the
+  // reference's minimal glass nav - with just a blur (no solid fill)
+  // once scrolled, so text stays legible over fast-moving content below.
+  const barBg = scrolled ? (onDark ? 'bg-ink/30 backdrop-blur-md' : 'bg-white/30 backdrop-blur-md') : 'bg-transparent'
 
   return (
-    <header className={`fixed inset-x-0 top-0 z-50 border-b transition-colors duration-300 ${borderTone} ${barBg}`}>
-      <nav className="mx-auto flex max-w-[1400px] items-center justify-between px-6 py-4 sm:px-10">
-        <MagneticLink href="#top" cursor="link" className="flex shrink-0 items-center gap-2.5">
-          <img src={logo} alt="Wave" className="h-8 w-8 rounded-full object-cover" />
-          <span className={`font-display text-xl leading-none font-semibold lowercase tracking-tight ${ink}`}>
-            wave
-          </span>
-        </MagneticLink>
-
+    <header className={`fixed inset-x-0 top-0 z-50 transition-colors duration-300 ${barBg}`}>
+      <nav className="mx-auto grid max-w-[1400px] grid-cols-2 items-center px-6 py-5 sm:px-10 lg:grid-cols-[1fr_auto_1fr]">
         <div className="hidden items-center gap-8 lg:flex">
           {LINKS.map((link) => (
             <MagneticLink
@@ -53,7 +49,14 @@ export function Nav() {
           ))}
         </div>
 
-        <div className="flex items-center gap-3">
+        <MagneticLink href="#top" cursor="link" className="flex shrink-0 items-center gap-2.5 justify-self-start lg:justify-self-center">
+          <img src={logo} alt="Wave" className="h-8 w-8 rounded-full object-cover" />
+          <span className={`font-display text-xl leading-none font-semibold lowercase tracking-tight ${ink}`}>
+            wave
+          </span>
+        </MagneticLink>
+
+        <div className="flex items-center justify-end gap-3">
           <MagneticLink
             href="#start-a-wave"
             cursor="button"
@@ -91,7 +94,7 @@ export function Nav() {
             animate={{ opacity: 1, height: 'auto' }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.25, ease: 'easeOut' }}
-            className={`overflow-hidden border-t lg:hidden ${borderTone} ${barBg}`}
+            className={`overflow-hidden border-t lg:hidden ${borderTone} ${onDark ? 'bg-ink/80' : 'bg-white/80'} backdrop-blur-md`}
           >
             <div className="flex flex-col gap-1 px-6 py-4">
               {LINKS.map((link) => (
