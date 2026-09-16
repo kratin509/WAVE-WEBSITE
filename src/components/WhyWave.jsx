@@ -132,13 +132,13 @@ export function WhyWave() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
   const painRef = useRef(null)
-  // WhyWavePainPoints is a 300vh container whose sticky h-screen panel
-  // unpins after (300vh - 100vh) of scroll - i.e. at 200/300 = 66.7% of
-  // the container's own height, not its full bottom edge. The panel's
+  // WhyWavePainPoints is a 500vh container whose sticky h-screen panel
+  // unpins after (500vh - 100vh) of scroll - i.e. at 400/500 = 80% of the
+  // container's own height, not its full bottom edge. The panel's
   // background only turns dark in the back half of that pin duration, so
-  // the nav flip window is scoped to roughly [47%, 67%] of the container
+  // the nav flip window is scoped to roughly [56%, 80%] of the container
   // to match what's actually on screen at each point.
-  useSectionNavTheme(painRef, { dark: true, start: '47% top', end: '67% top' })
+  useSectionNavTheme(painRef, { dark: true, start: '56% top', end: '80% top' })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
@@ -160,7 +160,7 @@ export function WhyWave() {
   }, [reduced])
 
   return (
-    <section id="why-wave" ref={sectionRef} className="relative bg-cream">
+    <section id="why-wave" ref={sectionRef} className="relative bg-ink-soft">
       <WhyWavePainPoints ref={painRef} />
 
       <div className="mx-auto max-w-[1800px] px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28">

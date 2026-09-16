@@ -47,9 +47,11 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
   // inertia instead of snapping 1:1 to every wheel notch.
   const scrollYProgress = useSpring(rawProgress, { stiffness: 90, damping: 26, mass: 0.4, restDelta: 0.0005 })
 
-  // Stays on the plain light panel through the first two cards, only
-  // starting to shift toward dark once they're on screen.
-  const backgroundColor = useTransform(scrollYProgress, [0, 0.46, 0.88], ['#f7f1e8', '#f7f1e8', '#1c1a17'])
+  // Starts pure white to bleed seamlessly out of the white Experiments
+  // section above, stays on that plain panel through the first two
+  // cards, then shifts toward the same ink-soft dark the section below
+  // this one ends on - no harsh color line at either edge.
+  const backgroundColor = useTransform(scrollYProgress, [0, 0.46, 0.88], ['#ffffff', '#ffffff', '#1c1a17'])
   const textColor = useTransform(scrollYProgress, [0, 0.46, 0.88], ['#0d0d0d', '#0d0d0d', '#f7f1e8'])
 
   if (reduced) {
@@ -73,7 +75,7 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
   }
 
   return (
-    <div ref={ref} className="relative h-[300vh]">
+    <div ref={ref} className="relative h-[500vh]">
       <motion.div
         style={{ backgroundColor }}
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
