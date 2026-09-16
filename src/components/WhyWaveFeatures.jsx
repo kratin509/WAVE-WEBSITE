@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useReducedMotion } from '../lib/useReducedMotion'
 
@@ -20,17 +20,21 @@ const BULLETS = [
 ]
 
 function AnimatedWords({ text, reduced }) {
-  if (reduced) return <>{text}</>
   return (
     <>
       {text.split(' ').map((word, i) => (
         <motion.span
           key={i}
-          initial={{ opacity: 0, y: 20 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
-          transition={{ duration: 0.5, delay: i * 0.035, ease: 'easeOut' }}
+          data-anchor={word === 'growth' ? 'growth' : undefined}
           className="inline-block"
+          {...(reduced
+            ? {}
+            : {
+                initial: { opacity: 0, y: 20 },
+                whileInView: { opacity: 1, y: 0 },
+                viewport: { once: true, margin: '-100px' },
+                transition: { duration: 0.5, delay: i * 0.035, ease: 'easeOut' },
+              })}
         >
           {word}&nbsp;
         </motion.span>
@@ -39,46 +43,112 @@ function AnimatedWords({ text, reduced }) {
   )
 }
 
-// One unbroken orange thread that starts behind the mission heading and
-// winds its way down past both feature cards to the foot of the section -
-// a single scroll-drawn pathLength stroke rather than two disconnected
-// decorations, so the whole section reads as one continuous piece instead
-// of stacked blocks. preserveAspectRatio=none deliberately lets the curve
-// stretch to whatever height the content ends up being, since it's an
-// abstract squiggle, not something that needs geometric precision.
+// Smooths a list of {x,y} points into one cubic-bezier path (Catmull-Rom
+// -> Bezier, tension 1/6) instead of hand-picked control points, so the
+// curve can be rebuilt from live-measured anchors without redoing the
+// bezier math by hand every time those anchors move.
+function smoothPath(points) {
+  if (points.length < 2) return ''
+  let d = `M ${points[0].x} ${points[0].y}`
+  for (let i = 0; i < points.length - 1; i++) {
+    const p0 = points[i - 1] || points[i]
+    const p1 = points[i]
+    const p2 = points[i + 1]
+    const p3 = points[i + 2] || p2
+    const c1x = p1.x + (p2.x - p0.x) / 6
+    const c1y = p1.y + (p2.y - p0.y) / 6
+    const c2x = p2.x - (p3.x - p1.x) / 6
+    const c2y = p2.y - (p3.y - p1.y) / 6
+    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`
+  }
+  return d
+}
+
+// One unbroken orange thread that starts right at the "G" of "growth" in
+// the mission heading, curls into a flourish, then dives through both
+// feature cards to the foot of the section. The anchor points (the growth
+// word, each card) are measured live off the DOM rather than hard-coded
+// pixel guesses - hard-coded values only ever matched one exact viewport
+// width, and broke (badly - loops landing on the wrong line, the spine
+// missing the cards entirely) the moment the heading wrapped onto a
+// different number of lines at another width. Re-measures on resize and
+// once fonts finish loading, since a late font swap reflows the heading.
 function BackgroundWave({ sectionRef, reduced }) {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 0.85', 'end 0.15'] })
-  // Two separate strokes sharing one scroll timeline rather than one path
-  // with a single [0,1] budget - a tightly coiled loop eats a hugely
-  // disproportionate share of a path's arc length for how little vertical
-  // space it covers, so treating the whole thing as one pathLength left
-  // the long spine stalled just past the loop for most of the scroll.
-  // Giving the flourish its own short early budget and the spine the rest
-  // guarantees the spine actually reaches both cards and the section's
-  // foot by the time you're done scrolling.
   const loopDrawn = useTransform(scrollYProgress, [0, 0.12], [0, 1])
   const spineDrawn = useTransform(scrollYProgress, [0.08, 1], [0, 1])
+  const [geo, setGeo] = useState(null)
+
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+
+    function measure() {
+      const sRect = section.getBoundingClientRect()
+      const growth = section.querySelector('[data-anchor="growth"]')
+      const cards = section.querySelectorAll('[data-anchor="card"]')
+      if (!growth || cards.length < 2 || sRect.width === 0) return
+      const toLocal = (r) => ({
+        left: r.left - sRect.left,
+        right: r.right - sRect.left,
+        top: r.top - sRect.top,
+        bottom: r.bottom - sRect.top,
+      })
+      setGeo({
+        width: sRect.width,
+        height: sRect.height,
+        g: toLocal(growth.getBoundingClientRect()),
+        c1: toLocal(cards[0].getBoundingClientRect()),
+        c2: toLocal(cards[1].getBoundingClientRect()),
+      })
+    }
+
+    measure()
+    document.fonts?.ready?.then(measure)
+    const ro = new ResizeObserver(measure)
+    ro.observe(section)
+    return () => ro.disconnect()
+  }, [sectionRef])
+
+  if (!geo) return null
+
+  const gx = geo.g.left + 6
+  const gy = geo.g.top + (geo.g.bottom - geo.g.top) * 0.55
+
+  const loopPoints = [
+    { x: gx, y: gy },
+    { x: gx - 90, y: gy - 70 },
+    { x: gx - 210, y: gy - 20 },
+    { x: gx - 150, y: gy + 90 },
+    { x: gx - 70, y: gy + 55 },
+  ]
+  const loopEnd = loopPoints[loopPoints.length - 1]
+
+  const c1w = geo.c1.right - geo.c1.left
+  const c1h = geo.c1.bottom - geo.c1.top
+  const c2w = geo.c2.right - geo.c2.left
+  const c2h = geo.c2.bottom - geo.c2.top
+
+  const spinePoints = [
+    loopEnd,
+    { x: geo.c1.left + c1w * 0.55, y: geo.c1.top + c1h * 0.12 },
+    { x: geo.c1.left + c1w * 0.35, y: geo.c1.top + c1h * 0.5 },
+    { x: geo.c1.left + c1w * 0.55, y: geo.c1.bottom - c1h * 0.05 },
+    { x: (geo.c1.left + geo.c2.right) / 2, y: (geo.c1.bottom + geo.c2.top) / 2 },
+    { x: geo.c2.left + c2w * 0.35, y: geo.c2.top + c2h * 0.1 },
+    { x: geo.c2.left + c2w * 0.55, y: geo.c2.top + c2h * 0.55 },
+    { x: geo.c2.left + c2w * 0.4, y: geo.c2.bottom - c2h * 0.05 },
+    { x: geo.c2.left + c2w * 0.3, y: Math.min(geo.c2.bottom + 60, geo.height - 20) },
+  ]
 
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 1440 2064"
-      preserveAspectRatio="none"
+      viewBox={`0 0 ${geo.width} ${geo.height}`}
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
     >
-      {/* Waypoints are tuned to this section's actual measured layout at
-          1440px. The stroke originates right at the "G" of "growth" in the
-          mission heading (measured at x869-1120/y288-354), curls left from
-          there, then hands off at (710,390) into a wide spine that dives
-          through each 9:16 card at roughly x282-642/y512-1152 and
-          x798-1158/y1248-1888 - it genuinely passes behind both cards, not
-          just near them. */}
       <motion.path
-        d="M 880 320
-           C 800 260, 700 260, 660 340
-           C 620 420, 700 470, 770 440
-           C 820 418, 820 360, 780 350
-           C 750 343, 720 360, 710 390"
+        d={smoothPath(loopPoints)}
         stroke="var(--color-wave-orange-deep)"
         strokeWidth="6"
         strokeLinecap="round"
@@ -89,15 +159,7 @@ function BackgroundWave({ sectionRef, reduced }) {
         pathLength={reduced ? undefined : 1}
       />
       <motion.path
-        d="M 710 390
-           C 660 460, 550 480, 500 560
-           C 460 620, 430 700, 460 800
-           C 490 900, 470 1000, 500 1100
-           C 530 1200, 600 1220, 650 1250
-           C 720 1290, 820 1300, 880 1360
-           C 940 1420, 960 1500, 990 1600
-           C 1020 1700, 980 1780, 1010 1850
-           C 1035 1910, 980 1950, 930 2000"
+        d={smoothPath(spinePoints)}
         stroke="var(--color-wave-orange-deep)"
         strokeWidth="6"
         strokeLinecap="round"
@@ -119,7 +181,10 @@ function FeatureRow({ stat, statLabel, statTone, heading, body, bullets, imageSi
         {/* Solid, fully opaque fill - anything drawn behind this (the
             background wave) must not show through, the way it would with
             a low-alpha tint. */}
-        <div className="aspect-[9/16] w-full max-w-[300px] rounded-3xl border border-ink/10 bg-cream-dim shadow-xl sm:max-w-[360px]" />
+        <div
+          data-anchor="card"
+          className="aspect-[9/16] w-full max-w-[300px] rounded-3xl border border-ink/10 bg-cream-dim shadow-xl sm:max-w-[360px]"
+        />
 
         <div
           className={`absolute bottom-4 min-w-[160px] rounded-2xl border p-4 shadow-lg ${
@@ -159,7 +224,7 @@ export function WhyWaveFeatures() {
   const reduced = useReducedMotion()
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white px-6 py-20 sm:py-24">
+    <section ref={sectionRef} className="bg-dot-grid relative overflow-hidden bg-white px-6 py-20 sm:py-24">
       <BackgroundWave sectionRef={sectionRef} reduced={reduced} />
 
       <div className="relative z-10 mx-auto max-w-[1000px]">
