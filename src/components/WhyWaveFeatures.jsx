@@ -48,34 +48,61 @@ function AnimatedWords({ text, reduced }) {
 // abstract squiggle, not something that needs geometric precision.
 function BackgroundWave({ sectionRef, reduced }) {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 0.85', 'end 0.15'] })
-  const drawn = useTransform(scrollYProgress, [0, 1], [0, 1])
+  // Two separate strokes sharing one scroll timeline rather than one path
+  // with a single [0,1] budget - a tightly coiled loop eats a hugely
+  // disproportionate share of a path's arc length for how little vertical
+  // space it covers, so treating the whole thing as one pathLength left
+  // the long spine stalled just past the loop for most of the scroll.
+  // Giving the flourish its own short early budget and the spine the rest
+  // guarantees the spine actually reaches both cards and the section's
+  // foot by the time you're done scrolling.
+  const loopDrawn = useTransform(scrollYProgress, [0, 0.12], [0, 1])
+  const spineDrawn = useTransform(scrollYProgress, [0.08, 1], [0, 1])
 
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 1440 2360"
+      viewBox="0 0 1440 2064"
       preserveAspectRatio="none"
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
     >
+      {/* Waypoints are tuned to this section's actual measured layout at
+          1440px: a flourish loop in the top-left margin, handing off at
+          (120,200) into a wide spine that dives through each 9:16 card at
+          roughly x282-642/y512-1152 and x798-1158/y1248-1888 - it genuinely
+          passes behind both cards, not just near them. */}
       <motion.path
-        d="M 760 20
-           C 880 90, 920 200, 820 260
-           C 680 340, 560 300, 600 420
-           C 640 540, 500 560, 420 660
-           C 340 760, 300 850, 320 960
-           C 340 1070, 460 1080, 480 1180
-           C 500 1280, 650 1300, 750 1360
-           C 880 1440, 940 1360, 1000 1450
-           C 1060 1540, 1180 1580, 1150 1700
-           C 1120 1820, 1000 1860, 1020 1980
-           C 1040 2100, 1150 2130, 1100 2240"
+        d="M 90 260
+           C 0 190, 40 30, 170 40
+           C 300 50, 320 190, 220 250
+           C 160 285, 110 260, 120 200"
         stroke="var(--color-wave-orange-deep)"
-        strokeWidth="3.5"
+        strokeWidth="4"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity="0.7"
-        style={reduced ? undefined : { pathLength: drawn }}
+        opacity="0.8"
+        style={reduced ? undefined : { pathLength: loopDrawn }}
+        pathLength={reduced ? undefined : 1}
+      />
+      <motion.path
+        d="M 120 200
+           C 200 260, 280 300, 340 380
+           C 420 480, 380 500, 420 580
+           C 460 660, 430 820, 470 960
+           C 500 1060, 540 1100, 580 1160
+           C 620 1220, 660 1190, 700 1220
+           C 770 1270, 860 1300, 910 1360
+           C 960 1420, 980 1500, 1010 1600
+           C 1040 1700, 1000 1780, 1030 1850
+           C 1055 1910, 1000 1950, 950 2000"
+        stroke="var(--color-wave-orange-deep)"
+        strokeWidth="4"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+        opacity="0.8"
+        style={reduced ? undefined : { pathLength: spineDrawn }}
         pathLength={reduced ? undefined : 1}
       />
     </svg>
@@ -87,7 +114,10 @@ function FeatureRow({ stat, statLabel, statTone, heading, body, bullets, imageSi
   return (
     <div className="flex flex-col items-center gap-10 md:flex-row md:items-center md:gap-8">
       <div className={`relative flex w-full justify-center md:w-auto ${imageFirst ? 'md:order-1' : 'md:order-2'} md:flex-1`}>
-        <div className="aspect-[9/16] w-full max-w-[300px] rounded-3xl border border-ink/10 bg-gradient-to-br from-ink/5 to-ink/10 shadow-xl sm:max-w-[360px]" />
+        {/* Solid, fully opaque fill - anything drawn behind this (the
+            background wave) must not show through, the way it would with
+            a low-alpha tint. */}
+        <div className="aspect-[9/16] w-full max-w-[300px] rounded-3xl border border-ink/10 bg-cream-dim shadow-xl sm:max-w-[360px]" />
 
         <div
           className={`absolute bottom-4 min-w-[160px] rounded-2xl border p-4 shadow-lg ${

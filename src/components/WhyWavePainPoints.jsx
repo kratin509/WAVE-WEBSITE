@@ -8,29 +8,54 @@ const HEADING = 'Growth feels harder than it should be.'
 // 5-10 ideas, rising paid spend) plus two more in the same voice, not a
 // new unrelated list. Paired top/bottom cards share the same top/bottom
 // offset so the layout reads as symmetric, with the fifth card alone in
-// the middle. Ranges start after a quiet beat on the plain white panel,
-// and the first two land well before the background starts turning dark.
+// the middle. This is a round trip, not a one-way reveal: each card has
+// an `outRange` mirroring its `range`, staggered in the same left-right-
+// center-left-right order, so the whole panel undoes itself - cards gone,
+// background back to white - before the sticky panel unpins into the
+// (white) section below. No hard color cut at the handoff.
 const CARDS = [
-  { text: 'One polished ad, hoping it lands', pos: 'top-[10%] left-[4%] md:left-[10%]', range: [0.14, 0.32] },
-  { text: 'Betting on 5–10 ideas and guessing', pos: 'top-[10%] right-[4%] md:right-[10%]', range: [0.26, 0.44] },
+  {
+    text: 'One polished ad, hoping it lands',
+    pos: 'top-[10%] left-[4%] md:left-[10%]',
+    range: [0.1, 0.23],
+    outRange: [0.66, 0.8],
+  },
+  {
+    text: 'Betting on 5–10 ideas and guessing',
+    pos: 'top-[10%] right-[4%] md:right-[10%]',
+    range: [0.18, 0.31],
+    outRange: [0.71, 0.85],
+  },
   {
     text: "Content looks polished but doesn't perform",
     pos: 'top-[46%] left-1/2 -translate-x-1/2',
-    range: [0.4, 0.58],
+    range: [0.28, 0.41],
+    outRange: [0.76, 0.9],
   },
-  { text: 'Paid media costs that keep climbing', pos: 'bottom-[10%] left-[6%] md:left-[13%]', range: [0.54, 0.72] },
-  { text: 'No way to know which creative works', pos: 'bottom-[10%] right-[6%] md:right-[13%]', range: [0.68, 0.86] },
+  {
+    text: 'Paid media costs that keep climbing',
+    pos: 'bottom-[10%] left-[6%] md:left-[13%]',
+    range: [0.38, 0.51],
+    outRange: [0.81, 0.95],
+  },
+  {
+    text: 'No way to know which creative works',
+    pos: 'bottom-[10%] right-[6%] md:right-[13%]',
+    range: [0.48, 0.61],
+    outRange: [0.86, 1],
+  },
 ]
 
-function PainCard({ text, pos, range, progress, static: isStatic }) {
+function PainCard({ text, pos, range, outRange, progress, static: isStatic }) {
   // Static (reduced-motion) fallback renders fully in place, no motion values.
   const y = useTransform(progress, range, [80, 0])
   // Opacity ramps in over just the first quarter of the card's own range,
   // so it's fully opaque well before it physically overlaps the heading -
   // otherwise a still-translucent card lets the heading text show through
-  // underneath it and the two visually merge.
+  // underneath it and the two visually merge. It then holds at full
+  // opacity until outRange, where it ramps back down to 0 on the way out.
   const fadeEnd = range[0] + (range[1] - range[0]) * 0.25
-  const opacity = useTransform(progress, [range[0], fadeEnd], [0, 1])
+  const opacity = useTransform(progress, [range[0], fadeEnd, outRange[0], outRange[1]], [0, 1, 1, 0])
 
   return (
     <motion.div
@@ -53,12 +78,22 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
   // rather than heavy, so it reads as smooth, not slow.
   const scrollYProgress = useSpring(rawProgress, { stiffness: 140, damping: 24, mass: 0.3, restDelta: 0.0005 })
 
-  // Starts pure white to bleed seamlessly out of the white Experiments
-  // section above, stays on that plain panel through the first two
-  // cards, then shifts toward the same ink-soft dark the section below
-  // this one ends on - no harsh color line at either edge.
-  const backgroundColor = useTransform(scrollYProgress, [0, 0.46, 0.88], ['#ffffff', '#ffffff', '#1c1a17'])
-  const textColor = useTransform(scrollYProgress, [0, 0.46, 0.88], ['#0d0d0d', '#0d0d0d', '#f7f1e8'])
+  // A round trip rather than a one-way ramp: starts pure white to bleed
+  // seamlessly out of the white Experiments section above, darkens through
+  // the card reveal, holds dark while the cards are up, then eases back to
+  // white as they leave - so by the time the panel unpins, the page is
+  // already white and hands off to the (also white) section below with no
+  // seam at all.
+  const backgroundColor = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.55, 0.75, 0.97, 1],
+    ['#ffffff', '#ffffff', '#1c1a17', '#1c1a17', '#ffffff', '#ffffff'],
+  )
+  const textColor = useTransform(
+    scrollYProgress,
+    [0, 0.2, 0.55, 0.75, 0.97, 1],
+    ['#0d0d0d', '#0d0d0d', '#f7f1e8', '#f7f1e8', '#0d0d0d', '#0d0d0d'],
+  )
 
   if (reduced) {
     return (

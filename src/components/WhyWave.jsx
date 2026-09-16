@@ -15,10 +15,11 @@ export function WhyWave() {
   // WhyWavePainPoints is a 350vh container whose sticky h-screen panel
   // unpins after (350vh - 100vh) of scroll - i.e. at 250/350 = 71.4% of
   // the container's own height, not its full bottom edge. The panel's
-  // background only turns dark in the back half of that pin duration, so
-  // the nav flip window is scoped to roughly [50%, 72%] of the container
-  // to match what's actually on screen at each point.
-  useSectionNavTheme(painRef, { dark: true, start: '50% top', end: '72% top' })
+  // background is now a round trip (white -> dark -> white) rather than a
+  // one-way ramp, solidly dark across roughly progress [0.35, 0.85] - so
+  // the nav flip window is scoped to that same span, converted to
+  // container-relative percent (progress * 71.4%).
+  useSectionNavTheme(painRef, { dark: true, start: '25% top', end: '61% top' })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
