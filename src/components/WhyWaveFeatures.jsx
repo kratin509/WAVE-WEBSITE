@@ -1,30 +1,36 @@
 import card5 from '../assets/cards/card5_kiara.png'
 import hookC from '../assets/experiments/hookC.jpg'
 
-// Two soft decorative curves behind the content - the brand's warm
-// orange/peach tones standing in for the reference's pink/purple, kept
-// low-opacity so they read as texture rather than competing with copy.
+// One continuous canvas layer behind the whole section (not per-row
+// backgrounds), so the curves can bleed across the section's own edges
+// instead of feeling boxed in. The top-left spiral is a real hand-drawn
+// squiggle shape (kept as-is, just recolored into the brand's orange
+// rather than the reference's pink) paired with a second swoop on the
+// opposite side for balance.
 function BackgroundWaves() {
   return (
     <svg
       aria-hidden="true"
-      viewBox="0 0 1200 900"
-      preserveAspectRatio="none"
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+      viewBox="0 0 1440 1200"
+      className="pointer-events-none absolute inset-0 z-0 h-full w-full overflow-visible"
     >
       <path
-        d="M-40 60 C 40 -20, 160 -20, 200 90 C 240 200, 120 260, 40 220 C -30 185, -10 130, 60 140 C 160 155, 260 260, 380 210"
+        d="M180.79 1.30042C163.471 65.6046 110.061 102.919 78.3233 105.455C51.3324 107.612 61.0037 65.4235 78.3233 76.7446C89.9026 84.3135 103.169 118.769 59.3715 133.984C33.4678 142.984 1.79041 130.815 1.79041 130.815"
         stroke="var(--color-wave-orange-deep)"
-        strokeWidth="2"
+        strokeWidth="2.23"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
-        opacity="0.35"
+        opacity="0.5"
       />
       <path
-        d="M1240 260 C 1120 320, 1060 420, 1140 500 C 1220 580, 1180 680, 1080 700 C 990 718, 940 660, 960 610"
+        d="M1259.21 780.7C1276.53 716.395 1329.94 679.081 1361.68 676.545C1388.67 674.388 1379 716.577 1361.68 705.255C1350.1 697.687 1336.83 663.231 1380.63 648.016C1406.53 639.016 1438.21 651.185 1438.21 651.185"
         stroke="var(--color-wave-orange)"
-        strokeWidth="2"
+        strokeWidth="2.23"
+        strokeLinecap="round"
+        strokeLinejoin="round"
         fill="none"
-        opacity="0.35"
+        opacity="0.4"
       />
     </svg>
   )
