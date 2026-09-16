@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
+import { useIsMobile } from '../lib/useIsMobile'
 import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { SectionLabel } from './ui/SectionLabel'
 import hookB from '../assets/experiments/hookB.jpg'
@@ -59,6 +60,32 @@ function CacIllustration() {
       <p className="mt-4 flex items-center gap-1.5 text-sm font-semibold text-wave-orange-deep">
         trending down <span aria-hidden="true">↓</span>
       </p>
+    </div>
+  )
+}
+
+// The "old way" struggles, scattered as floating cards around the
+// headline - reusing the same three pain points already named inline in
+// CARDS below (one polished ad / 5-10 ideas / rising paid spend) plus two
+// more in the same voice, rather than inventing an unrelated new list.
+const PAIN_POINTS = [
+  { text: 'One polished ad, hoping it lands', pos: 'left-0 top-[2%] lg:w-[230px]' },
+  { text: 'Betting on 5–10 ideas and guessing', pos: 'right-0 top-[6%] lg:w-[240px]' },
+  { text: 'Paid media costs that keep climbing', pos: 'left-0 top-[80%] lg:w-[240px]' },
+  { text: "Reach that never turns into signups", pos: 'right-0 top-[80%] lg:w-[230px]' },
+  { text: 'No way to know which creative works', pos: 'left-1/2 top-[88%] -translate-x-1/2 lg:w-[250px]' },
+]
+
+function PainCard({ text, pos }) {
+  return (
+    <div
+      data-pain-card
+      className={`absolute flex items-start gap-3 rounded-2xl border border-cream/10 bg-cream/[0.06] p-4 backdrop-blur-sm ${pos}`}
+    >
+      <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-wave-orange-deep text-xs font-bold text-ink">
+        ✕
+      </span>
+      <p className="font-display text-sm leading-snug font-semibold text-cream sm:text-base">{text}</p>
     </div>
   )
 }
@@ -130,7 +157,9 @@ function StackCard({ card, index }) {
 
 export function WhyWave() {
   const reduced = useReducedMotion()
+  const mobile = useIsMobile()
   const sectionRef = useRef(null)
+  const painRef = useRef(null)
   useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
@@ -148,9 +177,29 @@ export function WhyWave() {
           scrollTrigger: { trigger: sectionRef.current, start: 'top 78%' },
         },
       )
+
+      // Pain-point cards pin in place and float into position as the
+      // user scrolls through them - desktop only, where there's room for
+      // the scatter layout; mobile keeps the plain stacked reveal above.
+      if (!mobile && painRef.current) {
+        const cards = gsap.utils.toArray('[data-pain-card]', painRef.current)
+        gsap.set(cards, { opacity: 0, y: 50 })
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: painRef.current,
+            start: 'top top+=90',
+            end: '+=650',
+            pin: true,
+            scrub: 0.6,
+          },
+        })
+        cards.forEach((card, i) => {
+          tl.to(card, { opacity: 1, y: 0, duration: 0.6, ease: 'power2.out' }, i * 0.25)
+        })
+      }
     }, sectionRef)
     return () => ctx.revert()
-  }, [reduced])
+  }, [reduced, mobile])
 
   return (
     <section
@@ -159,16 +208,17 @@ export function WhyWave() {
       className="relative bg-ink px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1800px]">
-        <div className="mx-auto max-w-4xl text-center">
+        {/* Mobile/tablet: the plain centered version, no scatter layout. */}
+        <div className="mx-auto max-w-4xl text-center lg:hidden">
           <SectionLabel data-reveal tone="dark">
             why wave
           </SectionLabel>
 
           <h2 data-reveal className="mt-5 leading-[1.1]">
-            <span className="block font-display text-[2rem] font-semibold tracking-tight text-cream/30 line-through decoration-cream/25 sm:text-[2.5rem] lg:text-[3.25rem] 2xl:text-[3.75rem]">
+            <span className="block font-display text-[2rem] font-semibold tracking-tight text-cream/30 line-through decoration-cream/25 sm:text-[2.5rem]">
               the old way.
             </span>
-            <span className="mt-2 block font-serif text-[3rem] text-wave-orange italic sm:text-[4rem] lg:text-[5rem] 2xl:text-[5.75rem]">
+            <span className="mt-2 block font-serif text-[3rem] text-wave-orange italic sm:text-[4rem]">
               meet the new wave.
             </span>
           </h2>
@@ -176,6 +226,31 @@ export function WhyWave() {
           <p data-reveal className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-cream/50 sm:text-lg">
             A constant stream of creator content, tested at scale, that lowers what you pay to acquire a customer.
           </p>
+        </div>
+
+        {/* Desktop: pain-point cards pin and float into place around the
+            headline as the section scrolls into view. */}
+        <div ref={painRef} className="relative mx-auto hidden min-h-[680px] max-w-5xl lg:block">
+          {PAIN_POINTS.map((point) => (
+            <PainCard key={point.text} text={point.text} pos={point.pos} />
+          ))}
+
+          <div className="absolute inset-0 flex flex-col items-center justify-center px-16 text-center">
+            <SectionLabel tone="dark">why wave</SectionLabel>
+
+            <h2 className="mt-5 leading-[1.1]">
+              <span className="block font-display text-[2.25rem] font-semibold tracking-tight text-cream/30 line-through decoration-cream/25 2xl:text-[2.75rem]">
+                the old way.
+              </span>
+              <span className="mt-2 block font-serif text-[3.5rem] text-wave-orange italic 2xl:text-[4.25rem]">
+                meet the new wave.
+              </span>
+            </h2>
+
+            <p className="mx-auto mt-6 max-w-xl text-base leading-relaxed text-cream/50 sm:text-lg">
+              A constant stream of creator content, tested at scale, that lowers what you pay to acquire a customer.
+            </p>
+          </div>
         </div>
 
         <div data-reveal className="relative mx-auto mt-20 max-w-5xl space-y-8 pb-8">
