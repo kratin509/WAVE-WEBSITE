@@ -146,24 +146,19 @@ export function CaseStudies() {
       style={{ backgroundColor: BG }}
     >
       <div className="mx-auto max-w-[1200px]">
-        <div
-          data-reveal
-          className="grid grid-cols-1 gap-4 border-b border-[#DDBFA9] pb-10 sm:pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.3fr)] lg:items-end lg:gap-16"
-        >
-          <div>
-            <span className="inline-block rounded-full bg-[#FFF0E2] px-2.5 py-1 text-[10px] font-medium tracking-wide text-[#66564C] uppercase">
-              case studies
+        <div data-reveal className="border-b border-[#DDBFA9] pb-10 sm:pb-12">
+          <span className="inline-block rounded-full bg-[#FFF0E2] px-2.5 py-1 text-[10px] font-medium tracking-wide text-[#66564C] uppercase">
+            case studies
+          </span>
+          <h2 className="mt-5 font-display leading-[1.02]">
+            <span className="block text-[3.4rem] font-bold tracking-tight text-[#211914] sm:text-[5.2rem] lg:text-[7rem]">
+              every result has a
             </span>
-            <h2 className="mt-4 font-display leading-[1.1]">
-              <span className="text-[1.9rem] font-bold tracking-tight text-[#211914] sm:text-[2.6rem] lg:text-[3.1rem]">
-                every result has a{' '}
-              </span>
-              <span className="font-serif text-[2.1rem] text-[#FF4B1F] italic sm:text-[2.9rem] lg:text-[3.5rem]">
-                story.
-              </span>
-            </h2>
-          </div>
-          <p className="max-w-md text-sm leading-relaxed text-[#66564C] sm:text-[15px] lg:text-right">
+            <span className="block font-serif text-[3.6rem] text-[#FF4B1F] italic sm:text-[5.5rem] lg:text-[7.4rem]">
+              story.
+            </span>
+          </h2>
+          <p className="mt-6 max-w-md text-sm leading-relaxed text-[#66564C] sm:text-[15px]">
             Not a folder of clips and a view count — a growth story, stage by stage.
           </p>
         </div>
