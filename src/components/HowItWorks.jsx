@@ -93,7 +93,7 @@ export function HowItWorks() {
     <section
       id="how-it-works"
       ref={sectionRef}
-      className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="bg-dot-grid relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <div className="mx-auto max-w-[1360px]">
         <div className="grid grid-cols-1 gap-12 lg:grid-cols-[300px_1fr] lg:gap-20">

@@ -230,7 +230,7 @@ export function Experiments() {
     <section
       id="experiments"
       ref={sectionRef}
-      className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="bg-dot-grid relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <StatsTicker />
 

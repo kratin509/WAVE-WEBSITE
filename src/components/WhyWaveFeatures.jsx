@@ -43,13 +43,18 @@ function AnimatedWords({ text, reduced }) {
   )
 }
 
-// Smooths a list of {x,y} points into one cubic-bezier path (Catmull-Rom
-// -> Bezier, tension 1/6) instead of hand-picked control points, so the
-// curve can be rebuilt from live-measured anchors without redoing the
-// bezier math by hand every time those anchors move.
-function smoothPath(points) {
-  if (points.length < 2) return ''
-  let d = `M ${points[0].x} ${points[0].y}`
+// Turns a list of {x,y} points into cubic-bezier segments (Catmull-Rom ->
+// Bezier, tension 1/6) so the curve can be rebuilt from live-measured
+// anchors without redoing the bezier math by hand every time those
+// anchors move. Returns the raw "C ..." segments rather than one joined
+// `d` string, so a sequence that's later split into two separately
+// animated <path> elements (loop, then spine) still gets tangents
+// computed from the FULL point sequence at the join - splitting the
+// points into two arrays first and smoothing each in isolation loses the
+// neighbour on the far side of the join, which is exactly what produced
+// the sharp kink where the loop handed off into the spine.
+function smoothSegments(points) {
+  const segments = []
   for (let i = 0; i < points.length - 1; i++) {
     const p0 = points[i - 1] || points[i]
     const p1 = points[i]
@@ -59,9 +64,9 @@ function smoothPath(points) {
     const c1y = p1.y + (p2.y - p0.y) / 6
     const c2x = p2.x - (p3.x - p1.x) / 6
     const c2y = p2.y - (p3.y - p1.y) / 6
-    d += ` C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`
+    segments.push(`C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`)
   }
-  return d
+  return segments
 }
 
 // One unbroken orange thread that starts right at the "G" of "growth" in
@@ -129,8 +134,7 @@ function BackgroundWave({ sectionRef, reduced }) {
   const c2w = geo.c2.right - geo.c2.left
   const c2h = geo.c2.bottom - geo.c2.top
 
-  const spinePoints = [
-    loopEnd,
+  const spineRest = [
     { x: geo.c1.left + c1w * 0.55, y: geo.c1.top + c1h * 0.12 },
     { x: geo.c1.left + c1w * 0.35, y: geo.c1.top + c1h * 0.5 },
     { x: geo.c1.left + c1w * 0.55, y: geo.c1.bottom - c1h * 0.05 },
@@ -141,6 +145,16 @@ function BackgroundWave({ sectionRef, reduced }) {
     { x: geo.c2.left + c2w * 0.3, y: Math.min(geo.c2.bottom + 60, geo.height - 20) },
   ]
 
+  // One continuous point sequence, smoothed once, then split back into
+  // the two `d` strings the loop and spine each animate independently -
+  // see smoothSegments' comment for why splitting the points first (and
+  // smoothing each half separately) isn't the same thing.
+  const allPoints = [...loopPoints, ...spineRest]
+  const segments = smoothSegments(allPoints)
+  const loopSegCount = loopPoints.length - 1
+  const loopD = `M ${loopPoints[0].x} ${loopPoints[0].y} ` + segments.slice(0, loopSegCount).join(' ')
+  const spineD = `M ${loopEnd.x} ${loopEnd.y} ` + segments.slice(loopSegCount).join(' ')
+
   return (
     <svg
       aria-hidden="true"
@@ -148,7 +162,7 @@ function BackgroundWave({ sectionRef, reduced }) {
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
     >
       <motion.path
-        d={smoothPath(loopPoints)}
+        d={loopD}
         stroke="var(--color-wave-orange-deep)"
         strokeWidth="6"
         strokeLinecap="round"
@@ -159,7 +173,7 @@ function BackgroundWave({ sectionRef, reduced }) {
         pathLength={reduced ? undefined : 1}
       />
       <motion.path
-        d={smoothPath(spinePoints)}
+        d={spineD}
         stroke="var(--color-wave-orange-deep)"
         strokeWidth="6"
         strokeLinecap="round"

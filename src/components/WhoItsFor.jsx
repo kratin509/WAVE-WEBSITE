@@ -65,7 +65,7 @@ export function WhoItsFor() {
     <section
       id="who-its-for"
       ref={sectionRef}
-      className="relative overflow-hidden bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="bg-dot-grid relative overflow-hidden bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
       <DotGrid />
       <div className="relative mx-auto max-w-2xl text-center">

@@ -142,7 +142,7 @@ export function CaseStudies() {
     <section
       id="case-studies"
       ref={sectionRef}
-      className="relative px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
+      className="bg-dot-grid relative px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
       style={{ backgroundColor: BG }}
     >
       <div className="mx-auto max-w-[1200px]">
