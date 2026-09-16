@@ -67,41 +67,43 @@ function BackgroundWave({ sectionRef, reduced }) {
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
     >
       {/* Waypoints are tuned to this section's actual measured layout at
-          1440px: a flourish loop in the top-left margin, handing off at
-          (120,200) into a wide spine that dives through each 9:16 card at
-          roughly x282-642/y512-1152 and x798-1158/y1248-1888 - it genuinely
-          passes behind both cards, not just near them. */}
+          1440px. The stroke originates right at the "G" of "growth" in the
+          mission heading (measured at x869-1120/y288-354), curls left from
+          there, then hands off at (710,390) into a wide spine that dives
+          through each 9:16 card at roughly x282-642/y512-1152 and
+          x798-1158/y1248-1888 - it genuinely passes behind both cards, not
+          just near them. */}
       <motion.path
-        d="M 90 260
-           C 0 190, 40 30, 170 40
-           C 300 50, 320 190, 220 250
-           C 160 285, 110 260, 120 200"
+        d="M 880 320
+           C 800 260, 700 260, 660 340
+           C 620 420, 700 470, 770 440
+           C 820 418, 820 360, 780 350
+           C 750 343, 720 360, 710 390"
         stroke="var(--color-wave-orange-deep)"
-        strokeWidth="4"
+        strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity="0.8"
+        opacity="0.85"
         style={reduced ? undefined : { pathLength: loopDrawn }}
         pathLength={reduced ? undefined : 1}
       />
       <motion.path
-        d="M 120 200
-           C 200 260, 280 300, 340 380
-           C 420 480, 380 500, 420 580
-           C 460 660, 430 820, 470 960
-           C 500 1060, 540 1100, 580 1160
-           C 620 1220, 660 1190, 700 1220
-           C 770 1270, 860 1300, 910 1360
-           C 960 1420, 980 1500, 1010 1600
-           C 1040 1700, 1000 1780, 1030 1850
-           C 1055 1910, 1000 1950, 950 2000"
+        d="M 710 390
+           C 660 460, 550 480, 500 560
+           C 460 620, 430 700, 460 800
+           C 490 900, 470 1000, 500 1100
+           C 530 1200, 600 1220, 650 1250
+           C 720 1290, 820 1300, 880 1360
+           C 940 1420, 960 1500, 990 1600
+           C 1020 1700, 980 1780, 1010 1850
+           C 1035 1910, 980 1950, 930 2000"
         stroke="var(--color-wave-orange-deep)"
-        strokeWidth="4"
+        strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity="0.8"
+        opacity="0.85"
         style={reduced ? undefined : { pathLength: spineDrawn }}
         pathLength={reduced ? undefined : 1}
       />
