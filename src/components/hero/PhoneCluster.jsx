@@ -34,6 +34,21 @@ function WaveMarkGhost() {
   )
 }
 
+// A small centered play-button, the same visual shorthand as the
+// Experiments hook cards, so the stack reads as short-form video rather
+// than static photography.
+function PlayBadge() {
+  return (
+    <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
+      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/55 backdrop-blur-sm sm:h-11 sm:w-11">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M4 2.5 L11 7 L4 11.5 Z" fill="var(--color-cream)" />
+        </svg>
+      </span>
+    </div>
+  )
+}
+
 export function PhoneCluster({ reduced }) {
   return (
     <div className="relative mx-auto aspect-[6/5] w-full max-w-[480px]">
@@ -62,6 +77,7 @@ export function PhoneCluster({ reduced }) {
           }}
         >
           <img src={c.img} alt={c.alt} className="h-full w-full object-cover" loading="lazy" draggable={false} />
+          <PlayBadge />
         </div>
       ))}
     </div>

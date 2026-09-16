@@ -3,17 +3,35 @@ import gsap from 'gsap'
 import { useReducedMotion } from '../../lib/useReducedMotion'
 import { smoothScrollTo } from '../../lib/scrollTo'
 import { PhoneCluster } from './PhoneCluster'
+import hookC from '../../assets/experiments/hookC.jpg'
 
-const STATS = [
-  { value: '3.4B+', label: 'Views generated' },
-  { value: '100K+', label: 'App downloads driven' },
-  { value: '60+', label: 'Creators in our network' },
-  { value: '2–5x', label: 'Avg. CAC improvement' },
-]
+// Reusing Why Wave's three established pillars as short benefit tags,
+// rather than inventing new claims.
+const BENEFITS = ['go viral', 'test more creative', 'lower CAC']
 
-// Placeholder wordmarks, not real client logos - kept as plain styled
-// text rather than fabricated logo art.
-const TRUSTED_BY = ['zave', 'māyā', 'YoLearn', 'oolka', 'hulp']
+function StarIcon() {
+  return (
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="var(--color-wave-orange-deep)" aria-hidden="true">
+      <path d="M12 0 L14.6 9.4 L24 12 L14.6 14.6 L12 24 L9.4 14.6 L0 12 L9.4 9.4 Z" />
+    </svg>
+  )
+}
+
+// A small floating teaser, honestly framed around our own illustrative
+// "top performer" hook rather than a fabricated client project card.
+function TopHookCard() {
+  return (
+    <div className="hidden items-center gap-3 rounded-2xl border border-ink/10 bg-white/80 p-3 pr-5 shadow-[0_14px_32px_rgba(22,17,15,0.08)] backdrop-blur-sm sm:flex">
+      <div className="aspect-[9/16] h-14 shrink-0 overflow-hidden rounded-lg">
+        <img src={hookC} alt="" className="h-full w-full object-cover" />
+      </div>
+      <div>
+        <p className="text-[10px] font-semibold tracking-[0.12em] text-wave-orange-deep uppercase">Top performer</p>
+        <p className="font-display text-sm font-semibold text-ink">Hook C</p>
+      </div>
+    </div>
+  )
+}
 
 // One extremely subtle flowing line - abstract brand-wave identity, not
 // an ocean wave and not decoration: a single thin, low-contrast stroke
@@ -41,21 +59,21 @@ function AmbientWaveLine() {
 export function Hero() {
   const reduced = useReducedMotion()
 
-  const eyebrowRef = useRef(null)
   const headlineRef = useRef(null)
+  const benefitsRef = useRef(null)
+  const cardTeaserRef = useRef(null)
+  const cardsRef = useRef(null)
   const subRef = useRef(null)
   const ctaRef = useRef(null)
-  const cardsRef = useRef(null)
-  const statsRef = useRef(null)
 
   useEffect(() => {
     const targets = [
-      eyebrowRef.current,
       headlineRef.current,
+      benefitsRef.current,
+      cardTeaserRef.current,
+      cardsRef.current,
       subRef.current,
       ctaRef.current,
-      cardsRef.current,
-      statsRef.current,
     ].filter(Boolean)
 
     if (reduced) {
@@ -66,12 +84,12 @@ export function Hero() {
     gsap.set(targets, { opacity: 0, y: 28 })
     gsap
       .timeline({ defaults: { ease: 'power3.out' }, delay: 0.1 })
-      .to(eyebrowRef.current, { opacity: 1, y: 0, duration: 0.5 })
-      .to(headlineRef.current, { opacity: 1, y: 0, duration: 0.7 }, '-=0.25')
-      .to(subRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+      .to(headlineRef.current, { opacity: 1, y: 0, duration: 0.7 })
+      .to(benefitsRef.current, { opacity: 1, y: 0, duration: 0.5 }, '-=0.35')
+      .to(cardTeaserRef.current, { opacity: 1, y: 0, duration: 0.5 }, '-=0.3')
+      .to(cardsRef.current, { opacity: 1, y: 0, duration: 0.8 }, '-=0.55')
+      .to(subRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.6')
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
-      .to(cardsRef.current, { opacity: 1, y: 0, duration: 0.8 }, '-=0.6')
-      .to(statsRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
   }, [reduced])
 
   const handleSeeSystem = (e) => {
@@ -83,78 +101,55 @@ export function Hero() {
     <section id="top" className="relative overflow-hidden bg-cream">
       <AmbientWaveLine />
 
-      <div className="relative mx-auto max-w-[1500px] px-6 pt-24 pb-10 sm:px-10 sm:pt-28 sm:pb-12 lg:px-[7vw] lg:pt-28 lg:pb-14">
-        <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-[1fr_0.95fr] lg:gap-8">
-          <div>
-            <p
-              ref={eyebrowRef}
-              className="mb-3 flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase"
-            >
-              <span className="inline-block h-1.5 w-1.5 rounded-full bg-wave-orange-deep" />
-              UGC growth for consumer apps + D2C
-            </p>
+      <div className="relative mx-auto grid max-w-[1500px] grid-cols-1 items-center gap-16 px-6 pt-28 pb-16 sm:px-10 sm:pt-32 sm:pb-20 lg:grid-cols-2 lg:gap-14 lg:px-[7vw] lg:pt-36 lg:pb-24">
+        <div>
+          <h1 ref={headlineRef} className="font-display leading-[1.08] tracking-tight text-ink">
+            <span className="block text-2xl font-medium sm:text-3xl lg:text-4xl">Turn UGC into</span>
+            <span className="mt-1 block text-5xl font-bold sm:text-6xl lg:text-[3.6rem]">your next</span>
+            <span className="block text-5xl font-bold text-wave-orange-deep sm:text-6xl lg:text-[3.6rem]">
+              growth channel.
+            </span>
+          </h1>
 
-            <h1 ref={headlineRef} className="font-display leading-[1.08] tracking-tight text-ink">
-              <span className="block text-4xl font-bold sm:text-5xl lg:text-[3.3rem]">Real creators.</span>
-              <span className="block text-4xl font-bold text-wave-orange-deep sm:text-5xl lg:text-[3.3rem]">
-                Real growth
+          <div ref={benefitsRef} className="mt-7 flex flex-wrap items-center gap-x-6 gap-y-3">
+            {BENEFITS.map((label) => (
+              <span key={label} className="flex items-center gap-2 text-sm font-medium text-ink/65">
+                <StarIcon />
+                {label}
               </span>
-              <span className="block text-4xl font-bold sm:text-5xl lg:text-[3.3rem]">for ambitious brands.</span>
-            </h1>
-
-            <p ref={subRef} className="mt-4 max-w-md text-base leading-relaxed text-ink/60">
-              We find what content works. Test it at scale.
-              <br />
-              Turn attention into downloads, signups and revenue.
-            </p>
-
-            <div ref={ctaRef} className="mt-5 flex flex-wrap items-center gap-6">
-              <a
-                href="#start-a-wave"
-                data-cursor="button"
-                className="rounded-full bg-wave-orange-deep px-6 py-3 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-ink"
-              >
-                Start a wave →
-              </a>
-              <a
-                href="#how-it-works"
-                onClick={handleSeeSystem}
-                data-cursor="link"
-                className="flex items-center gap-1.5 text-sm font-semibold tracking-wide text-ink/60 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink"
-              >
-                See how it works →
-              </a>
-            </div>
+            ))}
           </div>
 
+          <div ref={cardTeaserRef} className="mt-8">
+            <TopHookCard />
+          </div>
+        </div>
+
+        <div>
           <div ref={cardsRef}>
             <PhoneCluster reduced={reduced} />
           </div>
-        </div>
 
-        <div
-          ref={statsRef}
-          className="mt-10 flex flex-col gap-6 border-t border-ink/10 pt-6 sm:mt-12 sm:flex-row sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-ink/10 sm:pt-7 lg:mt-14"
-        >
-          {STATS.map((stat, i) => (
-            <div key={stat.label} className={i === 0 ? 'sm:pr-8' : 'sm:px-8'}>
-              <p className="font-display text-2xl font-bold text-wave-orange-deep sm:text-3xl">{stat.value}</p>
-              <p className="mt-1 text-sm text-ink/55">{stat.label}</p>
-            </div>
-          ))}
-        </div>
-        <p className="mt-3 text-[11px] text-ink/35">Illustrative example — figures shown are sample data.</p>
-
-        <div className="mt-8 flex flex-col items-center gap-4 sm:mt-9 sm:flex-row sm:gap-8">
-          <p className="shrink-0 text-[11px] font-semibold tracking-[0.15em] text-ink/40 uppercase">
-            Trusted by fast-growing brands
+          <p ref={subRef} className="mx-auto mt-8 max-w-sm text-center text-base leading-relaxed text-ink/60 lg:text-left">
+            Real creators. Real content. Real users. We find what hits. Then we scale it.
           </p>
-          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-2 opacity-50 grayscale">
-            {TRUSTED_BY.map((name) => (
-              <span key={name} className="font-display text-lg font-bold text-ink">
-                {name}
-              </span>
-            ))}
+
+          <div ref={ctaRef} className="mt-6 flex flex-wrap items-center justify-center gap-6 lg:justify-start">
+            <a
+              href="#start-a-wave"
+              data-cursor="button"
+              className="rounded-full bg-wave-orange-deep px-6 py-3 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-ink"
+            >
+              Start a wave →
+            </a>
+            <a
+              href="#how-it-works"
+              onClick={handleSeeSystem}
+              data-cursor="link"
+              className="flex items-center gap-1.5 text-sm font-semibold tracking-wide text-ink/60 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink"
+            >
+              See how it works →
+            </a>
           </div>
         </div>
       </div>
