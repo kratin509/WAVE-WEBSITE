@@ -153,31 +153,40 @@ function StatBlock({ value, label, children }) {
   )
 }
 
-// A single hand-drawn-style wave, confined to the section's own top
-// padding band so it never reaches down into the headline - full-bleed
-// width (ignores the section's horizontal padding on purpose). Fades in
-// as a single complete shape via the same [data-reveal] system as the
-// rest of the section, rather than a scroll-linked stroke-draw tween,
-// so it can never freeze partway through if page height shifts (e.g.
-// images below loading) mistime a scroll-triggered animation.
-function TopWave() {
+const TICKER_ITEMS = [
+  '7+ niches covered',
+  'Live in 48 hours',
+  'Every clip reviewed by a human',
+  '8.3M views delivered',
+  '47 variations tested',
+  '20+ creators onboarded',
+]
+
+// A full-bleed dark strip pinned to the section's top padding band, same
+// footprint as the wave it replaces (absolute inset-x-0 so it ignores the
+// section's own horizontal padding). The stat list is doubled and the
+// track animates by exactly -50% so the loop has no seam; reduced motion
+// gets one static, non-scrolling pass of the same stats instead.
+function StatsTicker() {
+  const reduced = useReducedMotion()
+  const items = reduced ? TICKER_ITEMS : [...TICKER_ITEMS, ...TICKER_ITEMS]
+
   return (
-    <svg
-      data-reveal
-      aria-hidden="true"
-      className="pointer-events-none absolute inset-x-0 top-0 h-16 w-full sm:h-20 lg:h-24"
-      viewBox="0 0 1400 100"
-      preserveAspectRatio="none"
-    >
-      <path
-        d="M0 62 C 70 66, 100 8, 190 6 C 270 4, 310 58, 360 64 C 430 72, 480 14, 580 10 C 670 6, 720 92, 800 90 C 880 88, 930 18, 1030 12 C 1110 7, 1150 68, 1220 62 C 1300 55, 1340 22, 1400 26"
-        stroke="var(--color-wave-red)"
-        strokeWidth="15"
-        strokeLinecap="round"
-        fill="none"
-        vectorEffect="non-scaling-stroke"
-      />
-    </svg>
+    <div data-reveal className="absolute inset-x-0 top-0 flex h-9 items-center overflow-hidden bg-ink sm:h-10">
+      <div className={`flex shrink-0 items-center gap-8 px-6 whitespace-nowrap ${reduced ? 'flex-wrap' : 'animate-marquee'}`}>
+        {items.map((item, i) => (
+          <span
+            key={i}
+            className="flex items-center gap-8 text-[11px] font-semibold tracking-[0.15em] text-cream/80 uppercase"
+          >
+            {item}
+            <span className="text-wave-orange-deep" aria-hidden="true">
+              ✱
+            </span>
+          </span>
+        ))}
+      </div>
+    </div>
   )
 }
 
@@ -223,7 +232,7 @@ export function Experiments() {
       ref={sectionRef}
       className="relative bg-white px-6 py-20 sm:px-10 sm:py-24 lg:px-[7vw] lg:py-28"
     >
-      <TopWave />
+      <StatsTicker />
 
       <div className="relative mx-auto max-w-[1500px]">
         <div className="mx-auto max-w-2xl text-center">
