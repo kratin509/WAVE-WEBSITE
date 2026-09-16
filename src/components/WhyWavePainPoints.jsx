@@ -24,13 +24,18 @@ const CARDS = [
 
 function PainCard({ text, pos, range, progress, static: isStatic }) {
   // Static (reduced-motion) fallback renders fully in place, no motion values.
-  const opacity = useTransform(progress, range, [0, 1])
   const y = useTransform(progress, range, [80, 0])
+  // Opacity ramps in over just the first quarter of the card's own range,
+  // so it's fully opaque well before it physically overlaps the heading -
+  // otherwise a still-translucent card lets the heading text show through
+  // underneath it and the two visually merge.
+  const fadeEnd = range[0] + (range[1] - range[0]) * 0.25
+  const opacity = useTransform(progress, [range[0], fadeEnd], [0, 1])
 
   return (
     <motion.div
       style={isStatic ? undefined : { opacity, y }}
-      className={`absolute flex w-[290px] items-start gap-4 rounded-2xl bg-[#44403c] p-6 shadow-xl sm:w-[360px] ${pos}`}
+      className={`absolute z-20 flex w-[290px] items-start gap-4 rounded-2xl bg-[#44403c] p-6 shadow-xl sm:w-[360px] ${pos}`}
     >
       <span className="mt-0.5 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-wave-orange-deep text-sm font-bold text-ink">
         ✕
@@ -44,8 +49,9 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
   const reduced = useReducedMotion()
   const { scrollYProgress: rawProgress } = useScroll({ target: ref, offset: ['start start', 'end end'] })
   // Spring-smoothed so the whole sequence trails the scroll with a little
-  // inertia instead of snapping 1:1 to every wheel notch.
-  const scrollYProgress = useSpring(rawProgress, { stiffness: 90, damping: 26, mass: 0.4, restDelta: 0.0005 })
+  // inertia instead of snapping 1:1 to every wheel notch - tuned brisk
+  // rather than heavy, so it reads as smooth, not slow.
+  const scrollYProgress = useSpring(rawProgress, { stiffness: 140, damping: 24, mass: 0.3, restDelta: 0.0005 })
 
   // Starts pure white to bleed seamlessly out of the white Experiments
   // section above, stays on that plain panel through the first two
@@ -67,7 +73,7 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
             </div>
           ))}
         </div>
-        <h2 className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center px-6 text-center font-display text-4xl leading-[1.05] font-extrabold tracking-tight text-cream/20 sm:text-6xl">
+        <h2 className="pointer-events-none absolute inset-0 -z-10 flex items-center justify-center px-6 text-center font-display text-3xl leading-[1.1] font-bold tracking-tight text-cream/20 sm:text-5xl">
           {HEADING}
         </h2>
       </div>
@@ -75,7 +81,7 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
   }
 
   return (
-    <div ref={ref} className="relative h-[500vh]">
+    <div ref={ref} className="relative h-[350vh]">
       <motion.div
         style={{ backgroundColor }}
         className="sticky top-0 flex h-screen items-center justify-center overflow-hidden"
@@ -86,7 +92,7 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
 
         <motion.h2
           style={{ color: textColor }}
-          className="relative z-10 max-w-4xl px-6 text-center font-display text-5xl leading-[1.03] font-extrabold tracking-tight sm:text-7xl lg:text-[5.5rem]"
+          className="relative z-10 max-w-4xl px-6 text-center font-display text-4xl leading-[1.1] font-bold tracking-tight sm:text-6xl lg:text-[4.5rem]"
         >
           {HEADING}
         </motion.h2>
