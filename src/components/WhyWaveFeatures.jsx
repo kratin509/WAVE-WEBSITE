@@ -57,28 +57,6 @@ function BackgroundWaves({ sectionRef }) {
   )
 }
 
-// Splits the headline into words so each one settles into place as the
-// heading scrolls into view, instead of the whole line appearing at once.
-function AnimatedHeadline({ text }) {
-  const words = text.split(' ')
-  return (
-    <h2 className="mx-auto max-w-3xl font-display text-4xl leading-tight font-extrabold tracking-tight text-ink sm:text-5xl">
-      {words.map((word, i) => (
-        <motion.span
-          key={i}
-          initial={{ opacity: 0, y: 18 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-80px' }}
-          transition={{ duration: 0.5, delay: i * 0.035, ease: 'easeOut' }}
-          className="inline-block"
-        >
-          {word}&nbsp;
-        </motion.span>
-      ))}
-    </h2>
-  )
-}
-
 function FeatureRow({ image, alt, stat, statLabel, statTone, heading, body, bullets, imageSide }) {
   const imageFirst = imageSide === 'left'
   return (
@@ -131,13 +109,6 @@ export function WhyWaveFeatures() {
       <BackgroundWaves sectionRef={sectionRef} />
 
       <div className="relative z-10 mx-auto max-w-6xl">
-        <div className="relative z-10 mb-20 text-center">
-          <span className="mb-4 inline-block rounded-full bg-wave-peach-light px-3 py-1 text-xs font-semibold tracking-wider text-ink/70 uppercase">
-            Our approach
-          </span>
-          <AnimatedHeadline text="We made UGC into a consistent, high-performing growth channel." />
-        </div>
-
         <div className="mb-24">
           <FeatureRow
             image={card5}

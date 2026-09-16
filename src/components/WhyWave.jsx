@@ -4,6 +4,7 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
 import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { WhyWavePainPoints } from './WhyWavePainPoints'
+import { OurMission } from './OurMission'
 import { WhyWaveFeatures } from './WhyWaveFeatures'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -42,6 +43,7 @@ export function WhyWave() {
   return (
     <section id="why-wave" ref={sectionRef} className="relative bg-ink-soft">
       <WhyWavePainPoints ref={painRef} />
+      <OurMission />
       <WhyWaveFeatures />
     </section>
   )
