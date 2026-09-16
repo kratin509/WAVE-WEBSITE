@@ -1,17 +1,11 @@
 import card4 from '../../assets/cards/card4_tanvi.png'
-import card5 from '../../assets/cards/card5_kiara.png'
-import hookE from '../../assets/experiments/hookE.jpg'
 
-// Three tilted, overlapping UGC-video cards, positioned as percentages of
-// this component's own box (not the whole hero) so the cluster is a
-// self-contained visual unit next to the copy column - no annotation
-// tags, just the cards themselves. Card 1 (largest, female + product) up
-// front-left, Card 2 (male creator) tucked behind/right with an opposite
-// rotation, Card 3 (smallest, female talking to camera) farthest right.
-const CARDS = [
-  { img: card4, alt: 'Creator showing a product to camera', left: 0, top: 14, w: 40, rotate: -6, z: 30, bob: 5.2 },
-  { img: hookE, alt: 'Creator holding up a phone to camera', left: 30, top: 0, w: 38, rotate: 4, z: 20, bob: 5.6 },
-  { img: card5, alt: 'Creator talking to camera', left: 66, top: 24, w: 30, rotate: 7, z: 24, bob: 5.9 },
+// A single real UGC card up front, with two plain solid-color card backs
+// fanned out behind it (no extra photos) - dimensional without turning
+// into a wall of images.
+const BACK_CARDS = [
+  { color: 'var(--color-wave-orange-deep)', left: 2, top: 9, w: 36, rotate: -11, z: 10 },
+  { color: 'var(--color-wave-peach)', left: 12, top: 3, w: 36, rotate: -5, z: 15 },
 ]
 
 // A big, near-invisible outline of the brand's own wave mark sitting
@@ -21,7 +15,7 @@ function WaveMarkGhost() {
     <svg
       aria-hidden="true"
       viewBox="0 0 200 200"
-      className="pointer-events-none absolute top-1/2 left-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 opacity-[0.05]"
+      className="pointer-events-none absolute top-1/2 left-1/2 h-[130%] w-[130%] -translate-x-1/2 -translate-y-1/2 opacity-[0.06]"
     >
       <path
         d="M20 110 Q 45 60 70 110 T 120 110 T 170 110"
@@ -34,15 +28,12 @@ function WaveMarkGhost() {
   )
 }
 
-// A small centered play-button, the same visual shorthand as the
-// Experiments hook cards, so the stack reads as short-form video rather
-// than static photography.
 function PlayBadge() {
   return (
     <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
-      <span className="flex h-9 w-9 items-center justify-center rounded-full bg-ink/55 backdrop-blur-sm sm:h-11 sm:w-11">
-        <svg width="14" height="14" viewBox="0 0 14 14" fill="none" aria-hidden="true">
-          <path d="M4 2.5 L11 7 L4 11.5 Z" fill="var(--color-cream)" />
+      <span className="flex h-14 w-14 items-center justify-center rounded-full bg-white/90 shadow-lg">
+        <svg width="18" height="18" viewBox="0 0 14 14" fill="none" aria-hidden="true">
+          <path d="M4 2.5 L11 7 L4 11.5 Z" fill="var(--color-ink)" />
         </svg>
       </span>
     </div>
@@ -51,7 +42,7 @@ function PlayBadge() {
 
 export function PhoneCluster({ reduced }) {
   return (
-    <div className="relative mx-auto aspect-[6/5] w-full max-w-[480px]">
+    <div className="relative mx-auto aspect-[5/6] w-full max-w-[420px]">
       <div
         aria-hidden="true"
         className="pointer-events-none absolute top-1/2 left-1/2 h-[85%] w-[85%] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-70 blur-3xl"
@@ -59,27 +50,38 @@ export function PhoneCluster({ reduced }) {
       />
       <WaveMarkGhost />
 
-      {CARDS.map((c, i) => (
+      {BACK_CARDS.map((c, i) => (
         <div
           key={i}
-          className={`absolute overflow-hidden rounded-2xl border border-white/15 shadow-[0_20px_45px_rgba(22,17,15,0.22)] ${
-            reduced ? '' : 'animate-card-bob'
-          }`}
+          aria-hidden="true"
+          className="absolute rounded-2xl shadow-[0_16px_36px_rgba(22,17,15,0.18)]"
           style={{
             left: `${c.left}%`,
             top: `${c.top}%`,
             width: `${c.w}%`,
             aspectRatio: '9 / 16',
+            background: c.color,
             transform: `rotate(${c.rotate}deg)`,
             zIndex: c.z,
-            animationDuration: `${c.bob}s`,
-            animationDelay: `${i * -0.6}s`,
           }}
-        >
-          <img src={c.img} alt={c.alt} className="h-full w-full object-cover" loading="lazy" draggable={false} />
-          <PlayBadge />
-        </div>
+        />
       ))}
+
+      <div
+        className={`absolute overflow-hidden rounded-2xl shadow-[0_24px_55px_rgba(22,17,15,0.28)] ${
+          reduced ? '' : 'animate-card-bob'
+        }`}
+        style={{ left: '32%', top: '0%', width: '46%', aspectRatio: '9 / 16', zIndex: 30, animationDuration: '5.5s' }}
+      >
+        <img
+          src={card4}
+          alt="Creator showing a product to camera"
+          className="h-full w-full object-cover"
+          loading="lazy"
+          draggable={false}
+        />
+        <PlayBadge />
+      </div>
     </div>
   )
 }
