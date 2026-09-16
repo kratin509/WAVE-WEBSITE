@@ -1,46 +1,39 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { useReducedMotion } from '../../lib/useReducedMotion'
-import { useIsMobile } from '../../lib/useIsMobile'
 import { smoothScrollTo } from '../../lib/scrollTo'
-import { WaveLayers } from './WaveLayers'
-import { WaveCards } from './WaveCards'
+import { PhoneCluster } from './PhoneCluster'
 
-function HandLine({ className, style, color = 'var(--color-wave-orange-deep)', size = 40 }) {
-  return (
-    <svg
-      width={size}
-      height={size}
-      viewBox="0 0 40 40"
-      fill="none"
-      className={className}
-      style={style}
-      aria-hidden="true"
-    >
-      <path
-        d="M20 3 L20 15 M20 25 L20 37 M3 20 L15 20 M25 20 L37 20 M7 7 L14.5 14.5 M25.5 25.5 L33 33 M33 7 L25.5 14.5 M14.5 25.5 L7 33"
-        stroke={color}
-        strokeWidth="2.6"
-        strokeLinecap="round"
-      />
-    </svg>
-  )
-}
+const STATS = [
+  { value: '3.4B+', label: 'Views generated' },
+  { value: '100K+', label: 'App downloads driven' },
+  { value: '60+', label: 'Creators in our network' },
+  { value: '2–5x', label: 'Avg. CAC improvement' },
+]
+
+// Placeholder wordmarks, not real client logos - kept as plain styled
+// text rather than fabricated logo art.
+const TRUSTED_BY = ['zave', 'māyā', 'YoLearn', 'oolka', 'hulp']
 
 export function Hero() {
   const reduced = useReducedMotion()
-  const mobile = useIsMobile()
 
   const eyebrowRef = useRef(null)
   const headlineRef = useRef(null)
   const subRef = useRef(null)
   const ctaRef = useRef(null)
+  const cardsRef = useRef(null)
+  const statsRef = useRef(null)
 
-  const [motionState] = useState(() => ({ mouseX: 0, mouseY: 0 }))
-
-  // Entrance
   useEffect(() => {
-    const targets = [eyebrowRef.current, headlineRef.current, subRef.current, ctaRef.current].filter(Boolean)
+    const targets = [
+      eyebrowRef.current,
+      headlineRef.current,
+      subRef.current,
+      ctaRef.current,
+      cardsRef.current,
+      statsRef.current,
+    ].filter(Boolean)
 
     if (reduced) {
       gsap.set(targets, { opacity: 1, y: 0 })
@@ -54,100 +47,101 @@ export function Hero() {
       .to(headlineRef.current, { opacity: 1, y: 0, duration: 0.7 }, '-=0.25')
       .to(subRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
       .to(ctaRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.4')
+      .to(cardsRef.current, { opacity: 1, y: 0, duration: 0.8 }, '-=0.6')
+      .to(statsRef.current, { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
   }, [reduced])
-
-  // Cursor tracking → shared motion state (read by the wave layers each frame)
-  useEffect(() => {
-    if (reduced || mobile) return
-    const onMove = (e) => {
-      motionState.mouseX = (e.clientX / window.innerWidth) * 2 - 1
-      motionState.mouseY = -((e.clientY / window.innerHeight) * 2 - 1)
-    }
-    window.addEventListener('mousemove', onMove)
-    return () => window.removeEventListener('mousemove', onMove)
-  }, [reduced, mobile, motionState])
 
   const handleSeeSystem = (e) => {
     e.preventDefault()
     smoothScrollTo('#how-it-works')
   }
 
-  const waveBandHeight = mobile ? '20vh' : '26vh'
-
   return (
-    <section id="top" className="relative h-screen w-full overflow-hidden bg-white">
-      {/* wave layers + cards, interleaved by z-index: back waves (10) <
-          back cards (14) < front waves (20) < front/hero cards (24-40) */}
-      <WaveLayers
-        ids={['l1', 'l2']}
-        motionState={motionState}
-        mobile={mobile}
-        style={{ height: waveBandHeight, zIndex: 10 }}
+    <section id="top" className="relative overflow-hidden bg-cream">
+      {/* soft ambient glows standing in for the reference's radial highlights */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute -top-32 -left-32 h-[420px] w-[420px] rounded-full opacity-60 blur-3xl sm:h-[520px] sm:w-[520px]"
+        style={{ background: 'radial-gradient(circle, var(--color-wave-peach-light), transparent 70%)' }}
+      />
+      <div
+        aria-hidden="true"
+        className="pointer-events-none absolute top-1/4 right-0 h-[480px] w-[480px] translate-x-1/4 rounded-full opacity-60 blur-3xl sm:h-[620px] sm:w-[620px]"
+        style={{ background: 'radial-gradient(circle, var(--color-wave-peach), transparent 70%)' }}
       />
 
-      <WaveCards mobile={mobile} />
-
-      <WaveLayers
-        ids={['l3', 'l4']}
-        motionState={motionState}
-        mobile={mobile}
-        style={{ height: waveBandHeight, zIndex: 20 }}
-      />
-
-      {/* hand-drawn emphasis marks - desktop only, kept well clear of the header */}
-      <HandLine className="absolute hidden xl:block" style={{ top: '24%', left: '44%', zIndex: 30 }} size={44} />
-      <HandLine
-        className="absolute hidden -rotate-12 lg:block"
-        style={{ top: '27%', left: '65%', zIndex: 45 }}
-        color="var(--color-ink)"
-        size={38}
-      />
-      <HandLine
-        className="absolute hidden rotate-6 opacity-80 lg:block"
-        style={{ top: '58%', left: '67%', zIndex: 30 }}
-        size={36}
-      />
-
-      <div className="relative z-50 flex h-full w-full items-start px-6 pt-20 sm:px-10 sm:pt-24 lg:pt-[14vh] lg:pl-[7vw]">
-        <div className="w-full lg:max-w-[43vw]">
-          <p
-            ref={eyebrowRef}
-            className="mb-4 flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase"
-          >
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-wave-orange-deep" />
-            UGC growth for consumer apps + D2C
-          </p>
-
-          <h1 ref={headlineRef} className="font-display leading-[1.04] tracking-tight text-ink">
-            <span className="block text-2xl font-medium sm:text-3xl lg:text-4xl">Turn UGC into</span>
-            <span className="mt-1 block text-5xl font-semibold sm:text-6xl lg:text-[3.9rem]">your next</span>
-            <span className="block text-5xl font-semibold text-wave-orange-deep sm:text-6xl lg:text-[3.9rem]">
-              growth channel.
-            </span>
-          </h1>
-
-          <p ref={subRef} className="mt-5 max-w-md text-base leading-relaxed text-ink/60">
-            Real creators. Real content. Real users.
-            <br />
-            We find what hits. Then we scale it.
-          </p>
-
-          <div ref={ctaRef} className="mt-6 flex flex-wrap items-center gap-6">
-            <a
-              href="#start-a-wave"
-              data-cursor="button"
-              className="rounded-full bg-wave-orange-deep px-6 py-3 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-ink"
+      <div className="relative mx-auto max-w-[1500px] px-6 pt-28 pb-16 sm:px-10 sm:pt-32 sm:pb-20 lg:px-[7vw] lg:pt-36 lg:pb-24">
+        <div className="grid grid-cols-1 items-center gap-14 lg:grid-cols-[1fr_0.95fr] lg:gap-10">
+          <div>
+            <p
+              ref={eyebrowRef}
+              className="mb-4 flex items-center gap-2 text-[11px] font-semibold tracking-[0.2em] text-ink/55 uppercase"
             >
-              Start a wave →
-            </a>
-            <a
-              href="#how-it-works"
-              onClick={handleSeeSystem}
-              data-cursor="link"
-              className="flex items-center gap-1.5 text-sm font-semibold tracking-wide text-ink/60 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink"
-            >
-              See how it works →
-            </a>
+              <span className="inline-block h-1.5 w-1.5 rounded-full bg-wave-orange-deep" />
+              UGC growth for consumer apps + D2C
+            </p>
+
+            <h1 ref={headlineRef} className="font-display leading-[1.05] tracking-tight text-ink">
+              <span className="block text-5xl font-bold sm:text-6xl lg:text-[3.9rem]">Real creators.</span>
+              <span className="block text-5xl font-bold text-wave-orange-deep sm:text-6xl lg:text-[3.9rem]">
+                Real growth
+              </span>
+              <span className="block text-5xl font-bold sm:text-6xl lg:text-[3.9rem]">for ambitious brands.</span>
+            </h1>
+
+            <p ref={subRef} className="mt-5 max-w-md text-base leading-relaxed text-ink/60">
+              We find what content works. Test it at scale.
+              <br />
+              Turn attention into downloads, signups and revenue.
+            </p>
+
+            <div ref={ctaRef} className="mt-6 flex flex-wrap items-center gap-6">
+              <a
+                href="#start-a-wave"
+                data-cursor="button"
+                className="rounded-full bg-wave-orange-deep px-6 py-3 text-sm font-semibold tracking-wide text-cream transition-colors hover:bg-ink"
+              >
+                Start a wave →
+              </a>
+              <a
+                href="#how-it-works"
+                onClick={handleSeeSystem}
+                data-cursor="link"
+                className="flex items-center gap-1.5 text-sm font-semibold tracking-wide text-ink/60 underline decoration-ink/25 underline-offset-4 transition-colors hover:text-ink"
+              >
+                See how it works →
+              </a>
+            </div>
+          </div>
+
+          <div ref={cardsRef}>
+            <PhoneCluster reduced={reduced} />
+          </div>
+        </div>
+
+        <div
+          ref={statsRef}
+          className="mt-16 flex flex-col gap-8 border-t border-ink/10 pt-10 sm:mt-20 sm:flex-row sm:flex-wrap sm:gap-0 sm:divide-x sm:divide-ink/10 sm:pt-12 lg:mt-24"
+        >
+          {STATS.map((stat, i) => (
+            <div key={stat.label} className={i === 0 ? 'sm:pr-8' : 'sm:px-8'}>
+              <p className="font-display text-3xl font-bold text-wave-orange-deep sm:text-4xl">{stat.value}</p>
+              <p className="mt-1 text-sm text-ink/55">{stat.label}</p>
+            </div>
+          ))}
+        </div>
+        <p className="mt-4 text-[11px] text-ink/35">Illustrative example — figures shown are sample data.</p>
+
+        <div className="mt-14 flex flex-col items-center gap-5 sm:mt-16 sm:flex-row sm:gap-8">
+          <p className="shrink-0 text-[11px] font-semibold tracking-[0.15em] text-ink/40 uppercase">
+            Trusted by fast-growing brands
+          </p>
+          <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 opacity-50 grayscale">
+            {TRUSTED_BY.map((name) => (
+              <span key={name} className="font-display text-lg font-bold text-ink">
+                {name}
+              </span>
+            ))}
           </div>
         </div>
       </div>
