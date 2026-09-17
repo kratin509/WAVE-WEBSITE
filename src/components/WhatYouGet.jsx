@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
-import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { SectionLabel } from './ui/SectionLabel'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -43,7 +42,6 @@ const PHASES = [
 export function WhatYouGet() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
-  useSectionNavTheme(sectionRef, { dark: true })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return
