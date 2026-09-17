@@ -20,8 +20,8 @@ function App() {
         <Nav />
         <main>
           <Hero />
-          <HowItWorks />
           <WhyWave />
+          <HowItWorks />
           <Experiments />
           <CaseStudies />
           <WhatYouGet />

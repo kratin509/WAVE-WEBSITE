@@ -5,8 +5,8 @@ import { MagneticLink } from './MagneticLink'
 import logo from '../assets/brand/logo.jpg'
 
 const LINKS = [
-  { label: 'How it works', href: '#how-it-works' },
   { label: 'Why Wave', href: '#why-wave' },
+  { label: 'How it works', href: '#how-it-works' },
   { label: 'Experiments', href: '#experiments' },
   { label: 'Case studies', href: '#case-studies' },
 ]
