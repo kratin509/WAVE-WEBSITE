@@ -46,13 +46,7 @@ function AnimatedWords({ text, reduced }) {
 // Turns a list of {x,y} points into cubic-bezier segments (Catmull-Rom ->
 // Bezier, tension 1/6) so the curve can be rebuilt from live-measured
 // anchors without redoing the bezier math by hand every time those
-// anchors move. Returns the raw "C ..." segments rather than one joined
-// `d` string, so a sequence that's later split into two separately
-// animated <path> elements (loop, then spine) still gets tangents
-// computed from the FULL point sequence at the join - splitting the
-// points into two arrays first and smoothing each in isolation loses the
-// neighbour on the far side of the join, which is exactly what produced
-// the sharp kink where the loop handed off into the spine.
+// anchors move.
 function smoothSegments(points) {
   const segments = []
   for (let i = 0; i < points.length - 1; i++) {
@@ -69,19 +63,18 @@ function smoothSegments(points) {
   return segments
 }
 
-// One unbroken orange thread that starts right at the "G" of "growth" in
-// the mission heading, curls into a flourish, then dives through both
-// feature cards to the foot of the section. The anchor points (the growth
-// word, each card) are measured live off the DOM rather than hard-coded
-// pixel guesses - hard-coded values only ever matched one exact viewport
-// width, and broke (badly - loops landing on the wrong line, the spine
-// missing the cards entirely) the moment the heading wrapped onto a
-// different number of lines at another width. Re-measures on resize and
-// once fonts finish loading, since a late font swap reflows the heading.
+// One unbroken orange thread that starts just below the "growth" word in
+// the mission heading and flows down through both feature cards to the
+// foot of the section - a single smooth bezier curve, not a loop or
+// flourish. The anchor points (the growth word, each card) are measured
+// live off the DOM rather than hard-coded pixel guesses - hard-coded
+// values only ever matched one exact viewport width, and broke badly the
+// moment the heading wrapped onto a different number of lines at another
+// width. Re-measures on resize and once fonts finish loading, since a
+// late font swap reflows the heading.
 function BackgroundWave({ sectionRef, reduced }) {
   const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 0.85', 'end 0.15'] })
-  const loopDrawn = useTransform(scrollYProgress, [0, 0.12], [0, 1])
-  const spineDrawn = useTransform(scrollYProgress, [0.08, 1], [0, 1])
+  const drawn = useTransform(scrollYProgress, [0, 1], [0, 1])
   const [geo, setGeo] = useState(null)
 
   useEffect(() => {
@@ -118,30 +111,21 @@ function BackgroundWave({ sectionRef, reduced }) {
   if (!geo) return null
 
   const gx = geo.g.left + 6
-  const gy = geo.g.top + (geo.g.bottom - geo.g.top) * 0.5
   const gBottom = geo.g.bottom
-
-  // Every point after the first sits at or below gBottom (the text's own
-  // bottom edge, not just its vertical center) and the last two points
-  // both trend down-right - so the curve never has to double back up
-  // across the heading to reach them, the way it did when the loop's
-  // exit point was pinned to the text's vertical center instead of
-  // clearing its bottom edge with margin.
-  const loopPoints = [
-    { x: gx, y: gy },
-    { x: gx - 70, y: gy - 65 },
-    { x: gx - 190, y: gy - 35 },
-    { x: gx - 190, y: gBottom + 45 },
-    { x: gx - 90, y: gBottom + 75 },
-  ]
-  const loopEnd = loopPoints[loopPoints.length - 1]
 
   const c1w = geo.c1.right - geo.c1.left
   const c1h = geo.c1.bottom - geo.c1.top
   const c2w = geo.c2.right - geo.c2.left
   const c2h = geo.c2.bottom - geo.c2.top
 
-  const spineRest = [
+  // A single gentle S-curve, not a loop: it starts just below "growth"
+  // (clear of the text, so it never crosses back over the heading), drifts
+  // left then eases back right as it approaches card one, dives through
+  // both cards, and tapers off near the section's foot.
+  const points = [
+    { x: gx, y: gBottom + 10 },
+    { x: gx - 130, y: gBottom + 90 },
+    { x: gx - 60, y: gBottom + 200 },
     { x: geo.c1.left + c1w * 0.55, y: geo.c1.top + c1h * 0.12 },
     { x: geo.c1.left + c1w * 0.35, y: geo.c1.top + c1h * 0.5 },
     { x: geo.c1.left + c1w * 0.55, y: geo.c1.bottom - c1h * 0.05 },
@@ -152,15 +136,7 @@ function BackgroundWave({ sectionRef, reduced }) {
     { x: geo.c2.left + c2w * 0.3, y: Math.min(geo.c2.bottom + 60, geo.height - 20) },
   ]
 
-  // One continuous point sequence, smoothed once, then split back into
-  // the two `d` strings the loop and spine each animate independently -
-  // see smoothSegments' comment for why splitting the points first (and
-  // smoothing each half separately) isn't the same thing.
-  const allPoints = [...loopPoints, ...spineRest]
-  const segments = smoothSegments(allPoints)
-  const loopSegCount = loopPoints.length - 1
-  const loopD = `M ${loopPoints[0].x} ${loopPoints[0].y} ` + segments.slice(0, loopSegCount).join(' ')
-  const spineD = `M ${loopEnd.x} ${loopEnd.y} ` + segments.slice(loopSegCount).join(' ')
+  const d = `M ${points[0].x} ${points[0].y} ` + smoothSegments(points).join(' ')
 
   return (
     <svg
@@ -169,25 +145,14 @@ function BackgroundWave({ sectionRef, reduced }) {
       className="pointer-events-none absolute inset-0 z-0 h-full w-full"
     >
       <motion.path
-        d={loopD}
+        d={d}
         stroke="var(--color-wave-orange-deep)"
         strokeWidth="6"
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
         opacity="0.85"
-        style={reduced ? undefined : { pathLength: loopDrawn }}
-        pathLength={reduced ? undefined : 1}
-      />
-      <motion.path
-        d={spineD}
-        stroke="var(--color-wave-orange-deep)"
-        strokeWidth="6"
-        strokeLinecap="round"
-        strokeLinejoin="round"
-        fill="none"
-        opacity="0.85"
-        style={reduced ? undefined : { pathLength: spineDrawn }}
+        style={reduced ? undefined : { pathLength: drawn }}
         pathLength={reduced ? undefined : 1}
       />
     </svg>
