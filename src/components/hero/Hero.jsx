@@ -1,5 +1,4 @@
 import { useRef } from 'react'
-import { useSectionNavTheme } from '../../lib/useSectionNavTheme'
 import { smoothScrollTo } from '../../lib/scrollTo'
 import heroImage from '../../assets/hero/hero-banner.png'
 
@@ -12,7 +11,6 @@ const STATS = [
 
 export function Hero() {
   const sectionRef = useRef(null)
-  useSectionNavTheme(sectionRef, { dark: true })
 
   const handleSeeSystem = (e) => {
     e.preventDefault()

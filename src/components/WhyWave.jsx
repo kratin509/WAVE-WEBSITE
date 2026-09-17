@@ -2,7 +2,6 @@ import { useEffect, useRef } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { useReducedMotion } from '../lib/useReducedMotion'
-import { useSectionNavTheme } from '../lib/useSectionNavTheme'
 import { WhyWavePainPoints } from './WhyWavePainPoints'
 import { WhyWaveFeatures } from './WhyWaveFeatures'
 
@@ -12,14 +11,6 @@ export function WhyWave() {
   const reduced = useReducedMotion()
   const sectionRef = useRef(null)
   const painRef = useRef(null)
-  // WhyWavePainPoints is a 350vh container whose sticky h-screen panel
-  // unpins after (350vh - 100vh) of scroll - i.e. at 250/350 = 71.4% of
-  // the container's own height, not its full bottom edge. The panel's
-  // background is now a round trip (white -> dark -> white) rather than a
-  // one-way ramp, solidly dark across roughly progress [0.35, 0.85] - so
-  // the nav flip window is scoped to that same span, converted to
-  // container-relative percent (progress * 71.4%).
-  useSectionNavTheme(painRef, { dark: true, start: '25% top', end: '61% top' })
 
   useEffect(() => {
     if (reduced || !sectionRef.current) return

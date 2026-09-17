@@ -1,4 +1,3 @@
-import { NavThemeProvider } from './lib/navTheme'
 import { SmoothScroll } from './lib/SmoothScroll'
 import { Cursor } from './components/Cursor'
 import { Nav } from './components/Nav'
@@ -14,23 +13,21 @@ import { FinalCTA } from './components/FinalCTA'
 
 function App() {
   return (
-    <NavThemeProvider>
-      <SmoothScroll>
-        <Cursor />
-        <Nav />
-        <main>
-          <Hero />
-          <WhyWave />
-          <HowItWorks />
-          <Experiments />
-          <CaseStudies />
-          <WhatYouGet />
-          <WhoItsFor />
-          <FAQ />
-          <FinalCTA />
-        </main>
-      </SmoothScroll>
-    </NavThemeProvider>
+    <SmoothScroll>
+      <Cursor />
+      <Nav />
+      <main>
+        <Hero />
+        <WhyWave />
+        <HowItWorks />
+        <Experiments />
+        <CaseStudies />
+        <WhatYouGet />
+        <WhoItsFor />
+        <FAQ />
+        <FinalCTA />
+      </main>
+    </SmoothScroll>
   )
 }
 
