@@ -94,6 +94,12 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
     [0, 0.2, 0.55, 0.75, 0.97, 1],
     ['#0d0d0d', '#0d0d0d', '#f7f1e8', '#f7f1e8', '#0d0d0d', '#0d0d0d'],
   )
+  // The heading itself steps aside once all five cards are up (the last
+  // card's range ends at 0.61, the first card's outRange starts at 0.66)
+  // rather than sitting there behind them for that whole stretch - it
+  // fades out just before the cards finish arriving and back in once
+  // they've started leaving.
+  const headingOpacity = useTransform(scrollYProgress, [0, 0.45, 0.6, 0.67, 0.82, 1], [1, 1, 0, 0, 1, 1])
 
   if (reduced) {
     return (
@@ -126,7 +132,7 @@ export const WhyWavePainPoints = forwardRef(function WhyWavePainPoints(_props, r
         ))}
 
         <motion.h2
-          style={{ color: textColor }}
+          style={{ color: textColor, opacity: headingOpacity }}
           className="relative z-10 max-w-4xl px-6 text-center font-display text-4xl leading-[1.1] font-bold tracking-tight sm:text-6xl lg:text-[4.5rem]"
         >
           {HEADING}
