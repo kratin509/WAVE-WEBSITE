@@ -118,14 +118,21 @@ function BackgroundWave({ sectionRef, reduced }) {
   if (!geo) return null
 
   const gx = geo.g.left + 6
-  const gy = geo.g.top + (geo.g.bottom - geo.g.top) * 0.55
+  const gy = geo.g.top + (geo.g.bottom - geo.g.top) * 0.5
+  const gBottom = geo.g.bottom
 
+  // Every point after the first sits at or below gBottom (the text's own
+  // bottom edge, not just its vertical center) and the last two points
+  // both trend down-right - so the curve never has to double back up
+  // across the heading to reach them, the way it did when the loop's
+  // exit point was pinned to the text's vertical center instead of
+  // clearing its bottom edge with margin.
   const loopPoints = [
     { x: gx, y: gy },
-    { x: gx - 90, y: gy - 70 },
-    { x: gx - 210, y: gy - 20 },
-    { x: gx - 150, y: gy + 90 },
-    { x: gx - 70, y: gy + 55 },
+    { x: gx - 70, y: gy - 65 },
+    { x: gx - 190, y: gy - 35 },
+    { x: gx - 190, y: gBottom + 45 },
+    { x: gx - 90, y: gBottom + 75 },
   ]
   const loopEnd = loopPoints[loopPoints.length - 1]
 
