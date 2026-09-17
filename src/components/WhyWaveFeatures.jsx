@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion, useScroll, useTransform } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useReducedMotion } from '../lib/useReducedMotion'
 
 const MISSION_HEADING = 'We made UGC into a consistent, high-performing growth channel.'
@@ -25,7 +25,6 @@ function AnimatedWords({ text, reduced }) {
       {text.split(' ').map((word, i) => (
         <motion.span
           key={i}
-          data-anchor={word === 'growth' ? 'growth' : undefined}
           className="inline-block"
           {...(reduced
             ? {}
@@ -63,18 +62,20 @@ function smoothSegments(points) {
   return segments
 }
 
-// One unbroken orange thread that starts just below the "growth" word in
-// the mission heading and flows down through both feature cards to the
-// foot of the section - a single smooth bezier curve, not a loop or
-// flourish. The anchor points (the growth word, each card) are measured
-// live off the DOM rather than hard-coded pixel guesses - hard-coded
-// values only ever matched one exact viewport width, and broke badly the
-// moment the heading wrapped onto a different number of lines at another
-// width. Re-measures on resize and once fonts finish loading, since a
-// late font swap reflows the heading.
+// One large editorial wave, not a connector line: a single continuous
+// stroke that opens in the left margin above the mission badge, swings
+// wide across the negative space, and threads behind both feature cards
+// on its way down - the whole section reads as built around one
+// continuous path rather than "a line between some cards." Anchors (the
+// mission badge, each card) are measured live off the DOM rather than
+// hard-coded pixel guesses, which only ever match one exact viewport
+// width and break the moment content reflows at another width. The
+// sweep's amplitude scales off the actual left margin, so it's genuinely
+// wide on a roomy desktop layout and tucks in on a tighter one; below the
+// breakpoint where the two feature rows stack single-column (md, 768px)
+// there's no side margin left to sweep through, so it's hidden rather
+// than forced to overlap stacked text.
 function BackgroundWave({ sectionRef, reduced }) {
-  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start 0.85', 'end 0.15'] })
-  const drawn = useTransform(scrollYProgress, [0, 1], [0, 1])
   const [geo, setGeo] = useState(null)
 
   useEffect(() => {
@@ -83,9 +84,9 @@ function BackgroundWave({ sectionRef, reduced }) {
 
     function measure() {
       const sRect = section.getBoundingClientRect()
-      const growth = section.querySelector('[data-anchor="growth"]')
+      const badge = section.querySelector('[data-anchor="mission-badge"]')
       const cards = section.querySelectorAll('[data-anchor="card"]')
-      if (!growth || cards.length < 2 || sRect.width === 0) return
+      if (!badge || cards.length < 2 || sRect.width === 0) return
       const toLocal = (r) => ({
         left: r.left - sRect.left,
         right: r.right - sRect.left,
@@ -95,7 +96,7 @@ function BackgroundWave({ sectionRef, reduced }) {
       setGeo({
         width: sRect.width,
         height: sRect.height,
-        g: toLocal(growth.getBoundingClientRect()),
+        badge: toLocal(badge.getBoundingClientRect()),
         c1: toLocal(cards[0].getBoundingClientRect()),
         c2: toLocal(cards[1].getBoundingClientRect()),
       })
@@ -108,32 +109,31 @@ function BackgroundWave({ sectionRef, reduced }) {
     return () => ro.disconnect()
   }, [sectionRef])
 
-  if (!geo) return null
+  if (!geo || geo.width < 768) return null
 
-  const gx = geo.g.left + 6
-  const gBottom = geo.g.bottom
+  // The content column's left inset (roughly where card one's image
+  // sits) - the reference unit for how wide the margin sweep can be
+  // without ever reaching centered text.
+  const cl = geo.c1.left
+  const amp = Math.max(cl * 0.85, 70)
 
   const c1w = geo.c1.right - geo.c1.left
   const c1h = geo.c1.bottom - geo.c1.top
   const c2w = geo.c2.right - geo.c2.left
   const c2h = geo.c2.bottom - geo.c2.top
 
-  // A single gentle S-curve, not a loop: it starts just below "growth"
-  // (clear of the text, so it never crosses back over the heading), drifts
-  // left then eases back right as it approaches card one, dives through
-  // both cards, and tapers off near the section's foot.
   const points = [
-    { x: gx, y: gBottom + 10 },
-    { x: gx - 130, y: gBottom + 90 },
-    { x: gx - 60, y: gBottom + 200 },
-    { x: geo.c1.left + c1w * 0.55, y: geo.c1.top + c1h * 0.12 },
-    { x: geo.c1.left + c1w * 0.35, y: geo.c1.top + c1h * 0.5 },
-    { x: geo.c1.left + c1w * 0.55, y: geo.c1.bottom - c1h * 0.05 },
-    { x: (geo.c1.left + geo.c2.right) / 2, y: (geo.c1.bottom + geo.c2.top) / 2 },
-    { x: geo.c2.left + c2w * 0.35, y: geo.c2.top + c2h * 0.1 },
-    { x: geo.c2.left + c2w * 0.55, y: geo.c2.top + c2h * 0.55 },
-    { x: geo.c2.left + c2w * 0.4, y: geo.c2.bottom - c2h * 0.05 },
-    { x: geo.c2.left + c2w * 0.3, y: Math.min(geo.c2.bottom + 60, geo.height - 20) },
+    { x: cl * 0.3, y: Math.max(geo.badge.top - 70, 10) }, // opens upper-left, above the badge
+    { x: cl * 0.95, y: geo.badge.top + 20 }, // wide swing right, still short of centered text
+    { x: cl * 0.1, y: geo.c1.top - 110 }, // back left, deep into the margin
+    { x: -amp * 0.55, y: geo.c1.top - 20 }, // partially off-screen left
+    { x: geo.c1.left + c1w * 0.42, y: geo.c1.top + c1h * 0.28 }, // swing right, behind card one
+    { x: geo.c1.left + c1w * 0.62, y: geo.c1.bottom - c1h * 0.12 }, // emerges lower on the card
+    { x: cl * 0.12, y: (geo.c1.bottom + geo.c2.top) / 2 }, // wide swing left again, between rows
+    { x: -amp * 0.4, y: geo.c2.top - 30 }, // partially off-screen left again
+    { x: geo.c2.left + c2w * 0.38, y: geo.c2.top + c2h * 0.32 }, // swing right, behind card two
+    { x: geo.c2.left + c2w * 0.58, y: geo.c2.bottom - c2h * 0.1 }, // emerges lower on the card
+    { x: cl * 0.2, y: Math.min(geo.c2.bottom + 120, geo.height - 30) }, // tapers back left near the foot
   ]
 
   const d = `M ${points[0].x} ${points[0].y} ` + smoothSegments(points).join(' ')
@@ -142,7 +142,7 @@ function BackgroundWave({ sectionRef, reduced }) {
     <svg
       aria-hidden="true"
       viewBox={`0 0 ${geo.width} ${geo.height}`}
-      className="pointer-events-none absolute inset-0 z-0 h-full w-full"
+      className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full md:block"
     >
       <motion.path
         d={d}
@@ -151,8 +151,10 @@ function BackgroundWave({ sectionRef, reduced }) {
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        opacity="0.85"
-        style={reduced ? undefined : { pathLength: drawn }}
+        initial={reduced ? undefined : { pathLength: 0 }}
+        whileInView={reduced ? undefined : { pathLength: 1 }}
+        viewport={reduced ? undefined : { once: true, amount: 0.15 }}
+        transition={reduced ? undefined : { duration: 1.4, ease: 'easeInOut' }}
         pathLength={reduced ? undefined : 1}
       />
     </svg>
@@ -215,7 +217,10 @@ export function WhyWaveFeatures() {
 
       <div className="relative z-10 mx-auto max-w-[1000px]">
         <div className="mx-auto mb-20 flex max-w-[850px] flex-col items-center gap-4 text-center sm:mb-28">
-          <span className="inline-block rounded-full bg-wave-peach px-2 py-1 text-xs font-semibold tracking-[0.08em] text-ink uppercase">
+          <span
+            data-anchor="mission-badge"
+            className="inline-block rounded-full bg-wave-peach px-2 py-1 text-xs font-semibold tracking-[0.08em] text-ink uppercase"
+          >
             our mission
           </span>
           <h2 className="font-display text-3xl leading-[1.1] font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl">
