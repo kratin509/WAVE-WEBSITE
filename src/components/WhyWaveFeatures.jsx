@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { motion, useScroll, useTransform } from 'framer-motion'
 import { useReducedMotion } from '../lib/useReducedMotion'
 
 const MISSION_HEADING = 'We made UGC into a consistent, high-performing growth channel.'
@@ -42,39 +42,49 @@ function AnimatedWords({ text, reduced }) {
   )
 }
 
-// Turns a list of {x,y} points into cubic-bezier segments (Catmull-Rom ->
-// Bezier, tension 1/6) so the curve can be rebuilt from live-measured
-// anchors without redoing the bezier math by hand every time those
-// anchors move.
-function smoothSegments(points) {
-  const segments = []
-  for (let i = 0; i < points.length - 1; i++) {
-    const p0 = points[i - 1] || points[i]
-    const p1 = points[i]
-    const p2 = points[i + 1]
-    const p3 = points[i + 2] || p2
-    const c1x = p1.x + (p2.x - p0.x) / 6
-    const c1y = p1.y + (p2.y - p0.y) / 6
-    const c2x = p2.x - (p3.x - p1.x) / 6
-    const c2y = p2.y - (p3.y - p1.y) / 6
-    segments.push(`C ${c1x} ${c1y}, ${c2x} ${c2y}, ${p2.x} ${p2.y}`)
-  }
-  return segments
+// The signature Wave swirl - an exact, hand-authored reference path. Its
+// numbers are never redrawn or approximated; the only thing allowed to
+// change is where and how large it appears, via the similarity transform
+// below (uniform scale + rotation + translation, plus a horizontal mirror
+// so the sweep opens toward card one and closes toward card two, matching
+// their alternating left/right layout - still no shear, no reshaping).
+const WAVE_PATH_D =
+  'M-180.79 1.30042C-163.471 65.6046 -110.061 102.919 -78.3233 105.455C-51.3324 107.612 -61.0037 65.4235 -78.3233 76.7446C-89.9026 84.3135 -103.169 118.769 -59.3715 133.984C-33.4678 142.984 -1.79041 130.815 -1.79041 130.815'
+const WAVE_START = { x: -180.79, y: 1.30042 }
+const WAVE_END = { x: -1.79041, y: 130.815 }
+const WAVE_STROKE_WIDTH = 2.2337811386935087
+
+// Solves for the unique similarity transform (uniform scale + rotation +
+// translation) that carries the path's own start/end anchors onto two
+// live-measured target points, so the exact reference geometry can be
+// resized and repositioned to fit any section width/height without ever
+// bending its proportions.
+function waveTransform(targetStart, targetEnd) {
+  const lv = { x: WAVE_END.x - WAVE_START.x, y: WAVE_END.y - WAVE_START.y }
+  const tv = { x: targetEnd.x - targetStart.x, y: targetEnd.y - targetStart.y }
+  const scale = Math.hypot(tv.x, tv.y) / Math.hypot(lv.x, lv.y)
+  const rotation = Math.atan2(tv.y, tv.x) - Math.atan2(lv.y, lv.x)
+  const cos = Math.cos(rotation)
+  const sin = Math.sin(rotation)
+  const a = scale * cos
+  const b = scale * sin
+  const c = -scale * sin
+  const d = scale * cos
+  const e = targetStart.x - a * WAVE_START.x - c * WAVE_START.y
+  const f = targetStart.y - b * WAVE_START.x - d * WAVE_START.y
+  return `matrix(${a} ${b} ${c} ${d} ${e} ${f})`
 }
 
-// One large editorial wave, not a connector line: a single continuous
-// stroke that opens in the left margin above the mission badge, swings
-// wide across the negative space, and threads behind both feature cards
-// on its way down - the whole section reads as built around one
-// continuous path rather than "a line between some cards." Anchors (the
-// mission badge, each card) are measured live off the DOM rather than
-// hard-coded pixel guesses, which only ever match one exact viewport
-// width and break the moment content reflows at another width. The
-// sweep's amplitude scales off the actual left margin, so it's genuinely
-// wide on a roomy desktop layout and tucks in on a tighter one; below the
+// The reference swirl scaled dramatically larger and threaded through the
+// whole Mission section: it opens just below the heading at card one's
+// edge, sweeps down through card one's image, loops through the negative
+// space between the two feature rows, and closes past card two's image
+// into the right margin - one continuous journey rather than a
+// shortest-path connector. Anchors are measured live off the DOM so the
+// sweep still lands correctly however the section reflows; below the
 // breakpoint where the two feature rows stack single-column (md, 768px)
-// there's no side margin left to sweep through, so it's hidden rather
-// than forced to overlap stacked text.
+// there's no room left to sweep through without overlapping stacked text,
+// so it's hidden instead.
 function BackgroundWave({ sectionRef, reduced }) {
   const [geo, setGeo] = useState(null)
 
@@ -84,9 +94,9 @@ function BackgroundWave({ sectionRef, reduced }) {
 
     function measure() {
       const sRect = section.getBoundingClientRect()
-      const badge = section.querySelector('[data-anchor="mission-badge"]')
+      const heading = section.querySelector('[data-anchor="mission-heading"]')
       const cards = section.querySelectorAll('[data-anchor="card"]')
-      if (!badge || cards.length < 2 || sRect.width === 0) return
+      if (!heading || cards.length < 2 || sRect.width === 0) return
       const toLocal = (r) => ({
         left: r.left - sRect.left,
         right: r.right - sRect.left,
@@ -96,7 +106,7 @@ function BackgroundWave({ sectionRef, reduced }) {
       setGeo({
         width: sRect.width,
         height: sRect.height,
-        badge: toLocal(badge.getBoundingClientRect()),
+        heading: toLocal(heading.getBoundingClientRect()),
         c1: toLocal(cards[0].getBoundingClientRect()),
         c2: toLocal(cards[1].getBoundingClientRect()),
       })
@@ -109,34 +119,29 @@ function BackgroundWave({ sectionRef, reduced }) {
     return () => ro.disconnect()
   }, [sectionRef])
 
+  // Draws forward as the section scrolls through view and retracts on the
+  // way back up - a live scroll-position mapping, not a one-shot trigger.
+  const { scrollYProgress } = useScroll({ target: sectionRef, offset: ['start end', 'end start'] })
+  const drawProgress = useTransform(scrollYProgress, [0.05, 0.85], [0, 1])
+
   if (!geo || geo.width < 768) return null
 
-  // The content column's left inset (roughly where card one's image
-  // sits) - the reference unit for how wide the margin sweep can be
-  // without ever reaching centered text.
+  // Card one's own left edge - the reference unit for how close to the
+  // heading's centered text the opening sweep can sit without crossing it.
   const cl = geo.c1.left
-  const amp = Math.max(cl * 0.85, 70)
 
-  const c1w = geo.c1.right - geo.c1.left
-  const c1h = geo.c1.bottom - geo.c1.top
-  const c2w = geo.c2.right - geo.c2.left
-  const c2h = geo.c2.bottom - geo.c2.top
-
-  const points = [
-    { x: cl * 0.3, y: Math.max(geo.badge.top - 70, 10) }, // opens upper-left, above the badge
-    { x: cl * 0.95, y: geo.badge.top + 20 }, // wide swing right, still short of centered text
-    { x: cl * 0.1, y: geo.c1.top - 110 }, // back left, deep into the margin
-    { x: -amp * 0.55, y: geo.c1.top - 20 }, // partially off-screen left
-    { x: geo.c1.left + c1w * 0.42, y: geo.c1.top + c1h * 0.28 }, // swing right, behind card one
-    { x: geo.c1.left + c1w * 0.62, y: geo.c1.bottom - c1h * 0.12 }, // emerges lower on the card
-    { x: cl * 0.12, y: (geo.c1.bottom + geo.c2.top) / 2 }, // wide swing left again, between rows
-    { x: -amp * 0.4, y: geo.c2.top - 30 }, // partially off-screen left again
-    { x: geo.c2.left + c2w * 0.38, y: geo.c2.top + c2h * 0.32 }, // swing right, behind card two
-    { x: geo.c2.left + c2w * 0.58, y: geo.c2.bottom - c2h * 0.1 }, // emerges lower on the card
-    { x: cl * 0.2, y: Math.min(geo.c2.bottom + 120, geo.height - 30) }, // tapers back left near the foot
-  ]
-
-  const d = `M ${points[0].x} ${points[0].y} ` + smoothSegments(points).join(' ')
+  // Path start opens just below the mission heading - never inside its
+  // text block - right at card one's edge, so the big first sweep crosses
+  // straight into card one's image (text sits on the far side, to the
+  // right, out of the way). Path end tapers into the right margin past
+  // card two's image (whose text sits on the far side, to the left) - so
+  // the mirrored sweep's loop lands in the negative space between the two
+  // rows and the whole journey threads behind both cards' images without
+  // ever crossing either row's typography.
+  const c2 = geo.c2
+  const targetStart = { x: cl * 0.85, y: geo.heading.bottom + 40 }
+  const targetEnd = { x: Math.min(c2.right + 50, geo.width - 20), y: c2.bottom - 60 }
+  const transform = waveTransform(targetStart, targetEnd)
 
   return (
     <svg
@@ -145,17 +150,14 @@ function BackgroundWave({ sectionRef, reduced }) {
       className="pointer-events-none absolute inset-0 z-0 hidden h-full w-full md:block"
     >
       <motion.path
-        d={d}
+        d={WAVE_PATH_D}
+        transform={transform}
         stroke="var(--color-wave-orange-deep)"
-        strokeWidth="6"
+        strokeWidth={WAVE_STROKE_WIDTH}
         strokeLinecap="round"
         strokeLinejoin="round"
         fill="none"
-        initial={reduced ? undefined : { pathLength: 0 }}
-        whileInView={reduced ? undefined : { pathLength: 1 }}
-        viewport={reduced ? undefined : { once: true, amount: 0.15 }}
-        transition={reduced ? undefined : { duration: 1.4, ease: 'easeInOut' }}
-        pathLength={reduced ? undefined : 1}
+        pathLength={reduced ? 1 : drawProgress}
       />
     </svg>
   )
@@ -217,13 +219,13 @@ export function WhyWaveFeatures() {
 
       <div className="relative z-10 mx-auto max-w-[1000px]">
         <div className="mx-auto mb-20 flex max-w-[850px] flex-col items-center gap-4 text-center sm:mb-28">
-          <span
-            data-anchor="mission-badge"
-            className="inline-block rounded-full bg-wave-peach px-2 py-1 text-xs font-semibold tracking-[0.08em] text-ink uppercase"
-          >
+          <span className="inline-block rounded-full bg-wave-peach px-2 py-1 text-xs font-semibold tracking-[0.08em] text-ink uppercase">
             our mission
           </span>
-          <h2 className="font-display text-3xl leading-[1.1] font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl">
+          <h2
+            data-anchor="mission-heading"
+            className="font-display text-3xl leading-[1.1] font-bold tracking-tight text-ink sm:text-5xl lg:text-6xl"
+          >
             <AnimatedWords text={MISSION_HEADING} reduced={reduced} />
           </h2>
         </div>
