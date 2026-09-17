@@ -1,7 +1,7 @@
 import { useRef } from 'react'
 import { useSectionNavTheme } from '../../lib/useSectionNavTheme'
 import { smoothScrollTo } from '../../lib/scrollTo'
-import heroImage from '../../assets/hero/wave-tv-ocean.jpeg'
+import heroImage from '../../assets/hero/wave-web-banner.jpg'
 
 // Reusing Hero's own established stats/copy from earlier rounds, not new claims.
 const STATS = [
@@ -23,7 +23,7 @@ export function Hero() {
     <section id="top" ref={sectionRef} className="relative flex min-h-screen items-end overflow-hidden bg-ink">
       <img
         src={heroImage}
-        alt="Vintage TVs playing UGC video clips, riding a wave of ocean water at sunset"
+        alt="Vintage TVs floating in the ocean at sunset, each screen showing a creator's UGC video with view counts and engagement stats"
         className="absolute inset-0 h-full w-full object-cover"
         fetchPriority="high"
       />
