@@ -22,3 +22,16 @@ npm run dev
 ```bash
 npm run build
 ```
+
+## Video (Remotion)
+
+Programmatic videos live in `src/remotion/` (`WaveIntro` is a starter 1080×1920
+composition in the site's brand colors).
+
+```bash
+npm run video:studio   # open Remotion Studio to preview/edit compositions
+npm run video:render   # render WaveIntro to out/wave-intro.mp4
+```
+
+To embed a composition on the site, use `<WaveIntroPlayer />` from
+`src/remotion/WaveIntroPlayer.jsx` (built on `@remotion/player`).
