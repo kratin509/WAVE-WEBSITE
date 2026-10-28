@@ -20,7 +20,7 @@
   html, body { background: var(--paper); }
   body {
     width: 210mm; height: 297mm; overflow: hidden;
-    padding: 9mm 13mm 8mm;
+    padding: 8mm 13mm 7.5mm;
     font-family: "Inter", system-ui, sans-serif;
     font-size: 7.5pt; line-height: 1.42; color: var(--ink-2);
     -webkit-print-color-adjust: exact; print-color-adjust: exact;
@@ -29,6 +29,11 @@
   a { color: inherit; text-decoration: none; }
   h1, h2, h3 { font-family: "Inter Display", "Inter", sans-serif; color: var(--ink); letter-spacing: -0.02em; }
   .link { color: var(--brand); font-weight: 600; }
+  .btn { display: inline-block; font-weight: 700; font-size: 7.8pt; line-height: 1; padding: 2.2mm 3.8mm; border-radius: 1.4mm; letter-spacing: -0.005em; white-space: nowrap; }
+  .btn-brand { background: var(--brand); color: #fff; box-shadow: 0 0.8mm 2mm rgba(79,76,247,0.28); }
+  .btn-ghost { border: 0.8pt solid var(--ink); color: var(--ink); padding: 2mm 3.6mm; }
+  .btn-sm { font-size: 7pt; padding: 1.7mm 3mm; }
+  .lbl .btn { margin-top: 2.6mm; }
 
   /* Masthead */
   .mast { display: flex; justify-content: space-between; align-items: center; padding-bottom: 3mm; border-bottom: 0.6pt solid var(--ink); }
@@ -36,15 +41,16 @@
   .mast span { font-size: 6.6pt; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); }
 
   /* Hero */
-  .hero { padding: 4.6mm 0 4mm; }
-  .hero h1 { font-size: 26pt; line-height: 0.98; font-weight: 800; letter-spacing: -0.04em; }
+  .hero { padding: 4mm 0 3.4mm; }
+  .hero h1 { font-size: 25pt; line-height: 0.98; font-weight: 800; letter-spacing: -0.04em; }
   .hero h1 em { font-style: normal; color: var(--brand); }
-  .hero .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-top: 3.5mm; align-items: start; }
+  .hero .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 8mm; margin-top: 3mm; align-items: start; }
   .hero .deck { font-size: 10pt; line-height: 1.3; color: var(--ink); font-weight: 500; letter-spacing: -0.01em; }
   .hero .sub { font-size: 7.8pt; }
+  .hero-cta { display: flex; gap: 2mm; margin-top: 2.6mm; }
 
   /* Section grid: label column + content */
-  .sec { display: grid; grid-template-columns: var(--label) 1fr; gap: 6mm; padding: 3mm 0; border-top: 0.4pt solid var(--rule); }
+  .sec { display: grid; grid-template-columns: var(--label) 1fr; gap: 6mm; padding: 2.6mm 0; border-top: 0.4pt solid var(--rule); }
   .lbl .n { display: block; font-family: "JetBrains Mono"; font-size: 6.4pt; color: var(--brand); margin-bottom: 1mm; }
   .lbl h2 { font-size: 11pt; line-height: 1.15; font-weight: 700; }
   .lbl p { margin-top: 1.6mm; font-size: 6.6pt; line-height: 1.38; color: var(--ink-3); padding-right: 2mm; }
@@ -69,12 +75,12 @@
   .tools { list-style: none; }
   .tools li { border-bottom: 0.4pt solid var(--rule); }
   .tools li:first-child { border-top: 0.4pt solid var(--rule); }
-  .tools a { display: grid; grid-template-columns: 34mm 1fr 5mm; gap: 4mm; align-items: baseline; padding: 1.15mm 0; }
+  .tools a { display: grid; grid-template-columns: 34mm 1fr 5mm; gap: 4mm; align-items: baseline; padding: 0.95mm 0; }
   .tools h3 { margin: 0; }
   .tools .go { text-align: right; color: var(--brand); font-weight: 600; }
 
   /* 04 — the one highlighted panel */
-  .ai { margin: 0.5mm 0 0; background: var(--lav); border-radius: 3mm; padding: 4.2mm 5mm; display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
+  .ai { margin: 0.5mm 0 0; background: var(--lav); border-radius: 3mm; padding: 3.8mm 5mm; display: grid; grid-template-columns: 1fr 1fr; gap: 7mm; }
   .ai .n { font-family: "JetBrains Mono"; font-size: 6.4pt; color: var(--brand); }
   .ai h2 { font-size: 13pt; line-height: 1.08; font-weight: 800; margin: 0.8mm 0 1.6mm; letter-spacing: -0.03em; }
   .ai p + p { margin-top: 1.2mm; }
@@ -83,7 +89,7 @@
   .prompt { background: #fff; border-radius: 2mm; padding: 1.6mm 2.4mm; color: var(--ink); font-size: 7.2pt; }
   .conn { margin-top: 2mm; display: flex; align-items: center; gap: 3mm; font-size: 6.6pt; }
   .conn code { font-family: "JetBrains Mono"; font-size: 6.6pt; color: var(--ink); }
-  .fine { margin-top: 1.2mm; font-size: 6.2pt; color: var(--ink-3); }
+  .fine { margin-top: 1mm; font-size: 6.2pt; color: var(--ink-3); }
 
   /* 05 */
   .steps { list-style: none; counter-reset: s; display: grid; grid-template-columns: repeat(4, 1fr); gap: 5mm; }
@@ -99,13 +105,12 @@
   .src { margin-top: 1mm; font-size: 6.2pt; color: var(--ink-3); }
 
   /* CTA */
-  .cta { margin-top: auto; background: var(--ink); color: #fff; border-radius: 3mm; padding: 4mm 5.5mm; display: grid; grid-template-columns: 1fr auto; gap: 8mm; align-items: center; }
+  .cta { margin-top: auto; background: var(--ink); color: #fff; border-radius: 3mm; padding: 3.6mm 5.5mm; display: grid; grid-template-columns: 1fr auto; gap: 8mm; align-items: center; }
   .cta h2 { color: #fff; font-size: 14pt; line-height: 1.05; font-weight: 800; letter-spacing: -0.03em; }
   .cta p { color: #A9A9B3; margin-top: 1.6mm; font-size: 7.3pt; }
-  .cta .btns { display: flex; flex-direction: column; gap: 1.4mm; align-items: flex-end; }
-  .cta .b1 { background: var(--lime); color: var(--ink); font-weight: 700; font-size: 8pt; padding: 2mm 4.5mm; border-radius: 1.4mm; }
-  .cta .b2, .cta .b3 { color: #fff; font-size: 7.2pt; font-weight: 500; }
-  .cta .b3 { color: #A9A9B3; }
+  .cta .btns { display: grid; grid-template-columns: 1fr 1fr; gap: 1.8mm; width: 76mm; }
+  .cta .b1 { grid-column: 1 / -1; background: var(--lime); color: var(--ink); font-weight: 800; font-size: 10pt; padding: 3mm 4mm; border-radius: 1.6mm; text-align: center; box-shadow: 0 0 0 1.2mm rgba(201,242,92,0.18); }
+  .cta .b2, .cta .b3 { color: #fff; font-size: 7.2pt; font-weight: 700; text-align: center; padding: 2mm 2mm; border: 0.8pt solid #fff; border-radius: 1.4mm; white-space: nowrap; }
 </style>
 </head>
 <body>
@@ -118,7 +123,8 @@
 <section class="hero">
   <h1>The growth team’s guide<br>to <em>better attribution.</em></h1>
   <div class="cols">
-    <p class="deck">Stop optimising for installs. Start understanding what actually drives revenue.</p>
+    <div><p class="deck">Stop optimising for installs. Start understanding what actually drives revenue.</p>
+      <div class="hero-cta"><a class="btn btn-brand" href="https://linkrunner.io/">Start measuring for free →</a><a class="btn btn-ghost" href="https://linkrunner.io/tools">Free growth tools →</a></div></div>
     <p class="sub">Linkrunner is a mobile measurement partner (MMP). It connects your marketing campaigns to the installs, in-app activity, revenue and retention that follow. <a class="link" href="https://linkrunner.io/">linkrunner.io →</a></p>
   </div>
 </section>
@@ -156,7 +162,7 @@
 </section>
 
 <section class="sec">
-  <div class="lbl"><span class="n">03</span><h2>Useful tools.<br>Free to explore.</h2></div>
+  <div class="lbl"><span class="n">03</span><h2>Useful tools.<br>Free to explore.</h2><a class="btn btn-ghost btn-sm" href="https://linkrunner.io/tools">All tools →</a></div>
   <div>
     <ul class="tools">
       <li><a href="https://linkrunner.io/tools/roas-calculator"><h3>ROAS Calculator</h3><span>Model advertising returns and estimate when campaigns break even.</span><span class="go">↗</span></a></li>
@@ -173,7 +179,7 @@
     <span class="n">04 · Linkrunner + Claude</span>
     <h2>Your attribution workflow, inside Claude.</h2>
     <p>Linkrunner’s MCP connector lets you work with Linkrunner in Claude using plain-language prompts. Once you connect and authorise your account, you can create a project, retrieve your SDK token, and query supported campaign, statistics, funnel and setup information.</p>
-    <div class="conn"><code>https://mcp.linkrunner.io/mcp</code><a class="link" href="https://linkrunner.ai/ai">Explore the integration →</a></div>
+    <div class="conn"><a class="btn btn-brand btn-sm" href="https://linkrunner.ai/ai">Explore the integration →</a><code>https://mcp.linkrunner.io/mcp</code></div>
     <p class="fine">SDK setup still needs a developer; ad data needs the right integrations and permissions.</p>
   </div>
   <div class="prompts">
@@ -185,7 +191,7 @@
 </section>
 
 <section class="sec" style="border-top:0">
-  <div class="lbl"><span class="n">05</span><h2>Start measuring.<br>No annual lock-in.</h2></div>
+  <div class="lbl"><span class="n">05</span><h2>Start measuring.<br>No annual lock-in.</h2><a class="btn btn-brand btn-sm" href="https://linkrunner.io/">Start free →</a></div>
   <div>
     <ol class="steps">
       <li>Visit <a class="link" href="https://linkrunner.io/">Linkrunner</a> and create an account.</li>
@@ -209,8 +215,8 @@
   </div>
   <div class="btns">
     <a class="b1" href="https://linkrunner.io/">Start measuring for free →</a>
-    <a class="b2" href="https://linkrunner.io/tools">Explore free growth tools →</a>
-    <a class="b3" href="https://linkrunner.ai/ai">Connect Linkrunner to Claude →</a>
+    <a class="b2" href="https://linkrunner.io/tools">Explore free tools →</a>
+    <a class="b3" href="https://linkrunner.ai/ai">Connect to Claude →</a>
   </div>
 </footer>
 
